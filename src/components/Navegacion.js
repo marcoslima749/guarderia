@@ -17,8 +17,8 @@ export const Navegacion = (props) => {
     const botones = listaDeBotones.map( boton => <Boton captura={boton}/>)
 
     return (
-        <div>
+        <nav>
         {botones}
-        </div>
+        </nav>
     )
 }

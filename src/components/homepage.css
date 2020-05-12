@@ -1,0 +1,116 @@
+@font-face {
+    font-family: 'Volvo-Penta';
+    src: url('/VolvoBroadPro.otf');
+}
+
+body {
+    box-sizing: border-box;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-areas:
+    'head head head'
+    'main main main'
+    'main main main'
+    'foot foot foot';
+    grid-template-rows: 0.2fr 1fr 1fr 0.2fr;
+    height: 100vh;
+    background-image: url('/homecortado.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    /*Insertar propiedades para hacer la página responsive*/
+}
+
+.principal, .header, .pie {
+    opacity: 0.91;
+    font-family: Volvo-Penta;
+}
+
+
+.principal {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: calc(10px + 2vmin);
+}
+
+.titulo, .subtitulo, .separador {
+    margin: 0px;
+    padding: 0px;
+}
+
+.nombre, .descripcion {
+    margin: 0.5rem 1rem;
+    padding: 0.5rem;
+}
+
+.separador {
+    font-size: 2.5rem;
+}
+
+.titulo {
+    
+    font-family: Volvo-Penta;
+    border-width: 2px;
+
+}
+
+.subtitulo {
+
+    font-family: Volvo-Penta;
+    border-width: 2px;
+}
+
+.header {
+    grid-area: head;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /*background-color: #D5E3F4;*/
+}
+
+
+.panel, .software {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.panel {
+    margin: 0px 7.5rem;
+}
+
+
+.accion {
+    width: 5rem;
+    font-size: 1.3rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 1rem;
+    padding: 0.5rem;
+    background-color: #54ACEC;
+    border-radius: 2px;
+    transition: box-shadow 0.1s ease-out;
+}
+.accion:visited {
+    color: black;
+}
+
+.accion:hover {
+    box-shadow: 0px 0px 1px 1px #54ACEC;
+}
+
+.pie {
+    grid-area: foot;
+    background-color: #46A2E3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
