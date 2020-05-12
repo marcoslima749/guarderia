@@ -95,21 +95,22 @@ body {
     justify-content: center;
     margin: 0.5rem 1rem;
     padding: 0.5rem;
-    background-color: #54ACEC;
+    /*background-color: #54ACEC;*/
     border-radius: 2px;
-    transition: box-shadow 0.1s ease-out;
+    transition: box-shadow 0.3s ease-out;
 }
 .accion:visited {
     color: black;
 }
 
 .accion:hover {
-    box-shadow: 0px 0px 1px 1px #54ACEC;
+    box-shadow: 0px 0px 5px 1px white;
 }
 
 .pie {
+    color: #B2CDEB;
     grid-area: foot;
-    background-color: #46A2E3;
+    background-color: #0C67AD;
     display: flex;
     align-items: center;
     justify-content: center;
