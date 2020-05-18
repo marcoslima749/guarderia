@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './Login.cssS'
+import './Login.css'
 
 export const Login = () => {
     return (
@@ -9,7 +9,7 @@ export const Login = () => {
                 <form action="" method="post" className="formulario-login" id="formulario-login">
                     <input type="text" className="formulario-entrada" name="usuario" id="usuario" />
                     <input type="text" className="formulario-entrada" name="pass" id="pass"/>
-                <input type="submit" value="" className="formulario-submit boton"/>
+                <input type="submit" value="Ingresar" className="formulario-submit boton"/>
             </form>
             </div>
         </div>

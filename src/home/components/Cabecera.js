@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 export const Cabecera = () => {
     return(
@@ -9,8 +10,8 @@ export const Cabecera = () => {
                 <p className="descripcion">Software de gestión administrativa para empresas</p>
             </div>
             <div className="panel">
-                <a href="#" className="accion">Registrarse</a>
-                <a href="#" className="accion">Ingresar</a>
+                <Link to="/register" className="accion">Registrarse</Link>
+                <Link to="/login" className="accion">Ingresar</Link>
             </div>
         </header>
     )

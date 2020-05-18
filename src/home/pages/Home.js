@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Gaviota from './gaviota.svg'
+import Gaviota from '../components/gaviota.svg';
 
-import './homepage.css'
+import './home.css'
 
-import { Pie } from './Footer';
-import { Cabecera } from './Cabecera';
+import { Pie } from '../components/Footer';
+import { Cabecera } from '../components/Cabecera';
 
 export const Home = () => {
     return(
