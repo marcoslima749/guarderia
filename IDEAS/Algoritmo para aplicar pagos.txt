@@ -1,0 +1,34 @@
+ver la primera cuota sin cancelar
+
+ver el primer pago sin aplicar
+
+si el primer pago sin aplicar es menor que la primera cuota sin aplicar:
+
+	"a cta primera cuota sin cancelar" = primer pago sin aplicar;
+	saldoprimeracuotasincancelar = primera cuota - primer pago
+
+	loop
+
+si es igual:
+
+	si no es cuota parcialmente cancelada:
+		"primera cuota" = primer pago;
+		loop
+	si está parcialmente cancelada:
+		"saldo primera cuota" = primer pago;
+		loop
+
+si es mayor:
+
+	saldoprimerpagosinaplicar = primer pago - primera cuota
+
+	si no es cuota parcialmente cancelada:
+		"primera cuota" = primera cuota;
+		loop
+	si está parcialmente cancelada:
+		"saldo primera cuota" = saldo primera cuota;
+		loop
+
+	loop
+
+CONTEMPLAR EL CASO DE DOS PAGOS QUE NO COMPLETAN LA CUOTA, DOS "A CTA", PARA VER SI EL ALGORITMO LOS CONTEMPLA
