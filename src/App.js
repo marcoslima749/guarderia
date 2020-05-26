@@ -6,6 +6,10 @@ import { Register } from './auth/pages/Register';
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { HojaDeEstilo } from './shared/pages/HojaDeEstilo';
+import { Dashboard } from './shared/pages/dashboard';
+
+import './App.css'
+import { Inicio } from './inicio/pages/Inicio';
 
 export const App = () => {
     return (
@@ -15,13 +19,19 @@ export const App = () => {
                     <Home />
                 </Route>
                 <Route exact path="/login">
-                    <Login />
+                <Dashboard><Login /></Dashboard>  
                 </Route>
                 <Route exact path="/register">
                     <Register />
                 </Route>
+                <Route exact path="/inicio">
+                <Dashboard><Inicio /></Dashboard>  
+                </Route>
                 <Route exact path="/estilo">
                     <HojaDeEstilo />
+                </Route>
+                <Route exact path="/dashboard">
+                    <Dashboard />
                 </Route>
                 <Redirect to="/" />
             </Switch>

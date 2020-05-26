@@ -1,0 +1,30 @@
+
+.boton {
+    width: 5rem;
+    font-size: 1.3rem;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 2px;
+    transition: box-shadow 0.3s ease-out;
+    padding: 0.5rem;
+}
+
+.boton--panel {
+    margin: 0.5rem 1rem;
+}
+
+.boton:visited {
+    color: black;
+}
+
+.boton:hover {
+    box-shadow: 0px 0px 5px 1px #222222;
+}
+
+.boton--accion:hover {
+    box-shadow: 0px 0px 5px 1px white;
+}
+
+.fondo-azul {
+    background-color: #0C67AD;
+}

@@ -1,52 +1,52 @@
-.container {
+.estilos__container {
     height: 100vh;
     width: 100vw;
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
     display: grid;
-    place-content: center;
+    gap: 0.5rem;
+    place-content: start center;
     grid-template-columns: repeat(12,1fr);
-    grid-template-rows: repeat(12,1fr);
-    
+    background-color: rosybrown;
 }
 
 .estilos__titulo-pagina {
     margin: 0;
     padding: 0;
     grid-column: 1 / 13;
+    grid-row: 1 / 2;
     text-align: center;
+    box-sizing: border-box;
+    background-color: royalblue;
 }
 
-.estilos__tipografia-container {
-    margin: 0;
-    padding: 0;
+.tipografia-container {
     grid-column: 1 / 13;
     grid-row: 2 / 5;
+    margin: 0;
+    padding: 2px;
     display: grid;
-    grid-template: 1fr / 1fr 1fr;    
+    grid-template-columns: 1fr 1fr;
+    background-color: green;
+    justify-items: center;
 }
 
-.estilos__tipografia {
-    margin: 0 10rem;
-    padding: 0;
-    display: grid;
-    grid-template: 1fr 1fr 1fr;
+.tipografia {
+    width: 40vw;
+    height: 40vh;
+    display: inline-grid;
+    grid-template-rows: 1fr 1fr 1fr;
     justify-items: center;
     align-items: center;
-
+    background-color: blanchedalmond;
 }
 
-.estilos__tipografia__tipografia-uno {
+.tipografia-uno {
     font-family: Volvo-Penta;
 }
 
-.estilos__tipografia__tipografia-dos {
+.tipografia-dos {
     font-family: sans-serif;
-}
-
-.estilos__tipografia-uno {
-    margin: 0;
-    padding: 0;
 }
 
 

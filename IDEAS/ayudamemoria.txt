@@ -1,0 +1,16 @@
+Volvo
+IBM
+Istok Web
+Karla
+Nunito
+Open Sans
+Palanquin
+Pavanam
+Questrial
+Roboto
+Signika
+Titillium Web
+
+#0C67AD
+#B2CDEB
+#EDE9E9

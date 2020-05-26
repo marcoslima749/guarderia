@@ -1,0 +1,14 @@
+.dashboard {
+    display: grid;
+    grid-template-areas:
+    'head head head'
+    'main main main'
+    'main main main'
+    'foot foot foot';
+    grid-template-rows: 0.2fr 1fr 1fr 0.2fr;
+    height: 100vh;
+    background-image: url('/homecortado.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+

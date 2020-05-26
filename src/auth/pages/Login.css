@@ -1,0 +1,174 @@
+/*
+FUENTES DISPONIBLES:
+
+Volvo
+IBM
+Istok Web
+Karla
+Nunito
+Open Sans
+Palanquin
+Pavanam
+Questrial
+Roboto
+Signika
+Titillium Web
+Square
+Swiss
+Tahoma
+Share
+ShareTech
+*/
+
+
+
+
+.login__container {
+    font-family: 'ShareTech';
+
+    --color-tipografia: black; /*#1C2321;*/
+    --color-fondo: rgba(0, 0, 0,0.5);
+    --color-card: #EDE9E9;
+    --color-submit: #0C67AD;
+
+
+    grid-area: main;
+    position: absolute;
+    z-index: 2;;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-fondo);
+    display: grid;
+    place-content: center;
+    box-sizing: border-box;
+    transition: opacity 500ms ease;
+}
+
+.login__container--transparente{
+    opacity: 0;
+}
+
+.login__card {
+    background-color: var(--color-card);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20rem;
+    height: 30rem;
+    position: relative;
+    opacity: .94;
+}
+
+.login__cerrar {
+    font-family: Volvo;
+    text-decoration: none;
+    position: absolute;
+    top: 5%;
+    right: 10%;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--color-tipografia);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login__titulo {
+    color: var(--color-tipografia);
+    font-family: Volvo;
+    font-size: 1.8rem;
+}
+
+.login__formulario {
+    max-width: 500px;
+}
+
+.login__campo {
+    width: 100%;
+    position: relative;
+    border-bottom: 2px dashed var(--color-tipografia) ;
+    margin: 4rem auto 1rem;
+}
+
+.login__label {
+    color: var(--color-tipografia);
+    font-size: 1.2rem;
+   /* z-index: -1;*/
+    position: absolute;
+    transform: translateY(-2rem);
+    transform-origin: 0%;
+    transition: transform 400ms;
+}
+
+.login__campo:focus-within .login__label,
+.login__entrada:not(:placeholder-shown) + .login__label {
+    transform: scale(0.8) translateY(-5rem);
+}
+
+
+
+.login__entrada {
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    overflow: hidden;
+    margin: 0;
+    width: 100%;
+    padding: 0.25rem 0;
+    background: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: block;
+}
+
+.login__entrada:valid {
+    color: green;
+}
+
+.login__entrada:invalid {
+    color: rgb(255, 16, 83);/*#FF1053;*/
+}
+
+.login__campo::after {
+    content: "";
+    position: relative;
+    display: block;
+    height: 4px;
+    width: 100%;
+    background:var(--color-tipografia);
+    transform: scaleX(0);
+    /*transform-origin: 0%;*/
+    transition: transform 500ms ease;
+    top: 2px;
+}
+
+.login__campo:focus-within {
+    border-color: transparent;
+}
+
+.login__campo:focus-within::after {
+    transform: scaleX(1);
+}
+
+.login__boton-submit {
+    font-family: Volvo;
+    display: block;
+    /*height: 2rem;
+    border: none;
+    width: 60%;
+    border-radius: 6px;
+    */
+    margin: 10% 25%;
+    color: var(--color-card);
+    cursor: pointer;
+    background-color: var(--color-submit);
+
+}
+
+.login__boton-submit:visited {
+    color: var(--color-card);
+}
