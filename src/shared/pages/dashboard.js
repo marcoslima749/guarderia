@@ -9,11 +9,12 @@ export const Dashboard = ({
     nombre,
     descripcion,
     panel,
-    children
+    children,
+    clases
     }) => {
 
     return(
-        <div className="dashboard">
+        <div className={`dashboard ${clases}`}>
             <Cabecera nombre={nombre} descripcion={descripcion} panel={panel}/>
             {children}
             <Pie />

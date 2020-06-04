@@ -7,10 +7,6 @@ import './home.css'
 import { Pie } from '../../shared/components/Pie';
 import { Cabecera } from '../../shared/components/Cabecera';
 
-import { useState } from 'react'
-import { Login } from '../../auth/pages/Login';
-import { Register } from '../../auth/pages/Register';
-
 
 export const Home = () => {
 
