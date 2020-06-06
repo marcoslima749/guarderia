@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 import { Boton } from '../../shared/components/Boton';
 
 export const Login = () => {
-    let [clase, setClase] = useState("login__container--transparente")
+    //Se quita la clase login__container--transparente al montar el componente
+    //usando useEffect para crear el efecto de fade in
+    let [clase, setClase] = useState("login__container--transparente");
 
     useEffect(()=>{
         setClase("");
@@ -27,7 +29,6 @@ export const Login = () => {
                         <input type="password" className="login__entrada login__entrada-pass" name="pass" id="pass"  placeholder=" "/>
                         <label className="login__label" htmlFor="pass">Contraseña</label>
                     </div>
-                   {/*<input type="submit" value="INGRESAR" className="login__boton-submit"/> */}
                 </form>
                 <Boton path="/inicio" caption="INGRESAR" clases="login__boton-submit" />
             </div>

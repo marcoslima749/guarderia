@@ -80,11 +80,13 @@
 
 
 
-
-
-
-
 body {
+    /******Colores******/
+    --color-tipografia: black; /*#1C2321;*/
+    --color-fondo: rgba(0, 0, 0,0.5);
+    --color-card: #EDE9E9;
+    --color-submit: #0C67AD;
+
     box-sizing: border-box;
     margin: 0;
     padding: 0;

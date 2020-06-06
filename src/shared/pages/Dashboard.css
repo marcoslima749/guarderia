@@ -7,8 +7,22 @@
     'foot foot foot';
     grid-template-rows: 0.2fr 1fr 1fr 0.2fr;
     height: 100vh;
+}
+
+.dashboard--home {
     background-image: url('/homecortado.jpg');
     background-size: cover;
     background-repeat: no-repeat;
 }
 
+.dashboard__head {
+    grid-area: head;
+}
+
+.dashboard__main {
+    grid-area: main;
+}
+
+.dashboard__foot {
+    grid-area: foot;
+}

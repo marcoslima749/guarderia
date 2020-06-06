@@ -19,13 +19,15 @@ export const App = () => {
                     <Home />
                 </Route>
                 <Route exact path="/login">
-                <Dashboard><Login /></Dashboard>  
+                <Dashboard clases="dashboard--home"><Login /></Dashboard>  
                 </Route>
                 <Route exact path="/register">
                     <Register />
                 </Route>
                 <Route exact path="/inicio">
-                <Dashboard><Inicio /></Dashboard>  
+                <Dashboard >
+                    <Inicio />
+                </Dashboard>  
                 </Route>
                 <Route exact path="/estilo">
                     <HojaDeEstilo />
