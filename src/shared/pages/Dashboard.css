@@ -14,3 +14,15 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+.dashboard__head {
+    grid-area: head;
+}
+
+.dashboard__main {
+    grid-area: main;
+}
+
+.dashboard__foot {
+    grid-area: foot;
+}
