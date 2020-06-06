@@ -1,0 +1,106 @@
+@font-face {
+    font-family: "Volvo";
+    src: url("./fuentes/VolvoBroadPro.otf");
+}
+
+@font-face {
+    font-family: "ShareTech";
+    src: url("./fuentes/ShareTech-Regular.ttf");
+}
+
+
+
+
+* {
+
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+   display: grid; 
+   place-content: center;
+   width: 100vw;
+   height: 100vh;
+}
+
+.container {
+    width: 70vmin; /*CON 70 VMIN CONVIENE HACER 122 (AHORA 109(?) ZOOM AL IMPRIMIR*/ /*80vmin; es el original, 60vmin al imprimir a pdf se acomoda, 59vmin; es mobile friendly*/
+    height: 90vmin;
+    padding: 4rem;
+    padding-bottom: 4rem;
+    display: grid;
+    grid-template-rows: 1fr 1fr 3fr 3fr 1fr 1fr;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-areas:    "logo . . titulo titulo titulo"
+                            "subtitulo subtitulo subtitulo subtitulo subtitulo subtitulo"
+                            "tabla tabla tabla tabla tabla tabla"
+                            "tabla tabla tabla tabla tabla tabla"
+                            "confirm confirm confirm confirm confirm confirm"
+                            "disclaimer disclaimer disclaimer disclaimer disclaimer disclaimer";
+    border: 2px solid #0C67AD;
+    border-radius: 4px;
+    align-items: center;
+    justify-items: center;
+    font-family: ShareTech;
+
+}
+
+.logo {
+    width: 4rem;
+    grid-area: logo;
+    border-radius: 6px;
+    justify-self: start;
+}
+
+.titulo {
+    grid-area: titulo;
+    font-family: Volvo;
+    justify-self: end;
+}
+
+.subtitulo {
+    grid-area: subtitulo;
+    font-family: Volvo;
+    font-size: 2.5rem;
+}
+
+
+
+.tabla {
+    grid-area: tabla;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: start;
+    /*background-color: #EDE9E9;*/
+    width: 100%;
+    height: 11rem;
+    border-radius: 4px;
+    padding: 1rem;
+    font-size: 1.2rem;/*1.05rem;*/
+
+}
+
+.turno-confirmado {
+    grid-area: confirm;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.disclaimer {
+    grid-area: disclaimer;
+    font-size: 0.7rem;
+    text-align: center;
+        
+}
+
+.clave {
+    justify-self: start;
+}
+
+.valor {
+    justify-self: end;
+}
