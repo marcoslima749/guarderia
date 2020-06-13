@@ -19,14 +19,16 @@ export const App = () => {
                     <Home />
                 </Route>
                 <Route exact path="/login">
-                <Dashboard clases="dashboard--home"><Login /></Dashboard>  
+                <Dashboard clases="dashboard--home">
+                {(main) =>   <Login clases={main} />}
+                </Dashboard>  
                 </Route>
                 <Route exact path="/register">
-                    <Register />
+                {(main) =>   <Register clases={main} />}
                 </Route>
                 <Route exact path="/inicio">
-                <Dashboard >
-                    <Inicio />
+                <Dashboard nombre="CYNM" >
+                {(main) =>   <Inicio clases={main} />}
                 </Dashboard>  
                 </Route>
                 <Route exact path="/estilo">

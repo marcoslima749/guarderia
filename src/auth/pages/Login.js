@@ -6,17 +6,17 @@ import './Login.css'
 import { Link } from 'react-router-dom';
 import { Boton } from '../../shared/components/Boton';
 
-export const Login = () => {
+export const Login = ({clases}) => {
     //Se quita la clase login__container--transparente al montar el componente
     //usando useEffect para crear el efecto de fade in
-    let [clase, setClase] = useState("login__container--transparente");
+    let [transparente, setTransparente] = useState("login__container--transparente");
 
     useEffect(()=>{
-        setClase("");
+        setTransparente("");
     },[]);
 
     return (
-        <div className={`login__container ${clase}`}>
+        <div className={`login__container ${transparente} ${clases}`}>
             <div className="login__card">
             <Link to="/" className="login__cerrar" >X</Link>
                 <h2 className="login__titulo">INGRESO</h2>
