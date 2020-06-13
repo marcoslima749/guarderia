@@ -4,7 +4,7 @@ import './Sidenav.css';
 
 import { Boton } from './Boton';
 
-export const Sidenav = ({clases}) => {
+export const Sidenav = ({clases, botones}) => {
     let paths = [
         "Emb",
         "Org",
@@ -14,7 +14,7 @@ export const Sidenav = ({clases}) => {
 
     return(
         <div className={`sidenav__container ${clases}`}>
-            {paths.map((p) => <Boton path={`/${p}`} caption={p} clases="fondo-azul" /> )}
+            {botones.map((i) => <img src={i} alt=""/> )}
         </div>
     )
 }

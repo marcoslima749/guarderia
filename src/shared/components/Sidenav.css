@@ -1,7 +1,7 @@
 .sidenav__container {
     display: inline-flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     background-color: var(--color-card);
     height: 100%;
     width: 6rem;
