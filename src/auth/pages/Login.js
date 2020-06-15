@@ -18,7 +18,7 @@ export const Login = ({clases}) => {
     return (
         <div className={`login__container ${transparente} ${clases}`}>
             <div className="login__card">
-            <Link to="/" className="login__cerrar" >X</Link>
+                <Link to="/" className="login__cerrar" >X</Link>
                 <h2 className="login__titulo">INGRESO</h2>
                 <form action="" method="post" className="login__formulario" id="login__formulario">
                     <div className="login__campo">
@@ -30,7 +30,7 @@ export const Login = ({clases}) => {
                         <label className="login__label" htmlFor="pass">Contraseña</label>
                     </div>
                 </form>
-                <Boton path="/inicio" caption="INGRESAR" clases="login__boton-submit" />
+                <Boton path="/inicio" clases="hover-oscuro login__boton-submit boton--cabecera">INGRESAR</Boton>
             </div>
         </div>
     )

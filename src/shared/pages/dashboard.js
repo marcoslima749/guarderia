@@ -15,7 +15,9 @@ export const Dashboard = ({
 
     return(
         <div className={`dashboard ${clases}`}>
-            <Cabecera nombre={nombre} descripcion={descripcion} panel={panel}/>
+            <Cabecera nombre={nombre} descripcion={descripcion}>
+               { panel && panel }
+            </Cabecera>
             {children("dashboard__main")}
             <Pie />
         </div>

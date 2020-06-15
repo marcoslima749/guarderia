@@ -85,9 +85,38 @@ body {
     --color-tipografia: black; /*#1C2321;*/
     --color-fondo: rgba(0, 0, 0,0.5);
     --color-card: #EDE9E9;
-    --color-submit: #0C67AD;
+    --color-azul: #0C67AD;
+    --color-gris-obscuro: #1C2321 ;
+    --color-gris: grey;
 
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+.simple-hover {
+    transition: background-color 0.2s ease-in-out;
+}
+
+
+.simple-hover:hover {
+    box-shadow: white 0 0 0;
+    background-color: var(--color-card);
+    cursor: pointer;
+}
+
+.hover-oscuro, .hover-claro {
+    transition: box-shadow 0.3s ease-out;
+}
+
+.hover-oscuro:hover {
+    box-shadow: 0px 0px 5px 1px #222222;
+}
+
+.hover-claro:hover {
+    box-shadow: 0px 0px 5px 1px white;
+}
+
+.lista-tareas__desplazar {
+    transform: translateY(100%);
 }

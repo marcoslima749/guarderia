@@ -27,7 +27,7 @@ export const App = () => {
                 {(main) =>   <Register clases={main} />}
                 </Route>
                 <Route exact path="/inicio">
-                <Dashboard nombre="CYNM" >
+                <Dashboard nombre="CYNM" descripcion="Tareas" >
                 {(main) =>   <Inicio clases={main} />}
                 </Dashboard>  
                 </Route>

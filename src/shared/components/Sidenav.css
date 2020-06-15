@@ -2,7 +2,10 @@
     display: inline-flex;
     flex-direction: column;
     justify-content: space-evenly;
+    align-items: center;
     background-color: var(--color-card);
     height: 100%;
     width: 6rem;
+    background-color: white;
+    border-right: var(--color-gris) solid 1px;
 }
