@@ -2,6 +2,11 @@ const express = require('express');
 const mysql = require('mysql');
 const envParser = require('./env');
 
+//importando las rutas
+const login = require('./routes/login');
+const api = require('./routes/api.v0');
+
+//trayendo las variables de entorno
 const env = envParser();
 
 //creando la conección a la base de datos
@@ -19,6 +24,7 @@ db.connect((err)=> {
         throw err;
     }
     console.log("Base de datos conectada!");
+    app.set('db', db);
 })
 
 
@@ -26,13 +32,10 @@ const app = express();
 
 //Rutas
 
+app.use('/login', login);
+app.use('/api', api);
+
 app.get('/',(req, res)=> {
-
-    db.query('SELECT * FROM embarcaciones',(error, results, fields) => {
-        if (error) throw error;
-        console.log(results[0].nombre);
-    })
-
     res.send('Hola desde el servidor');
 })
 
