@@ -1,13 +1,18 @@
 import React, { useState , useEffect } from 'react';
 
+import axios from 'axios';
+
 import './Tareas.css'
 
 import mas from '../../shared/components/iconos/mas.svg';
 import listo from '../../shared/components/iconos/listo.svg';
 
+const moment = require('moment');
+
+/*
 let listaDeTareas = [
     {
-        id: 1,
+        idtareas: 1,
         descripcion: "Es necesario realizar la Tarea Uno",
         nota: "Hay que verificar tal cosa",
         deadline: "2020-10-07",
@@ -15,7 +20,7 @@ let listaDeTareas = [
         completado: false
     },
     {
-        id: 2,
+        idtareas: 2,
         descripcion: "Es necesario realizar la Tarea Dos",
         nota: "Hay que verificar tal otra cosa",
         deadline: "2020-11-30",
@@ -23,7 +28,7 @@ let listaDeTareas = [
         completado: false
     },
     {
-        id: 3,
+        idtareas: 3,
         descripcion: "Es necesario realizar la Tarea Tres",
         nota: "Hay que verificar tal otra cosa",
         deadline: "",
@@ -31,33 +36,45 @@ let listaDeTareas = [
         completado: false
     }
 ];
-
+*/
 
 export const Tareas = () => {
 
+    
     let [ lista, setLista ] = useState();
     let [completadas, setCompletadas] = useState(0);
+
+    //Estados para manejar el CSS a través de las clases
     let [desplazar, setDesplazar] = useState(false);
     let [transition, setTransition] = useState(true);
     
 
-    useEffect(()=> {
-        setLista(() => {
-            return listaDeTareas
-        });
-
-    setCompletadas((prevCompletadas)=> {
-        let newCompletadas = prevCompletadas;
-        listaDeTareas.forEach((tarea)=> tarea.completado && ++newCompletadas);
-        return newCompletadas;
-    });
-
+    useEffect(() => {
+            axios.get('/api/db/tareas', {
+                params: {
+                    prueba : 'este es un parámetro de prueba'
+                }
+            }).then((res)=>{
+                setLista(() => res.data);
+            }).catch((err)=> {
+                console.log(err);
+            });            
     }, [])
+    
+    //VER POR QUÉ AL LLAMAR A SETCOMPLETADAS LISTA SALE UNDEFINED
+
+    const countCompletadas = () => {
+        setCompletadas((prevCompletadas)=> {
+            let newCompletadas = prevCompletadas;
+            lista.forEach((tarea)=> !!tarea.completado && ++newCompletadas);
+            return newCompletadas;
+        })
+    }
     
     const completarTarea = (id) => {
         let newLista = lista.map((tarea) => {
-            if(tarea.id === id) {
-                tarea.completado = true;
+            if(tarea.idtareas === id) {
+                tarea.completado = 1;
             }
             return tarea;
         });
@@ -96,12 +113,12 @@ export const Tareas = () => {
             let newLista = JSON.parse(JSON.stringify(prevLista));
             newLista.unshift(
                 {
-                    id: id,
+                    idtareas: id,
                     descripcion: "",
                     nota: "",
                     deadline: "",
                     prioridad: "",
-                    completado: false
+                    completado: 0
                 }
             );
             return newLista
@@ -111,7 +128,7 @@ export const Tareas = () => {
     const handleChange = (e, id) => {
         let prevLista = JSON.parse(JSON.stringify(lista));
         let newLista = prevLista.map((tarea)=>{
-            if(tarea.id === id) {
+            if(tarea.idtareas === id) {
                 tarea[e.target.name] = e.target.value;
             }
             return tarea;
@@ -137,23 +154,23 @@ export const Tareas = () => {
 
             </li>
             
-            {lista && lista.filter((tarea)=>tarea.completado === false).map((tarea)=> {
+            {lista && lista.filter((tarea)=>tarea.completado === 0).map((tarea)=> {
                 return(
-                    <li key={tarea.id} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar&& 'lista-tareas__desplazar'}`}>
-                        <div className="lista-tareas__completado" onClick={()=>completarTarea(tarea.id)} >
+                    <li key={tarea.idtareas} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar&& 'lista-tareas__desplazar'}`}>
+                        <div className="lista-tareas__completado" onClick={()=>completarTarea(tarea.idtareas)} >
                             <img src={listo} alt="Tilde"/>
                         </div>
                         <div className="lista-tareas__info">
                         <div className="lista-tareas__campo-descripcion">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.id)} name="descripcion" spellCheck="false" className="lista-tareas__descripcion lista-tareas__campo" value={tarea.descripcion} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="descripcion" spellCheck="false" className="lista-tareas__descripcion lista-tareas__campo" value={tarea.descripcion} />
                         </div>
                         <div className="lista-tareas__campo-nota">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.id)} name="nota" spellCheck="false" className="lista-tareas__nota lista-tareas__campo" value={tarea.nota} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="nota" spellCheck="false" className="lista-tareas__nota lista-tareas__campo" value={tarea.nota} />
                         </div>    
                         </div>
-                        <input type="date" name="deadline" onChange={(e)=>handleChange(e, tarea.id)} className="lista-tareas__deadline lista-tareas__campo" value={tarea.deadline ? tarea.deadline : "2020-06-15" } />
+                        <input type="date" name="deadline" onChange={(e)=>handleChange(e, tarea.idtareas)} className="lista-tareas__deadline lista-tareas__campo" value={tarea.deadline ? moment(tarea.deadline).format('YYYY[-]MM[-]DD') : moment().format('YYYY[-]MM[-]DD') } />
                         <div className="lista-tareas__campo-prioridad">
-                        <input type="text" onChange={(e)=>handleChange(e, tarea.id)} name="prioridad" spellCheck="false" className="lista-tareas__prioridad lista-tareas__campo" value={tarea.prioridad} />
+                        <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="prioridad" spellCheck="false" className="lista-tareas__prioridad lista-tareas__campo" value={tarea.prioridad} />
                         </div>    
                     </li>
                 )

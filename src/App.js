@@ -10,6 +10,7 @@ import { Dashboard } from './shared/pages/dashboard';
 
 import './App.css'
 import { Inicio } from './inicio/pages/Inicio';
+import { Embarcaciones } from './embarcaciones/pages/Embarcaciones';
 
 export const App = () => {
     return (
@@ -34,8 +35,10 @@ export const App = () => {
                 <Route exact path="/estilo">
                     <HojaDeEstilo />
                 </Route>
-                <Route exact path="/dashboard">
-                    <Dashboard />
+                <Route exact path="/embarcaciones">
+                <Dashboard nombre="CYNM" descripcion="Embarcaciones" >
+                {(main) =>   <Embarcaciones clases={main} />}
+                </Dashboard>  
                 </Route>
                 <Redirect to="/" />
             </Switch>
