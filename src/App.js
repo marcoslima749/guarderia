@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { HojaDeEstilo } from './shared/pages/HojaDeEstilo';
 import { Dashboard } from './shared/pages/dashboard';
 
+
 import './App.css'
 import { Inicio } from './inicio/pages/Inicio';
 import { Embarcaciones } from './embarcaciones/pages/Embarcaciones';
