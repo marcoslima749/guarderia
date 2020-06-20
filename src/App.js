@@ -1,3 +1,6 @@
+
+//123 probando...
+
 import React from 'react';
 
 import { Home } from './home/pages/Home';
@@ -7,6 +10,7 @@ import { Register } from './auth/pages/Register';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import { HojaDeEstilo } from './shared/pages/HojaDeEstilo';
 import { Dashboard } from './shared/pages/dashboard';
+
 
 import './App.css'
 import { Inicio } from './inicio/pages/Inicio';
