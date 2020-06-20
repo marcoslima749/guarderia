@@ -25,6 +25,15 @@ routes.post('/tareas',(req,res)=> {
     res.send('Base actualizada correctamente');
 });
 
+/*
+para obtener el id de una fila insertada
+
+connection.query('INSERT INTO posts SET ?', {title: 'test'}, function (error, results, fields) {
+  if (error) throw error;
+  console.log(results.insertId);
+});
+
+*/
 //copia
 //consulta de una sola tabla con una condición opcional
 /*

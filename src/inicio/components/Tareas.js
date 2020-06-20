@@ -21,6 +21,12 @@ export const Tareas = () => {
     //Estados para manejar el CSS a través de las clases
     let [desplazar, setDesplazar] = useState(false);
     let [transition, setTransition] = useState(true);
+
+    //Estado para manejar el blur y el focus dentro del mismo elemento
+    let [elementoAnterior, setElementoAnterior] = useState();
+
+    //Estado para manejar el snapshot del elemento a modificar
+    let [snap, setSnap] = useState();
     
     //consulta las tareas a la base de datos y las asigna al estado
     useEffect(() => {
@@ -180,7 +186,7 @@ export const Tareas = () => {
             );
             return newLista;
         })
-
+/* //Debería actualizar la copia solo en el blur de la fila completa...
         setListaCopia((prevCopia)=> {
             let newCopia = JSON.parse(JSON.stringify(prevCopia));
             newCopia.unshift(
@@ -198,6 +204,7 @@ export const Tareas = () => {
             );
             return newCopia;
         })
+    */    
     }
 
     const handleChange = (e, id) => {
@@ -235,6 +242,57 @@ export const Tareas = () => {
         });
     }
 
+    const handleFocus = (indice, id) => {
+        if (elementoAnterior === undefined) { //Es el primer elemento en hacer focus
+            setElementoAnterior(lista[indice]);
+            //Hacer el snapshot y retornar
+            setSnap(lista[indice]);
+            return;
+        } else if (elementoAnterior.idtareas === id) { //El focus está dentro del mismo elemento
+            return;
+        }
+        //El focus pasó a otro elemento
+        //Verificar si el elemento anterior cambió y mandar el post antes de hacer el nuevo snapshot
+        let lastTarea = lista.filter((tarea)=> tarea.idtareas === snap.idtareas)[0];
+        let camposModificados = []
+        Object.keys(snap).forEach((llave)=> {
+            if(snap[llave] !== lastTarea[llave]) {
+                camposModificados.push(llave);
+            }
+        });
+        if (camposModificados.length === 0) { //Los campos son iguales, no hay modificación
+            return;
+        } else { //Hay campos modificados, mandar consulta
+            axios.post('/api/db/tareas', {
+                tarea: lastTarea,
+                campos: camposModificados
+            }).then((response)=> {
+                console.log('Respuesta del servidor',response);
+            });
+        }
+
+        //Hacer el snapshot
+        setSnap(lista[indice]);
+        setElementoAnterior(lista[indice]);
+        console.log('focus snap, elementoAnterior: ', elementoAnterior);
+
+    };
+
+    const handleBlur = (indice, id) => {
+        //manejar el último blur cuando ya no hay compararción con el elemento
+       /* 
+        if (elementoAnterior === undefined) {
+            setElementoAnterior(lista[indice])
+        } else if (elementoAnterior.idtareas === id) {
+            return;
+        }
+        console.log('blur. comparar snap y mandar post, elementoAnterior: ', elementoAnterior)
+        */
+        //logica para comparar el snapshot y mandar la consulta
+
+  
+    };
+
     return(
         <div className="lista-tareas__container">
         <ul className="lista-tareas">
@@ -253,21 +311,28 @@ export const Tareas = () => {
 
             </li>
             
+            {/*
+            Extraido de los inputs
+            onBlur={()=>actualizarCopia(tarea.idtareas, "descripcion")}
+            onBlur={()=>actualizarCopia(tarea.idtareas, "nota")}
+            onBlur={()=>actualizarCopia(tarea.idtareas, "deadline")}
+            */}
+
             {lista && lista.filter((tarea)=>tarea.completado === 0 && tarea.eliminado === false).map((tarea, indice)=> {
                 return(
-                    <li key={tarea.idtareas} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar && 'lista-tareas__desplazar'}`}>
+                    <li onFocus={()=>handleFocus(indice, tarea.idtareas)} onBlur={()=>handleBlur(indice, tarea.idtareas)} key={tarea.idtareas} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar && 'lista-tareas__desplazar'}`}>
                         <div className="lista-tareas__completado" onClick={()=>completarTarea(tarea.idtareas)} >
                             <img src={listo} alt="Tilde"/>
                         </div>
                         <div className="lista-tareas__info">
                         <div className="lista-tareas__campo-descripcion">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} onBlur={()=>actualizarCopia(tarea.idtareas, "descripcion")} name="descripcion" spellCheck="false" className="lista-tareas__descripcion lista-tareas__campo" value={tarea.descripcion} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="descripcion" spellCheck="false" className="lista-tareas__descripcion lista-tareas__campo" value={tarea.descripcion} />
                         </div>
                         <div className="lista-tareas__campo-nota">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} onBlur={()=>actualizarCopia(tarea.idtareas, "nota")} name="nota" spellCheck="false" className="lista-tareas__nota lista-tareas__campo" value={tarea.nota} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="nota" spellCheck="false" className="lista-tareas__nota lista-tareas__campo" value={tarea.nota} />
                         </div>    
                         </div>
-                        <input type="date" name="deadline" onChange={(e)=>handleChange(e, tarea.idtareas)} onBlur={()=>actualizarCopia(tarea.idtareas, "deadline")} className="lista-tareas__deadline lista-tareas__campo" value={tarea.deadline ? moment(tarea.deadline).format('YYYY[-]MM[-]DD') : moment().format('YYYY[-]MM[-]DD') } />
+                        <input type="date" name="deadline" onChange={(e)=>handleChange(e, tarea.idtareas)}  className="lista-tareas__deadline lista-tareas__campo" value={tarea.deadline ? moment(tarea.deadline).format('YYYY[-]MM[-]DD') : moment().format('YYYY[-]MM[-]DD') } />
                         <div className="lista-tareas__eliminar" onClick={()=>eliminarTarea(tarea.idtareas)}>
                             <img src={eliminar} className="lista-tareas__eliminar__icono" alt="eliminar"/>
                         </div>
