@@ -20,6 +20,11 @@ routes.get('/tareas',(req, res) => {
     })
 });
 
+routes.post('/tareas',(req,res)=> {
+    console.log('req.body: ',req.body);
+    res.send('Base actualizada correctamente');
+});
+
 //copia
 //consulta de una sola tabla con una condición opcional
 /*
