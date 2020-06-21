@@ -10,6 +10,7 @@ import eliminar from '../../shared/components/iconos/eliminar.svg';
 
 const moment = require('moment');
 
+//AGREGAR LA LÓGICA PARA MANDAR LA CONSULTA POR AXIOS SI AÑADE UNA TAREA
 
 export const Tareas = () => {
 
@@ -218,9 +219,36 @@ export const Tareas = () => {
         setLista(newLista);
     }
 
+    const eliminarEnLista = (id) => {
+        setLista((prevLista)=> {
+            let newLista = prevLista.filter((tarea)=>tarea.idtareas !== id)
+            return newLista;
+        });
+    }
+
+    const enviarConsulta = (tarea, mod, campos = []) => {
+        axios.post('/api/db/tareas', {
+            tarea,
+            mod,
+            campos
+        }).then((response)=> {
+            console.log('Respuesta del servidor',response);
+        });
+    }
     
     const eliminarTarea = (id) => {
-
+        if(id < 1) { // es 0.algoo así que es nuevo
+            console.log('eliminando una tarea nueva');
+            eliminarEnLista(id);
+        } else {
+            console.log('eliminando una tarea vieja');
+            console.log('id: ', id);
+            let tareaEliminada = lista.filter((tarea)=>tarea.idtareas === id)[0];
+            console.log(tareaEliminada);
+            enviarConsulta(tareaEliminada, 'elminado');
+            eliminarEnLista(id);
+        }
+        /*
         setLista((prevLista)=>{
             let newLista = prevLista.map((tarea)=> {
                 if(tarea.idtareas === id) {
@@ -240,6 +268,7 @@ export const Tareas = () => {
             });
             return newCopia;
         });
+        */
     }
 
     const handleFocus = (indice, id) => {
@@ -252,6 +281,15 @@ export const Tareas = () => {
             return;
         }
         //El focus pasó a otro elemento
+        //Verificar si el elemento anterior cambió y mandar el post antes de hacer el nuevo snapshot
+        verificarCambios();
+        //Hacer el snapshot
+        setSnap(lista[indice]);
+        setElementoAnterior(lista[indice]);
+
+    };
+
+    const verificarCambios = () => {
         //Verificar si el elemento anterior cambió y mandar el post antes de hacer el nuevo snapshot
         let lastTarea = lista.filter((tarea)=> tarea.idtareas === snap.idtareas)[0];
         let camposModificados = []
@@ -270,26 +308,25 @@ export const Tareas = () => {
                 console.log('Respuesta del servidor',response);
             });
         }
-
-        //Hacer el snapshot
-        setSnap(lista[indice]);
-        setElementoAnterior(lista[indice]);
-        console.log('focus snap, elementoAnterior: ', elementoAnterior);
-
-    };
+    }
 
     const handleBlur = (indice, id) => {
         //manejar el último blur cuando ya no hay compararción con el elemento
-       /* 
-        if (elementoAnterior === undefined) {
-            setElementoAnterior(lista[indice])
-        } else if (elementoAnterior.idtareas === id) {
-            return;
+        console.log('blur')
+        if(elementoAnterior.idtareas === id) {
+            console.log('el elemento anterior es igual al actual (posible ultimo blur)');
+            //checkear que no hay focus en el resto de los elementos para determinar que es el último
+            setTimeout(()=>{
+                let ultimoBlur = ![].slice.call(document.getElementsByClassName('lista-tareas__tarea')).some((el)=>el.matches(':focus-within'));
+                if(ultimoBlur) {
+                    //checkear si hay cambios para mandar el post
+                    console.log('ultimo blur');
+                    verificarCambios();
+                    setElementoAnterior(undefined);
+                    setSnap(undefined);
+                }
+            },0)
         }
-        console.log('blur. comparar snap y mandar post, elementoAnterior: ', elementoAnterior)
-        */
-        //logica para comparar el snapshot y mandar la consulta
-
   
     };
 
