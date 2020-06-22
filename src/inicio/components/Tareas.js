@@ -105,19 +105,34 @@ export const Tareas = () => {
     },[lista]);
     
 
-    const completarTarea = (id) => {
-        let newLista = lista.map((tarea) => {
-            if(tarea.idtareas === id) {
-                tarea.completado = 1;
-            }
-            return tarea;
-        });
-        setLista(newLista);
+    const completarTarea = (indice, id,e) => {
+        console.log('e target: ', e.target);
+        e.target.parentElement.focus();
+        if(elementoAnterior === undefined && snap === undefined) {
+            console.log('elanterior y snap undefined, lista[indice]: ', lista[indice]);
+            setElementoAnterior(lista[indice]);
+            setSnap(lista[indice]);
+        }
+
+/*
+        handleFocus(indice, id);
+        console.log('luego del focus, indice: ', indice, ' id: ', id, ' elmento anterior: ', elementoAnterior, ' snap: ', snap);
+        setLista((prevLista)=> {
+            let newLista = prevLista.map((tarea) => {
+                if(tarea.idtareas === id) {
+                    tarea.completado = 1;
+                }
+                return tarea;
+            });
+            return newLista;
+        })
         setCompletadas((prevCompletadas) => {
             return ++prevCompletadas;
         });
+        console.log('final de la function, indice: ', indice, ' id: ', id, ' elmento anterior: ', elementoAnterior, ' snap: ', snap);
+*/
     }
-
+    
     const handleDesplazar = (e) => {
         //Los eventos en React se nullifican por razones de performance
         //Por lo tanto necesito capturar el elemento antes de que suceda para poder hacer focus
@@ -141,33 +156,7 @@ export const Tareas = () => {
         
     }
 
-    //On blur function
-
-    const actualizarCopia = (id, name) => {
-        //Compara los campos de para determinar si la tarea fue modificada.
-        //Si es así, establece la propiedad 'modificado' a true
-        //Si es nuevo también modifica la propiedad en la copia para poder pasarla a la base de datos
-        let tareaPrev = listaCopia.filter((tarea)=>tarea.idtareas === id)[0];
-        let tareaPost = lista.filter((tarea)=>tarea.idtareas === id)[0];
-
-        if(tareaPost[name] !== tareaPrev[name]){
-            let newCopia = listaCopia.map((tarea)=>{
-                if(tarea.idtareas === id) {
-                    tarea.modificado = true;
-                    if(tarea.nuevo === true) {
-                        tarea[name] = tareaPost[name];
-                    }
-                }
-                return(tarea);
-            })
-            console.log('newCopia: ',newCopia)
-            console.log(' lista: ', lista);
-            setListaCopia(newCopia);
-        }
-
-    }
-
-    
+        
     const handleNuevaTarea = (id) => {
         
         setLista((prevLista)=>{
@@ -187,25 +176,7 @@ export const Tareas = () => {
             );
             return newLista;
         })
-/* //Debería actualizar la copia solo en el blur de la fila completa...
-        setListaCopia((prevCopia)=> {
-            let newCopia = JSON.parse(JSON.stringify(prevCopia));
-            newCopia.unshift(
-                {
-                    idtareas: id,
-                    descripcion: "",
-                    nota: "",
-                    deadline: "",
-                    prioridad: "",
-                    completado: 0,
-                    modificado: false,
-                    nuevo: true,
-                    eliminado: false
-                }
-            );
-            return newCopia;
-        })
-    */    
+
     }
 
     const handleChange = (e, id) => {
@@ -227,6 +198,7 @@ export const Tareas = () => {
     }
 
     const enviarConsulta = (tarea, mod, campos = []) => {
+        console.log('enviando consulta. tarea : ', tarea, ' mod: ', mod, ' campos: ', campos);
         axios.post('/api/db/tareas', {
             tarea,
             mod,
@@ -244,6 +216,8 @@ export const Tareas = () => {
                 });
             }
             console.log('Respuesta del servidor',response);
+        }).catch((err)=>{
+            console.log(err);
         });
     }
     
@@ -256,33 +230,14 @@ export const Tareas = () => {
             console.log('id: ', id);
             let tareaEliminada = lista.filter((tarea)=>tarea.idtareas === id)[0];
             console.log('tareaEliminada: ',tareaEliminada);
-            enviarConsulta(tareaEliminada, 'elminado');
+            enviarConsulta(tareaEliminada, 'eliminado');
             eliminarEnLista(tareaEliminada);
         }
-        /*
-        setLista((prevLista)=>{
-            let newLista = prevLista.map((tarea)=> {
-                if(tarea.idtareas === id) {
-                    tarea.eliminado = true;
-                }
-                return tarea;
-            });
-            return newLista
-        });
 
-        setListaCopia((prevCopia)=> {
-            let newCopia = prevCopia.map((tarea)=> {
-                if(tarea.idtareas === id) {
-                    tarea.eliminado = true;
-                }
-                return tarea;
-            });
-            return newCopia;
-        });
-        */
     }
 
     const handleFocus = (indice, id) => {
+        console.log('focus. indice: ', indice, ' id: ', id);
         if (elementoAnterior === undefined) { //Es el primer elemento en hacer focus
             setElementoAnterior(lista[indice]);
             //Hacer el snapshot y retornar
@@ -363,17 +318,11 @@ export const Tareas = () => {
 
             </li>
             
-            {/*
-            Extraido de los inputs
-            onBlur={()=>actualizarCopia(tarea.idtareas, "descripcion")}
-            onBlur={()=>actualizarCopia(tarea.idtareas, "nota")}
-            onBlur={()=>actualizarCopia(tarea.idtareas, "deadline")}
-            */}
 
             {lista && lista.filter((tarea)=>tarea.completado === 0).map((tarea, indice)=> {
                 return(
                     <li onFocus={()=>handleFocus(indice, tarea.idtareas)} onBlur={()=>handleBlur(indice, tarea.idtareas)} key={tarea.idtareas} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar && 'lista-tareas__desplazar'}`}>
-                        <div className="lista-tareas__completado" onClick={()=>completarTarea(tarea.idtareas)} >
+                        <div className="lista-tareas__completado" onClick={(e)=>completarTarea(indice, tarea.idtareas, e)} >
                             <img src={listo} alt="Tilde"/>
                         </div>
                         <div className="lista-tareas__info">

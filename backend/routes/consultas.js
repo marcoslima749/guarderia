@@ -1,5 +1,6 @@
 const express = require('express');
 const routes = express.Router();
+const sql = require('./consultas/sql');
 
 routes.get('/embarcaciones',(req, res) => {
     const db = req.app.get('db');
@@ -13,16 +14,62 @@ routes.get('/embarcaciones',(req, res) => {
 
 routes.get('/tareas',(req, res) => {
     const db = req.app.get('db');
-    db.query('SELECT * FROM tareas',(error, results, fields) => {
+    db.query(sql.tareas.todo ,(error, results, fields) => {
         if (error) throw error;
         res.json(results);
-        
     })
 });
 
 routes.post('/tareas',(req,res)=> {
-    console.log('req.body: ',req.body);
-    res.send('Base actualizada correctamente');
+    let log = '';
+    const db = req.app.get('db');
+    let consulta = '';
+    let tarea = JSON.parse(JSON.stringify(req.body.tarea));
+    let campos = [];
+    let valores = [];
+
+    log += 'request body: ' + JSON.stringify(req.body) + '\n\n';
+
+    switch (req.body.mod) {
+        case 'nuevo' :
+            delete tarea.idtareas;
+            campos = Object.keys(tarea);
+            valores = campos.map((llave)=>tarea[llave]);
+            consulta = sql.tareas.insertar(campos, valores);
+            log += consulta + '\n\n';
+            break;
+        case 'modificado' :
+            campos = req.body.campos;
+            consulta = campos.map((llave)=>sql.tareas.modificar(llave, tarea[llave], tarea.idtareas)).join(';');
+            log += consulta + '\n\n';
+            break;
+        case 'eliminado':
+            consulta = sql.tareas.eliminar(tarea.idtareas);
+            log += consulta + '\n\n';
+            break;
+        default:
+            log += 'Valor inválido en la propiedad mod del request body: ' + req.body.mod + '\n\n';
+            console.log(log);
+            return;
+    };
+
+    db.query(consulta, (error, results, fields)=>{
+        if (error) {
+            log += error;
+            console.log(log);
+            throw error;
+        }
+        if (req.body.mod === 'nuevo') {
+            res.json(results);
+            // res.json(results.insertId);
+        } else {
+            res.send(results);
+        }
+        log += 'Base consultada correctamente. Results: ' +  JSON.stringify(results) + '\n\n';
+        console.log(log);
+    });
+
+
 });
 
 /*
