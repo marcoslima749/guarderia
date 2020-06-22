@@ -219,9 +219,9 @@ export const Tareas = () => {
         setLista(newLista);
     }
 
-    const eliminarEnLista = (id) => {
+    const eliminarEnLista = (tareaEliminada) => {
         setLista((prevLista)=> {
-            let newLista = prevLista.filter((tarea)=>tarea.idtareas !== id)
+            let newLista = prevLista.filter((tarea)=>tarea.idtareas !== tareaEliminada.idtareas);
             return newLista;
         });
     }
@@ -232,6 +232,17 @@ export const Tareas = () => {
             mod,
             campos
         }).then((response)=> {
+            if(mod === 'nuevo'){ 
+                setLista((prevLista)=> {
+                    let newLista = prevLista.map((tareaEnLista) => {
+                        if (tareaEnLista.idtareas === tarea.idtareas) {
+                            tareaEnLista.idtareas = tareaEnLista.idtareas; //response.data.nuevaID;
+                        };
+                        return tareaEnLista;
+                    });
+                    return newLista;
+                });
+            }
             console.log('Respuesta del servidor',response);
         });
     }
@@ -244,9 +255,9 @@ export const Tareas = () => {
             console.log('eliminando una tarea vieja');
             console.log('id: ', id);
             let tareaEliminada = lista.filter((tarea)=>tarea.idtareas === id)[0];
-            console.log(tareaEliminada);
+            console.log('tareaEliminada: ',tareaEliminada);
             enviarConsulta(tareaEliminada, 'elminado');
-            eliminarEnLista(id);
+            eliminarEnLista(tareaEliminada);
         }
         /*
         setLista((prevLista)=>{
@@ -291,6 +302,7 @@ export const Tareas = () => {
 
     const verificarCambios = () => {
         //Verificar si el elemento anterior cambió y mandar el post antes de hacer el nuevo snapshot
+        console.log('verificando cambios');
         let lastTarea = lista.filter((tarea)=> tarea.idtareas === snap.idtareas)[0];
         let camposModificados = []
         Object.keys(snap).forEach((llave)=> {
@@ -299,14 +311,17 @@ export const Tareas = () => {
             }
         });
         if (camposModificados.length === 0) { //Los campos son iguales, no hay modificación
+            console.log('los campos son iguales, no hay modificacion. lastTarea: ', lastTarea, ' snap: ', snap)
             return;
         } else { //Hay campos modificados, mandar consulta
-            axios.post('/api/db/tareas', {
-                tarea: lastTarea,
-                campos: camposModificados
-            }).then((response)=> {
-                console.log('Respuesta del servidor',response);
-            });
+            let mod = 'modificado';
+            console.log('hay campos modificados: ', camposModificados);
+            console.log('verificando si es nuevo');
+            if(lastTarea.idtareas < 1) {
+                console.log('es nuevo');
+                mod = 'nuevo';
+            };
+            enviarConsulta(lastTarea, mod, camposModificados);
         }
     }
 
@@ -355,7 +370,7 @@ export const Tareas = () => {
             onBlur={()=>actualizarCopia(tarea.idtareas, "deadline")}
             */}
 
-            {lista && lista.filter((tarea)=>tarea.completado === 0 && tarea.eliminado === false).map((tarea, indice)=> {
+            {lista && lista.filter((tarea)=>tarea.completado === 0).map((tarea, indice)=> {
                 return(
                     <li onFocus={()=>handleFocus(indice, tarea.idtareas)} onBlur={()=>handleBlur(indice, tarea.idtareas)} key={tarea.idtareas} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar && 'lista-tareas__desplazar'}`}>
                         <div className="lista-tareas__completado" onClick={()=>completarTarea(tarea.idtareas)} >
