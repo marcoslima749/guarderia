@@ -10,13 +10,12 @@ import eliminar from '../../shared/components/iconos/eliminar.svg';
 
 const moment = require('moment');
 
-//AGREGAR LA LÓGICA PARA MANDAR LA CONSULTA POR AXIOS SI AÑADE UNA TAREA
 
 export const Tareas = () => {
 
     
     let [ lista, setLista ] = useState();
-    let [listaCopia, setListaCopia] = useState();
+ /*   let [listaCopia, setListaCopia] = useState();*/
     let [completadas, setCompletadas] = useState(0);
 
     //Estados para manejar el CSS a través de las clases
@@ -29,72 +28,72 @@ export const Tareas = () => {
     //Estado para manejar el snapshot del elemento a modificar
     let [snap, setSnap] = useState();
     
+    // ****************
+    //La idea es que al modificar cualquier tarea se ponga un timer a correr para actualizar la base
+    //siempre con el último valor de la tarea. Cuando termina el timer se actualiza la base.
+    //con cada modificacion el timer se reinicia
+    //objetivo: actualizar la base 2500ms después de la última modificación
+    //ó si el focus sale de la lista (ultimo blur) [o cambia de tarea ???]
+    //se puede hacer una copia de la tarea modificada antes de hacer el cambio y de ahí sacar el cambio
+    //o directamente poner la última versión de la tarea en una queue para enviar como 'modificaciones'
+    //pero mandar la queue importa la modificación de la función 'mandar consulta' para aceptar múltiples
+    //tareas
+
+    //Al final agregué un timer para llamar a la función 'verificar cambios'
+    //y una variable para establecer si hacerlo o no.
+    //El resto sigue igual.
+
+    //Cuenta regresiva para actualizar la base
+    let [timer, setTimer] = useState(0);
+    let [verificar, setVerificar] = useState(false);
+
+    //Cuando el timer se pone en un valor tope (2500 por ahora) lo empieza a descontar hasta que esté en cero
+
+    useEffect(()=>{
+        if (timer === 0) {
+            console.log('Timer en 0');
+            if(!verificar) {
+                console.log('No verificar');
+                setVerificar(true);
+                return;
+            }
+            verificarCambios();
+        }
+        if (timer < 0) {
+            console.log('timer menor que 0: ', timer);
+            return;
+        }
+        let idTimeOut = setTimeout(()=>{
+            console.log('timer: ', timer);
+            setTimer((prevTimer)=>{
+                let newTimer = prevTimer - 500;
+                return newTimer;
+            })
+        }, 500);
+
+        return ()=> {
+            clearTimeout(idTimeOut);
+        }
+
+    }, [timer]);
+
+    
     //consulta las tareas a la base de datos y las asigna al estado
     useEffect(() => {
             axios.get('/api/db/tareas').then((res)=>{
                 setLista(() => res.data.map((tarea)=> {
-                    let tareaMod = {...tarea, modificado : false, eliminado: false, nuevo: false};
+                    let tareaMod = {...tarea /*, modificado : false, eliminado: false, nuevo: false*/ };
                     return(tareaMod);
                 }));
-                setListaCopia(()=> res.data.map((tarea)=> {
+/*                setListaCopia(()=> res.data.map((tarea)=> {
                     let tareaMod = {...tarea, modificado : false, eliminado: false, nuevo: false};
                     return(tareaMod);
-                }));
+                })); */
             }).catch((err)=> {
                 console.log(err);
             });     
     }, []);
 
-    //Consulta la listaCopia para ver si hay cambios
-    //Contemplar el caso de una tarea nueva que luego es modificada, porque la 1era modificación la inserta
-    //pero la segunda modificación la insertaría de nuevo. Prevenir ese caso.
-    //La tarea nueva se inserta pero después no se sabe el id para modificarla. Verificar si la inserción
-    //devuelve algún id para asignar a la tarea. En ese caso modificar la tarea sin llamar a la actualización
-
-    useEffect(()=>{
-        if(listaCopia === undefined){return};
-        let peticion = [];
-        listaCopia.forEach((tarea, indice)=>{
-
-            if(tarea.eliminado){
-                if(tarea.nuevo){return}
-                peticion.push({
-                    obj: lista[indice],
-                    mod: 'eliminado',
-                })
-            } else if(tarea.nuevo) {
-                if(tarea.descripcion === "" && tarea.nota === "") {return}
-                peticion.push({
-                    obj: lista[indice],
-                    mod: 'nuevo'
-                })
-            } else if(tarea.modificado) {
-                let modTarea = {
-                    obj: lista[indice],
-                    mod: 'modificado',
-                    campos: []
-                };
-
-                Object.keys(tarea).forEach((llave)=>{
-                    if(tarea[llave] !== lista[indice][llave] && llave !== 'modificado' ) {
-                        modTarea.campos.push(llave);
-                    }
-                });
-                
-                if(modTarea.campos.length === 0){
-                    console.log('tag modificado pero ningún campo es distinto!');
-                    return;
-                }
-                peticion.push(modTarea);
-
-            };
-        });
-
-        if(peticion.length === 0) {return};
-        axios.post('/api/db/tareas',{
-            consulta: JSON.stringify(peticion)
-        })
-    },[listaCopia]);
 
     //Revisa la lista para enumerar las tareas completadas
     useEffect(()=>{
@@ -106,17 +105,14 @@ export const Tareas = () => {
     
 
     const completarTarea = (indice, id,e) => {
-        console.log('e target: ', e.target);
-        e.target.parentElement.focus();
-        if(elementoAnterior === undefined && snap === undefined) {
-            console.log('elanterior y snap undefined, lista[indice]: ', lista[indice]);
-            setElementoAnterior(lista[indice]);
-            setSnap(lista[indice]);
-        }
+//Al hacer click en el boton se genera un blur en el elemento y como no es un input no se produce focus.
+//Esto es interpretado como último blur, se verifican cambios y setean snap y último elemento a undefined.
+//Blur no puede ser evitado con preventDefault y siempre va a suceder esto antes de llamar a completarTarea
+//Por lo tanto hay que manejar este cambio por fuera de el flujo 'focus-edicion-blur'
 
-/*
-        handleFocus(indice, id);
-        console.log('luego del focus, indice: ', indice, ' id: ', id, ' elmento anterior: ', elementoAnterior, ' snap: ', snap);
+        e.preventDefault();
+        
+        //Setear el cambio en la lista
         setLista((prevLista)=> {
             let newLista = prevLista.map((tarea) => {
                 if(tarea.idtareas === id) {
@@ -125,12 +121,10 @@ export const Tareas = () => {
                 return tarea;
             });
             return newLista;
-        })
-        setCompletadas((prevCompletadas) => {
-            return ++prevCompletadas;
         });
-        console.log('final de la function, indice: ', indice, ' id: ', id, ' elmento anterior: ', elementoAnterior, ' snap: ', snap);
-*/
+        
+        enviarConsulta(lista[indice], 'modificado', ['completado']);
+
     }
     
     const handleDesplazar = (e) => {
@@ -169,9 +163,6 @@ export const Tareas = () => {
                     deadline: "",
                     prioridad: "",
                     completado: 0,
-                    modificado: false,
-                    nuevo: true,
-                    eliminado: false
                 }
             );
             return newLista;
@@ -180,6 +171,8 @@ export const Tareas = () => {
     }
 
     const handleChange = (e, id) => {
+        setVerificar(true);
+        setTimer(2500);
         let prevLista = JSON.parse(JSON.stringify(lista));
         let newLista = prevLista.map((tarea)=>{
             if(tarea.idtareas === id) {
@@ -205,10 +198,17 @@ export const Tareas = () => {
             campos
         }).then((response)=> {
             if(mod === 'nuevo'){ 
+                console.log('insertada exitosamente una tarea nueva. Cambiando id en la lista');
                 setLista((prevLista)=> {
                     let newLista = prevLista.map((tareaEnLista) => {
                         if (tareaEnLista.idtareas === tarea.idtareas) {
-                            tareaEnLista.idtareas = tareaEnLista.idtareas; //response.data.nuevaID;
+                            console.log('coinSciden las id viejas. Id en la lista: ' + tareaEnLista.idtareas + ' id en la tarea mandada: ' + tarea.idtareas)
+                            console.log('response.data.nuevaID: ', response.data.nuevaID);
+                            if(tarea.idtareas === snap.idtareas ) {
+                                console.log('tarea.idtareas: ', tarea.idtareas, ' snap id', snap.idtareas);
+                                setSnap(...tarea, {idtareas: response.data.nuevaID})
+                            }
+                            tareaEnLista.idtareas = response.data.nuevaID;
                         };
                         return tareaEnLista;
                     });
@@ -239,6 +239,8 @@ export const Tareas = () => {
     const handleFocus = (indice, id) => {
         console.log('focus. indice: ', indice, ' id: ', id);
         if (elementoAnterior === undefined) { //Es el primer elemento en hacer focus
+            console.log('elemento anterior undefined: ' + elementoAnterior);
+            console.log('se va a setear el anterior a la lista[indice]: ' + lista[indice]);
             setElementoAnterior(lista[indice]);
             //Hacer el snapshot y retornar
             setSnap(lista[indice]);
@@ -248,6 +250,7 @@ export const Tareas = () => {
         }
         //El focus pasó a otro elemento
         //Verificar si el elemento anterior cambió y mandar el post antes de hacer el nuevo snapshot
+        setVerificar(false);
         verificarCambios();
         //Hacer el snapshot
         setSnap(lista[indice]);
@@ -258,8 +261,14 @@ export const Tareas = () => {
     const verificarCambios = () => {
         //Verificar si el elemento anterior cambió y mandar el post antes de hacer el nuevo snapshot
         console.log('verificando cambios');
-        let lastTarea = lista.filter((tarea)=> tarea.idtareas === snap.idtareas)[0];
+        console.log('snap.idtareas: ', snap.idtareas);
+        let lastTarea = lista.filter((tarea)=> {
+            console.log('tarea.idtareas: ', tarea.idtareas);
+            return tarea.idtareas === snap.idtareas
+        })[0];
+        console.log('lasttarea: ', lastTarea);
         let camposModificados = []
+        console.log('snap: ', snap);
         Object.keys(snap).forEach((llave)=> {
             if(snap[llave] !== lastTarea[llave]) {
                 camposModificados.push(llave);
@@ -327,18 +336,18 @@ export const Tareas = () => {
                         </div>
                         <div className="lista-tareas__info">
                         <div className="lista-tareas__campo-descripcion">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="descripcion" spellCheck="false" className="lista-tareas__descripcion lista-tareas__campo" value={tarea.descripcion} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="descripcion" spellCheck="false" className="lista-tareas__descripcion lista-tareas__campo" value={tarea.descripcion ? tarea.descripcion : ''} />
                         </div>
                         <div className="lista-tareas__campo-nota">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="nota" spellCheck="false" className="lista-tareas__nota lista-tareas__campo" value={tarea.nota} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="nota" spellCheck="false" className="lista-tareas__nota lista-tareas__campo" value={tarea.nota ? tarea.nota : ''} />
                         </div>    
                         </div>
-                        <input type="date" name="deadline" onChange={(e)=>handleChange(e, tarea.idtareas)}  className="lista-tareas__deadline lista-tareas__campo" value={tarea.deadline ? moment(tarea.deadline).format('YYYY[-]MM[-]DD') : moment().format('YYYY[-]MM[-]DD') } />
+                        <input type="date" name="deadline" onChange={(e)=>handleChange(e, tarea.idtareas)}  className="lista-tareas__deadline lista-tareas__campo" value={tarea.deadline ? moment(tarea.deadline).format('YYYY[-]MM[-]DD') : '' } />
                         <div className="lista-tareas__eliminar" onClick={()=>eliminarTarea(tarea.idtareas)}>
                             <img src={eliminar} className="lista-tareas__eliminar__icono" alt="eliminar"/>
                         </div>
                         <div className="lista-tareas__campo-prioridad">
-                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="prioridad" spellCheck="false" className="lista-tareas__prioridad lista-tareas__campo" value={tarea.prioridad} />
+                            <input type="text" onChange={(e)=>handleChange(e, tarea.idtareas)} name="prioridad" spellCheck="false" className="lista-tareas__prioridad lista-tareas__campo" value={tarea.prioridad ? tarea.prioridad : ''} />
                         </div>
                     </li>
                 )

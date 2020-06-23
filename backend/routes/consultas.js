@@ -21,10 +21,12 @@ routes.get('/tareas',(req, res) => {
 });
 
 routes.post('/tareas',(req,res)=> {
-    let log = '';
+    let log = 'LOG: ---------------------------------------------\n\n';
     const db = req.app.get('db');
     let consulta = '';
     let tarea = JSON.parse(JSON.stringify(req.body.tarea));
+    
+
     let campos = [];
     let valores = [];
 
@@ -49,26 +51,32 @@ routes.post('/tareas',(req,res)=> {
             break;
         default:
             log += 'Valor inválido en la propiedad mod del request body: ' + req.body.mod + '\n\n';
+            log+= 'Final LOG ----------------------------------------'
             console.log(log);
             return;
-    };
-
-    db.query(consulta, (error, results, fields)=>{
-        if (error) {
-            log += error;
+        };
+        log+= 'Reemplazando valores vacios por null \n\n';
+        consulta = consulta.replace(/''/g, 'null');
+        log+= 'Consulta modificada:\n\n' + consulta + '\n\n';
+        
+        db.query(consulta, (error, results, fields)=>{
+            if (error) {
+                log += error + '\n\n';
+                log+= 'Final LOG ----------------------------------------'
+                console.log(log);
+                throw error;
+            }
+            if (req.body.mod === 'nuevo') {
+                res.json({results, nuevaID : results.insertId});
+                // res.json(results.insertId);
+            } else {
+                res.send(results);
+            }
+            log += 'Base consultada correctamente. Results: ' +  JSON.stringify(results) + '\n\n';
+            log+= 'Final LOG ----------------------------------------'
             console.log(log);
-            throw error;
-        }
-        if (req.body.mod === 'nuevo') {
-            res.json(results);
-            // res.json(results.insertId);
-        } else {
-            res.send(results);
-        }
-        log += 'Base consultada correctamente. Results: ' +  JSON.stringify(results) + '\n\n';
-        console.log(log);
-    });
-
+        });
+        
 
 });
 
