@@ -3,9 +3,11 @@ const routes = express.Router();
 const sql = require('./consultas/sql');
 
 routes.get('/embarcaciones',(req, res) => {
+    console.log('get en embaracciones');
     const db = req.app.get('db');
     db.query('SELECT * FROM embarcaciones',(error, results, fields) => {
         if (error) throw error;
+        console.log('results: ', JSON.stringify(results));
         res.json(results);
         
     })

@@ -15,7 +15,6 @@ import { Tareas } from '../components/Tareas';
 export const Inicio = ({clases}) => {
     return(
         <div className={`inicio__container ${clases}`}>
-            <Sidenav clases="side" botones={[bote, calendario, billetera, grafico, planilla]}/>
             <Tareas clases="main" />
         </div>
     )

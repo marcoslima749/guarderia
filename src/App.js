@@ -13,8 +13,8 @@ import { Dashboard } from './shared/pages/dashboard';
 
 
 import './App.css'
-import { Inicio } from './inicio/pages/Inicio';
 import { Embarcaciones } from './embarcaciones/pages/Embarcaciones';
+import { Tareas } from './inicio/components/Tareas';
 
 export const App = () => {
     return (
@@ -25,23 +25,23 @@ export const App = () => {
                 </Route>
                 <Route exact path="/login">
                 <Dashboard clases="dashboard--home">
-                {(main) =>   <Login clases={main} />}
+                    <Login />
                 </Dashboard>  
                 </Route>
                 <Route exact path="/register">
-                {(main) =>   <Register clases={main} />}
+                    <Register />
                 </Route>
                 <Route exact path="/inicio">
-                <Dashboard nombre="CYNM" descripcion="Tareas" >
-                {(main) =>   <Inicio clases={main} />}
+                <Dashboard nombre="CYNM" descripcion="Tareas" side={true} >
+                    <Tareas />
                 </Dashboard>  
                 </Route>
                 <Route exact path="/estilo">
                     <HojaDeEstilo />
                 </Route>
                 <Route exact path="/embarcaciones">
-                <Dashboard nombre="CYNM" descripcion="Embarcaciones" >
-                {(main) =>   <Embarcaciones clases={main} />}
+                <Dashboard nombre="CYNM" descripcion="Embarcaciones" side={true} >
+                    <Embarcaciones />
                 </Dashboard>  
                 </Route>
                 <Redirect to="/" />
