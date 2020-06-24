@@ -2,17 +2,19 @@ const express = require('express');
 const routes = express.Router();
 const sql = require('./consultas/sql');
 
+
+
 routes.get('/embarcaciones',(req, res) => {
-    console.log('get en embaracciones');
     const db = req.app.get('db');
-    db.query('SELECT * FROM embarcaciones',(error, results, fields) => {
+    db.query(sql.embarcaciones.resumen,(error, results, fields) => {
         if (error) throw error;
         console.log('results: ', JSON.stringify(results));
         res.json(results);
-        
     })
     console.log(req.body);
-});
+}); 
+
+
 
 routes.get('/tareas',(req, res) => {
     const db = req.app.get('db');

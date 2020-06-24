@@ -32,6 +32,8 @@ console.log(insertar('tareas', ['campo1', 'campo2', 'campo3'],['valor1', 'valor2
 
 //Tablas
 
+//Tareas
+
 const tareas = {
     todo : todo('tareas'),
     eliminar : (id) => eliminar('tareas', 'idtareas', id),
@@ -41,15 +43,42 @@ const tareas = {
     modificar: (campo, valor, id) => modificar('tareas', campo, valor, 'idtareas', id)
 }
 
-/*
-console.log(tareas.todo);
-console.log(tareas.insertar(['campo1','campo2'],['valor1','valor2']));
-console.log(tareas.eliminar('idtareas','1'));
-console.log(tareas.modificar('descripcion','Nuevo valor descripcion' ,'1'));
-*/
+//Embarcaciones
+
+const embResumen =
+`SELECT
+embarcaciones.idembarcaciones AS ID,
+embarcaciones.nombre AS Embarcacion,
+categorias.idcategorias AS Categoria,
+clientes.idclientes AS IDcl,
+CONCAT(clientes.apellido, ', ' , clientes.nombre) AS Cliente,
+embarcaciones_has_clientes.porcentaje_posesion AS '%',
+embarcaciones.contrato_fecha as Contrato,
+embarcaciones.seguro_fecha as Seguro
+FROM
+embarcaciones
+JOIN categorias_has_embarcaciones ON categorias_has_embarcaciones.id_embarcaciones = embarcaciones.idembarcaciones
+JOIN categorias ON categorias.idcategorias = categorias_has_embarcaciones.id_categorias
+JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
+JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idclientes
+;`;
+
+const embarcaciones = {
+    todo : todo('embarcaciones'),
+    resumen: embResumen
+}
+
+
+const clientes = {
+    todo: todo('clientes'),
+}
+
+
 
 
 
 module.exports = {
-    tareas
+    tareas,
+    embarcaciones,
+    clientes
 }
