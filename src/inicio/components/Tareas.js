@@ -197,16 +197,19 @@ export const Tareas = () => {
             mod,
             campos
         }).then((response)=> {
+            console.log('response: ', response);
             if(mod === 'nuevo'){ 
                 console.log('insertada exitosamente una tarea nueva. Cambiando id en la lista');
                 setLista((prevLista)=> {
                     let newLista = prevLista.map((tareaEnLista) => {
                         if (tareaEnLista.idtareas === tarea.idtareas) {
-                            console.log('coinSciden las id viejas. Id en la lista: ' + tareaEnLista.idtareas + ' id en la tarea mandada: ' + tarea.idtareas)
+                            console.log('coinciden las id viejas. Id en la lista: ' + tareaEnLista.idtareas + ' id en la tarea mandada: ' + tarea.idtareas)
+                            console.log('response: ', response);
+                            console.log('response.data: ', response.data);
                             console.log('response.data.nuevaID: ', response.data.nuevaID);
                             if(tarea.idtareas === snap.idtareas ) {
                                 console.log('tarea.idtareas: ', tarea.idtareas, ' snap id', snap.idtareas);
-                                setSnap(...tarea, {idtareas: response.data.nuevaID})
+                                setSnap({...tarea, idtareas: response.data.nuevaID})
                             }
                             tareaEnLista.idtareas = response.data.nuevaID;
                         };
@@ -214,10 +217,11 @@ export const Tareas = () => {
                     });
                     return newLista;
                 });
-            }
+            } else {console.log('mod no es nuevo: ', mod)};
             console.log('Respuesta del servidor',response);
         }).catch((err)=>{
-            console.log(err);
+            console.log('Error en axios response: ',err);
+            throw err;
         });
     }
     

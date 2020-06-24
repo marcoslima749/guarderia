@@ -25,8 +25,6 @@ routes.post('/tareas',(req,res)=> {
     const db = req.app.get('db');
     let consulta = '';
     let tarea = JSON.parse(JSON.stringify(req.body.tarea));
-    
-
     let campos = [];
     let valores = [];
 
@@ -36,18 +34,18 @@ routes.post('/tareas',(req,res)=> {
         case 'nuevo' :
             delete tarea.idtareas;
             campos = Object.keys(tarea);
-            valores = campos.map((llave)=>tarea[llave]);
-            consulta = sql.tareas.insertar(campos, valores);
-            log += consulta + '\n\n';
+            valores = campos.map((llave)=>tarea[llave])
+            consulta = sql.tareas.insertar(campos, valores); 
+            log += 'Case: nuevo. Campos: ' + JSON.stringify(campos) + 'Valores: ' + JSON.stringify(valores) + 'Consulta: ' + JSON.stringify(consulta) + '\n\n';
             break;
         case 'modificado' :
             campos = req.body.campos;
-            consulta = campos.map((llave)=>sql.tareas.modificar(llave, tarea[llave], tarea.idtareas)).join(';');
-            log += consulta + '\n\n';
+                consulta = campos.map((llave)=>sql.tareas.modificar(llave, tarea[llave], tarea.idtareas)).join(';');
+                log += 'Case: modificado. Campos: ' + campos + 'Consulta: ' +  JSON.stringify(consulta) + '\n\n';
             break;
         case 'eliminado':
             consulta = sql.tareas.eliminar(tarea.idtareas);
-            log += consulta + '\n\n';
+            log += 'Case: Elminidado. Consulta: ' + JSON.stringify(consulta) + '\n\n';
             break;
         default:
             log += 'Valor inválido en la propiedad mod del request body: ' + req.body.mod + '\n\n';
@@ -55,29 +53,35 @@ routes.post('/tareas',(req,res)=> {
             console.log(log);
             return;
         };
+
+
         log+= 'Reemplazando valores vacios por null \n\n';
         consulta = consulta.replace(/''/g, 'null');
-        log+= 'Consulta modificada:\n\n' + consulta + '\n\n';
-        
-        db.query(consulta, (error, results, fields)=>{
+        log+= 'Consulta modificada:\n\n' + JSON.stringify(consulta) + '\n\n';
+
+
+        db.query(consulta, (error, results, _fields)=>{
             if (error) {
-                log += error + '\n\n';
-                log+= 'Final LOG ----------------------------------------'
+                log += 'ERROR!: ' + error + '\n\n';
+                log += 'Final LOG ----------------------------------------'
                 console.log(log);
                 throw error;
             }
+
+            log += 'Base consultada correctamente. Results: ' +  JSON.stringify(results) + '\n\n';
             if (req.body.mod === 'nuevo') {
+                log+= 'Enviando Respuesta (NUEVO): ' + JSON.stringify({results, nuevaID : results.insertId}) + '\n\n';
                 res.json({results, nuevaID : results.insertId});
-                // res.json(results.insertId);
             } else {
+                log+= 'Enviando Respuesta (NO NUEVO): ' + JSON.stringify(results) + '\n\n';
                 res.send(results);
             }
-            log += 'Base consultada correctamente. Results: ' +  JSON.stringify(results) + '\n\n';
+            
             log+= 'Final LOG ----------------------------------------'
             console.log(log);
-        });
-        
 
+        });
+            
 });
 
 /*

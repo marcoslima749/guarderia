@@ -18,7 +18,8 @@ const db = mysql.createConnection({
     host : env.DB_HOST,
     user : env.DB_USUARIO,
     password: env.DB_PASS,
-    database: env.DB_BASE
+    database: env.DB_BASE,
+    flags: 'MULTI_STATEMENTS'
 });
  
 db.connect((err)=> {
