@@ -111,8 +111,11 @@ export const Tareas = () => {
 //Por lo tanto hay que manejar este cambio por fuera de el flujo 'focus-edicion-blur'
 
         e.preventDefault();
+
+
         
         //Setear el cambio en la lista
+        let foco = lista.filter((tarea) => tarea.idtareas === id)[0];
         setLista((prevLista)=> {
             let newLista = prevLista.map((tarea) => {
                 if(tarea.idtareas === id) {
@@ -123,7 +126,7 @@ export const Tareas = () => {
             return newLista;
         });
         
-        enviarConsulta(lista[indice], 'modificado', ['completado']);
+        enviarConsulta(foco, 'modificado', ['completado']);
 
     }
     
@@ -241,13 +244,17 @@ export const Tareas = () => {
     }
 
     const handleFocus = (indice, id) => {
+        let foco = lista.filter((tarea) => tarea.idtareas === id)[0];
+
         console.log('focus. indice: ', indice, ' id: ', id);
         if (elementoAnterior === undefined) { //Es el primer elemento en hacer focus
             console.log('elemento anterior undefined: ' + elementoAnterior);
-            console.log('se va a setear el anterior a la lista[indice]: ' + lista[indice]);
-            setElementoAnterior(lista[indice]);
+            console.log('NOOO se va a setear el anterior a la lista[indice]: ' + JSON.stringify(lista[indice]));
+            console.log('se va a setear el anterior a AL ID ENFOCADO ' + JSON.stringify(foco));
+
+            setElementoAnterior(foco);
             //Hacer el snapshot y retornar
-            setSnap(lista[indice]);
+            setSnap(foco);
             return;
         } else if (elementoAnterior.idtareas === id) { //El focus está dentro del mismo elemento
             return;
@@ -257,8 +264,8 @@ export const Tareas = () => {
         setVerificar(false);
         verificarCambios();
         //Hacer el snapshot
-        setSnap(lista[indice]);
-        setElementoAnterior(lista[indice]);
+        setSnap(foco);
+        setElementoAnterior(foco);
 
     };
 

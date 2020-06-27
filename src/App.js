@@ -14,8 +14,8 @@ import { Dashboard } from './shared/pages/dashboard';
 import './App.css'
 import { Resumen } from './resumen/pages/Resumen';
 import { Tareas } from './inicio/components/Tareas';
-import { Embarcaciones } from './embarcaciones/pages/Embarcaciones';
-import { Clientes } from './clientes/pages/Clientes';
+import { Embarcacion } from './embarcaciones/pages/Embarcacion';
+import { Cliente } from './clientes/pages/Cliente';
 
 export const App = () => {
     return (
@@ -45,12 +45,12 @@ export const App = () => {
                 </Route>
                 <Route path="/embarcaciones/:id">
                 <Dashboard nombre="CYNM" descripcion="embarcaciones" side={true} >
-                    <Embarcaciones />
+                    <Embarcacion />
                 </Dashboard>  
                 </Route>
                 <Route path="/clientes/:id">
                 <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
-                    <Clientes />
+                    <Cliente />
                 </Dashboard>  
                 </Route>
                 <Redirect to="/" />

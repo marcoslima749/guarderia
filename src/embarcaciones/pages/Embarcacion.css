@@ -1,0 +1,64 @@
+.embarcacion__container {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-areas:
+    "nombre nombre nombre nombre nombre nombre"
+    "id id marca marca modelo modelo"
+    "eslora eslora manga manga puntal puntal"
+    "contrato contrato matricula matricula seguro seguro"
+    "baja baja . . . . "
+    "propietarios propietarios propietarios propietarios propietarios propietarios "
+    ;
+
+}
+
+.embarcacion__nombre {
+    grid-area: nombre;
+}
+
+.embarcacion__idembarcaciones {
+    grid-area: id;
+}
+
+.embarcacion__marca {
+    grid-area: marca;
+}
+
+.embarcacion__modelo {
+    grid-area: modelo;
+}
+
+.embarcacion__eslora {
+    grid-area: eslora;
+}
+
+.embarcacion__manga {
+    grid-area: manga;
+}
+
+.embarcacion__puntal {
+    grid-area: puntal;
+}
+
+/*
+.embarcacion__contrato {
+    grid-area: contrato;
+}
+*/
+
+.embarcacion__contrato_fecha {
+    grid-area: contrato;
+}
+
+.embarcacion__matricula {
+    grid-area: matricula;
+}
+
+.embarcacion__seguro_fecha {
+    grid-area: seguro;
+}
+
+.embarcacion__baja_fecha {
+    grid-area: baja;
+}
+

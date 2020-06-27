@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useRouterMatch, useParams } from 'react-router-dom';
 
-export const Clientes = () => {
+export const Cliente = () => {
     let [cliente, setCliente] = useState({});
     let params = useParams();
 
