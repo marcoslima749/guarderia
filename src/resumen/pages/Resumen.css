@@ -18,9 +18,14 @@
     padding-bottom: 3px;
     border: 1px solid grey;
     display: grid;
-    grid-template-columns: 2rem 1fr 4rem 4rem 1fr 2rem 6rem 6rem;
+    grid-template-columns: 2rem 5fr 4rem 5fr 2rem minmax(6rem, 2fr) minmax(6rem, 2fr);
 
     justify-items: center;
+}
+
+.embarcaciones__titulo, .embarcaciones__campo {
+    width: 100%;
+    text-align: center;
 }
 
 .embarcaciones__flag {

@@ -1,70 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Entrada } from '../../shared/components/Entrada';
+import { useEffect } from 'react';
 import axios from 'axios';
-import './Embarcaciones.css';
+import { useState } from 'react';
+import { useRouterMatch, useParams } from 'react-router-dom';
 
-const moment = require('moment');
-
-export const Embarcaciones = ({clases}) => {
-    let [listaEmb, setListaEmb]  = useState([]);
+export const Embarcaciones = () => {
+    let [embarcacion, setEmbarcacion] = useState({});
     let [llaves, setLlaves] = useState([]);
+    let params = useParams();
+
+    useEffect(() =>{
+        console.log('render')
+        axios.get(`/api/db/embarcaciones/${params.id}`).then((response)=>{
+            setEmbarcacion(response.data[0]);
+        });
+    }, [params.id]);
 
     useEffect(()=> {
-        axios.get('/api/db/embarcaciones').then((response)=>{
-            console.log(response);
-            actualizarLista(response.data);
-        }).catch((error)=>{
-            throw error;
-        });
-
-    }, [])
-
-    const actualizarLista = (datos) => {
-        setLlaves(Object.keys(datos[0]));
-        setListaEmb(datos);
-    }
-
-    
-    let titulos = llaves.map((llave)=> {
-        return (
-            <span key={Math.random()} className={`embarcaciones__titulo-${llave}`}>
-                {llave === 'Posesion' ? '%' : llave === 'Categoria' ? 'Cat' : llave}
-            </span>
-        )
-    });
-
-    let filas = listaEmb.map((emb)=> {
-            return(
-                <div key={`${emb.ID}-${emb.Cliente}`} className="embarcaciones__embarcacion">
-                
-                {
-                    llaves.map((llave)=> {
-                        return(
-                            <span key={llave} className={`embarcaciones__ embarcacion embarcacion__${llave}`}>
-                                {llave === 'Contrato' || llave === 'Seguro' ? moment(emb[llave]).format('DD[-]MM[-]YYYY') : emb[llave]}
-                            </span>
-                        )
-                    })
-                }
-
-                </div>
-            )
-        });
+        console.log('embarcacion: ', embarcacion);
+        setLlaves(Object.keys(embarcacion));
+    }, [embarcacion])
 
     return(
-
-        <div className={`embarcaciones ${clases}`}>
-
-            <div className="embarcaciones__titulos">
-                {titulos}
-            </div>
-
-            <div className="embarcaciones__lista">
-                {filas}
-            </div>
-            <div className="embarcaciones__flag">
-                flags
-            </div>
-            
+        <div>
+        <h1>embarcacion</h1>
+        {embarcacion ? llaves.map((k) => <Entrada key={k} value={embarcacion[k]}/>) : 'Cargando...'}
         </div>
     )
-}
+};
+

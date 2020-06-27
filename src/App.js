@@ -7,18 +7,18 @@ import { Home } from './home/pages/Home';
 import { Login } from './auth/pages/Login';
 import { Register } from './auth/pages/Register';
 
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import { HojaDeEstilo } from './shared/pages/HojaDeEstilo';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Dashboard } from './shared/pages/dashboard';
 
 
 import './App.css'
-import { Embarcaciones } from './embarcaciones/pages/Embarcaciones';
+import { Resumen } from './resumen/pages/Resumen';
 import { Tareas } from './inicio/components/Tareas';
+import { Embarcaciones } from './embarcaciones/pages/Embarcaciones';
+import { Clientes } from './clientes/pages/Clientes';
 
 export const App = () => {
     return (
-        <Router>
             <Switch>
                 <Route exact path="/">
                     <Home />
@@ -31,21 +31,29 @@ export const App = () => {
                 <Route exact path="/register">
                     <Register />
                 </Route>
+                {/* a partir de acá está logueado */}
+
                 <Route exact path="/inicio">
                 <Dashboard nombre="CYNM" descripcion="Tareas" side={true} >
                     <Tareas />
                 </Dashboard>  
                 </Route>
-                <Route exact path="/estilo">
-                    <HojaDeEstilo />
+                <Route exact path="/resumen">
+                <Dashboard nombre="CYNM" descripcion="Resumen" side={true} >
+                    <Resumen />
+                </Dashboard>  
                 </Route>
-                <Route exact path="/embarcaciones">
-                <Dashboard nombre="CYNM" descripcion="Embarcaciones" side={true} >
+                <Route path="/embarcaciones/:id">
+                <Dashboard nombre="CYNM" descripcion="embarcaciones" side={true} >
                     <Embarcaciones />
+                </Dashboard>  
+                </Route>
+                <Route path="/clientes/:id">
+                <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
+                    <Clientes />
                 </Dashboard>  
                 </Route>
                 <Redirect to="/" />
             </Switch>
-        </Router>
     )
 }

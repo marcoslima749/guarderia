@@ -37,6 +37,7 @@ console.log(insertar('tareas', ['campo1', 'campo2', 'campo3'],['valor1', 'valor2
 const tareas = {
     todo : todo('tareas'),
     eliminar : (id) => eliminar('tareas', 'idtareas', id),
+    
     // INSERT INTO `guarderiadb`.`tareas` (`descripcion`, `nota`, `deadline`, `prioridad`, `completado`) VALUES ('nueva descr', 'nota de la desc', '2020-09-01', '3', '0');
 
     insertar : (campos, valores) => insertar('tareas', campos, valores),
@@ -49,12 +50,12 @@ const embResumen =
 `SELECT
 embarcaciones.idembarcaciones AS ID,
 embarcaciones.nombre AS Embarcacion,
-categorias.idcategorias AS Categoria,
-clientes.idclientes AS IDcl,
+categorias.idcategorias AS Cat,
 CONCAT(clientes.apellido, ', ' , clientes.nombre) AS Cliente,
+clientes.idclientes AS IDc,
 embarcaciones_has_clientes.porcentaje_posesion AS '%',
-embarcaciones.contrato_fecha as Contrato,
-embarcaciones.seguro_fecha as Seguro
+'Al Día' as Estado,
+'0' as Pendiente
 FROM
 embarcaciones
 JOIN categorias_has_embarcaciones ON categorias_has_embarcaciones.id_embarcaciones = embarcaciones.idembarcaciones
@@ -65,12 +66,14 @@ JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idcli
 
 const embarcaciones = {
     todo : todo('embarcaciones'),
-    resumen: embResumen
+    resumen: embResumen,
+    seleccionar : (id) => select('embarcaciones', '*', `idembarcaciones = '${id}'`)
 }
 
 
 const clientes = {
     todo: todo('clientes'),
+    seleccionar : (id) => select('clientes', '*', `idclientes = '${id}'`)
 }
 
 

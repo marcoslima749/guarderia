@@ -4,7 +4,7 @@ const sql = require('./consultas/sql');
 
 
 
-routes.get('/embarcaciones',(req, res) => {
+routes.get('/resumen',(req, res) => {
     const db = req.app.get('db');
     db.query(sql.embarcaciones.resumen,(error, results, fields) => {
         if (error) throw error;
@@ -122,10 +122,20 @@ routes.get('/:tabla',(req, res) => {
 
 
 
-routes.get('/embarcaciones/:emb', (req, res)=> {
+routes.get('/embarcaciones/:id', (req, res)=> {
     const db = req.app.get('db');
-    const nombre = req.params.emb;
-    db.query(`SELECT * FROM embarcaciones WHERE embarcaciones.nombre ='${nombre}'`, (error, results, fields)=>{
+    const id = req.params.id;
+    db.query(sql.embarcaciones.seleccionar(id), (error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+
+});
+
+routes.get('/clientes/:id', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.seleccionar(id), (error, results, fields)=>{
         if (error) throw error;
         res.json(results);
     })

@@ -9,3 +9,20 @@
     background-color: white;
     border-right: var(--color-gris) solid 1px;
 }
+
+.sidenav__activo {
+    position: relative;
+}
+
+.sidenav__activo::after {
+    --activo-height: 60px; /*20px*/ 
+    --activo-width: 3px; /*10px*/
+    content: "";
+    position: absolute;
+    top: calc(50% - var(--activo-height / 2));
+    right: 0;
+    width: var(--activo-width);
+    height: var(--activo-height);
+    background-color: grey; /*var(--color-card);*/
+    /*clip-path: polygon(0 50%, 100% 0, 100% 100%);*/
+}

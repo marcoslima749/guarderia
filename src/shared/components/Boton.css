@@ -5,6 +5,7 @@
     border-radius: 2px;
     width: fit-content;
     text-decoration: none;
+    color: var(--color-tipografia);
 }
 
 .boton--cabecera {
