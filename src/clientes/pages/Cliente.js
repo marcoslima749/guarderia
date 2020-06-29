@@ -7,19 +7,41 @@ import { useRouterMatch, useParams } from 'react-router-dom';
 
 export const Cliente = () => {
     let [cliente, setCliente] = useState({});
+    let [mails, setMails] = useState([]);
+    let [formaPago, setFormaPago] = useState([]);
+    let [formaFacturacion, setFormaFacturacion] = useState([]);
     let params = useParams();
 
     useEffect(() =>{
         console.log('render')
         axios.get(`/api/db/clientes/${params.id}`).then((response)=>{
-            setCliente(response.data);
+            setCliente(response.data[0]);
         });
+        
+        axios.get(`/api/db/clientes/${params.id}/m`).then((response)=>{
+            setMails(response.data);
+        });
+        
+        axios.get(`/api/db/clientes/${params.id}/f`).then((response)=>{
+            setFormaFacturacion(response.data[0]);
+        });
+        
+        axios.get(`/api/db/clientes/${params.id}/p`).then((response)=>{
+            setFormaPago(response.data[0]);
+        });
+
     }, [params.id]);
 
+    
     return(
         <div>
         <h1>cliente</h1>
-        <pre>{JSON.stringify(cliente, null, 3)}</pre>
+        <pre>
+            {JSON.stringify(cliente, null, 3)}
+            {JSON.stringify(mails,null,3)}
+            {JSON.stringify(formaPago,null,3)}
+            {JSON.stringify(formaFacturacion,null,3)}
+        </pre>
         </div>
     )
 };

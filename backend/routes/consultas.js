@@ -88,38 +88,16 @@ routes.post('/tareas',(req,res)=> {
             
 });
 
-/*
-para obtener el id de una fila insertada
 
-connection.query('INSERT INTO posts SET ?', {title: 'test'}, function (error, results, fields) {
-  if (error) throw error;
-  console.log(results.insertId);
-});
-
-*/
-//copia
-//consulta de una sola tabla con una condición opcional
-/*
-routes.get('/:tabla',(req, res) => {
-    switch(req.params.tabla) {
-        case 'embarcaciones':
-
-            break;
-
-
-            default:
-                res.sendStatus(404).send('No se encuentra la tabla');
-    }
-
-
+routes.get('/embarcaciones/:id/cl', (req, res)=> {
     const db = req.app.get('db');
-    db.query('SELECT * FROM embarcaciones',(error, results, fields) => {
+    const id = req.params.id;
+    db.query(sql.embarcaciones.clientes(id), (error, results, fields)=>{
         if (error) throw error;
         res.json(results);
     })
+    
 });
-*/
-
 
 
 routes.get('/embarcaciones/:id', (req, res)=> {
@@ -129,8 +107,37 @@ routes.get('/embarcaciones/:id', (req, res)=> {
         if (error) throw error;
         res.json(results);
     })
-
+    
 });
+
+
+routes.get('/clientes/:id/m', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.mails(id), (error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+});
+
+routes.get('/clientes/:id/f', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.formaFacturacion(id), (error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+});
+
+routes.get('/clientes/:id/p', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.formaPago(id), (error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+});
+
 
 routes.get('/clientes/:id', (req, res)=> {
     const db = req.app.get('db');
@@ -139,13 +146,22 @@ routes.get('/clientes/:id', (req, res)=> {
         if (error) throw error;
         res.json(results);
     })
-
 });
+
 
 routes.get('/', (req, res)=> {
     res.send('api db funciona');   
 });
 
 
+/*
+para obtener el id de una fila insertada
+
+connection.query('INSERT INTO posts SET ?', {title: 'test'}, function (error, results, fields) {
+  if (error) throw error;
+  console.log(results.insertId);
+});
+
+*/
 
 module.exports = routes;

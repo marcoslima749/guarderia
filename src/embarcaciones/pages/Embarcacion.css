@@ -3,21 +3,63 @@
     grid-template-columns: repeat(6,1fr);
     grid-template-areas:
     "nombre nombre nombre nombre nombre nombre"
-    "id id marca marca modelo modelo"
-    "eslora eslora manga manga puntal puntal"
+    "id cat . tarifa tasa total"
+    "marca modelo . eslora manga puntal"
     "contrato contrato matricula matricula seguro seguro"
     "baja baja . . . . "
     "propietarios propietarios propietarios propietarios propietarios propietarios "
     ;
+    
+    font-family: Sharetech;
 
+}
+
+.entrada__input {
+    font-family: inherit;
+}
+
+.embarcacion__campo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.embarcacion__llave {
+    text-align: center;
+    text-transform: capitalize;
 }
 
 .embarcacion__nombre {
     grid-area: nombre;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.embarcacion__idembarcaciones {
+.embarcacion__nombre__input {
+    width: 100%;
+    text-align: center;
+}
+/*La clase embarcacion__ID choca con la misma clase en el resumen, por eso la d minúscula*/
+.embarcacion__Id {
     grid-area: id;
+}
+
+.embarcacion__categoria {
+    grid-area: cat;
+}
+
+.embarcacion__tarifa {
+    grid-area: tarifa;
+}
+
+.embarcacion__tasa {
+    grid-area: tasa;
+}
+
+.embarcacion__total {
+    grid-area: total;
 }
 
 .embarcacion__marca {
@@ -40,25 +82,41 @@
     grid-area: puntal;
 }
 
-/*
+
 .embarcacion__contrato {
     grid-area: contrato;
 }
-*/
 
-.embarcacion__contrato_fecha {
-    grid-area: contrato;
-}
 
 .embarcacion__matricula {
     grid-area: matricula;
 }
 
-.embarcacion__seguro_fecha {
+.embarcacion__seguro {
     grid-area: seguro;
 }
 
-.embarcacion__baja_fecha {
+.embarcacion__baja {
     grid-area: baja;
 }
 
+.embarcacion__propietarios {
+    grid-area: propietarios;
+    display: grid;
+    grid-template-rows: 4rem;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    align-items: center;
+}
+
+
+.embarcacion__propietario__campo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.embarcacion__propietarios__label, .embarcacion__propietario__nombre__label, .embarcacion__propietario__posesion__label {
+    width: 100%;
+    text-align: center;
+}

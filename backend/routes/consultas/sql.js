@@ -64,16 +64,109 @@ JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idem
 JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idclientes
 ;`;
 
+const embTarifaId = (id) =>
+`SELECT
+embarcaciones.nombre AS nombre,
+embarcaciones.idembarcaciones AS Id,
+categorias.idcategorias AS categoria,
+embarcaciones.marca AS marca,
+embarcaciones.modelo AS modelo,
+tarifas.tarifa AS tarifa,
+tasas.tasa AS tasa,
+(tarifas.tarifa + tasas.tasa) AS total,
+embarcaciones.eslora AS eslora,
+embarcaciones.manga AS manga,
+embarcaciones.puntal AS puntal,
+embarcaciones.contrato_fecha AS contrato,
+embarcaciones.matricula AS matricula,
+embarcaciones.seguro_fecha AS seguro
+FROM
+embarcaciones
+JOIN categorias_has_embarcaciones ON categorias_has_embarcaciones.id_embarcaciones = embarcaciones.idembarcaciones
+JOIN categorias ON categorias.idcategorias = categorias_has_embarcaciones.id_categorias
+JOIN tasas ON tasas.categoria = categorias.idcategorias
+JOIN rangos_precio_has_embarcaciones ON rangos_precio_has_embarcaciones.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
+JOIN rangos_precio ON rangos_precio.idrangos_precio = rangos_precio_has_embarcaciones.rangos_precio_idrangos_precio
+JOIN tarifas ON tarifas.rangos_precio_idrangos_precio = rangos_precio.idrangos_precio
+WHERE
+embarcaciones.idembarcaciones = '${id}'
+ORDER BY tarifas.vigencia DESC, tasas.vigencia DESC LIMIT 1;`;
+
+const embClientes = (id) =>
+    `SELECT
+    CONCAT(clientes.apellido, ', ' , clientes.nombre) AS cliente,
+    embarcaciones_has_clientes.porcentaje_posesion AS posesion
+    FROM
+    embarcaciones
+    JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
+    JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idclientes
+    WHERE embarcaciones.idembarcaciones = '${id}';`;
+
+
+
+
 const embarcaciones = {
     todo : todo('embarcaciones'),
     resumen: embResumen,
-    seleccionar : (id) => select('embarcaciones', '*', `idembarcaciones = '${id}'`)
+    seleccionar : embTarifaId,
+    clientes : embClientes
 }
 
 
+const mails = id =>
+`SELECT
+mails.mail
+FROM 
+mails
+JOIN clientes ON clientes.idclientes = mails.clientes_idclientes
+WHERE
+clientes.idclientes = '${id}';
+`;
+
+//ESTAS CONSULTAS ASUMEN QUE TODOS LOS DATOS ESTÁN INGRESADOS. ESTE ES SÓLO EL CASO DE LUMAGO
+//POR ESO EL RESTO VUELVE UN ARRAY VACÍO, PORQUE NO SE PUEDEN CUMPLIR TODAS LAS CONDICIONES
+//QUIZAS CONVIENE HACER CONSULTAS SEPARADAS PARA TENER LOS DATOS EXISTENTES
+
+const cliente = id => `
+SELECT
+clientes.idclientes,
+clientes.apellido,
+clientes.nombre,
+clientes.documento,
+clientes.direccion,
+clientes.localidad,
+clientes.provincia,
+clientes.pais,
+clientes.codigo_postal,
+forma_de_pago.forma_de_pago,
+forma_de_facturacion.numero_cliente,
+forma_de_facturacion.razon_social,
+forma_de_facturacion.documento,
+forma_de_facturacion.iva,
+forma_de_facturacion.tipo_de_factura
+FROM
+clientes
+JOIN forma_de_pago ON forma_de_pago.clientes_idclientes = clientes.idclientes
+JOIN forma_de_facturacion ON forma_de_facturacion.clientes_idclientes = clientes.idclientes
+WHERE
+clientes.idclientes = '${id}';`
+
+const formaPago = (id) => `
+SELECT * FROM forma_de_pago WHERE clientes_idclientes = '${id}';
+`;
+
+const formaFacturacion = (id) => `
+SELECT * FROM forma_de_facturacion WHERE clientes_idclientes = '${id}';
+`;
+
 const clientes = {
     todo: todo('clientes'),
-    seleccionar : (id) => select('clientes', '*', `idclientes = '${id}'`)
+    seleccionar : (id) => select('clientes', '*', `idclientes = '${id}'`),
+    mails,
+    cliente,
+    formaPago,
+    formaFacturacion
+
 }
 
 
