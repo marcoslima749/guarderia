@@ -94,14 +94,17 @@ ORDER BY tarifas.vigencia DESC, tasas.vigencia DESC LIMIT 1;`;
 
 const embClientes = (id) =>
     `SELECT
-    CONCAT(clientes.apellido, ', ' , clientes.nombre) AS cliente,
-    embarcaciones_has_clientes.porcentaje_posesion AS posesion
+    clientes.apellido,
+    clientes.nombre,
+    embarcaciones_has_clientes.porcentaje_posesion AS posesion,
+    clientes.idclientes AS id
     FROM
     embarcaciones
     JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
     JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idclientes
     WHERE embarcaciones.idembarcaciones = '${id}';`;
 
+const embModificar = (campo, valor, id) => modificar('embarcaciones', campo, valor, 'idembarcaciones', id)
 
 
 
@@ -109,7 +112,8 @@ const embarcaciones = {
     todo : todo('embarcaciones'),
     resumen: embResumen,
     seleccionar : embTarifaId,
-    clientes : embClientes
+    clientes : embClientes,
+    modificar: embModificar
 }
 
 

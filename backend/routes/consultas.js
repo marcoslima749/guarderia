@@ -99,6 +99,39 @@ routes.get('/embarcaciones/:id/cl', (req, res)=> {
     
 });
 
+routes.put('/embarcaciones/:id/m', (req, res) => {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    let embarcacion = JSON.parse(JSON.stringify(req.body.embarcacion));
+    //modifica los campos de la embarcacion para la base
+    embarcacion['contrato_fecha'] = embarcacion.contrato;
+    delete embarcacion.contrato;
+    embarcacion['seguro_fecha'] = embarcacion.seguro;
+    delete embarcacion.seguro;
+    //sacar el comment cuando esté la fecha de baja
+    //embarcacion[baja_fecha] = embarcacion.baja;
+    //delete embarcacion.baja;
+
+    let campos = JSON.parse(JSON.stringify(req.body.campos));
+    if (campos.includes('contrato')) {
+        campos.splice(campos.indexOf('contrato'), 1, 'contrato_fecha');
+    }
+    if (campos.includes('seguro')) {
+        campos.splice(campos.indexOf('seguro'), 1, 'seguro_fecha');
+    }
+    if (campos.includes('baja')) {
+        campos.splice(campos.indexOf('baja'), 1, 'baja_fecha');
+    }
+
+    let consulta = campos.map((llave)=>sql.embarcaciones.modificar(llave, embarcacion[llave], id)).join(';');
+    res.send(consulta);
+    return;
+    db.query(consulta, (error, results, fields)=> {
+        if (error) throw error;
+        res.send(results);
+    })
+})
+
 
 routes.get('/embarcaciones/:id', (req, res)=> {
     const db = req.app.get('db');

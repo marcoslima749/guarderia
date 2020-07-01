@@ -8,6 +8,7 @@
     "contrato contrato matricula matricula seguro seguro"
     "baja baja . . . . "
     "propietarios propietarios propietarios propietarios propietarios propietarios "
+    "flag flag flag flag flag flag"
     ;
     
     font-family: Sharetech;
@@ -100,6 +101,10 @@
     grid-area: baja;
 }
 
+.embarcacion__flag {
+    grid-area: flag;
+}
+
 .embarcacion__propietarios {
     grid-area: propietarios;
     display: grid;
@@ -116,7 +121,13 @@
     justify-content: center;
 }
 
-.embarcacion__propietarios__label, .embarcacion__propietario__nombre__label, .embarcacion__propietario__posesion__label {
+.embarcacion__propietarios__label, .embarcacion__propietario__nombre__label, .embarcacion__propietario__apellido__label, .embarcacion__propietario__posesion__label,
+.embarcacion__propietario__nombre__boton, .embarcacion__propietario__apellido__boton, .embarcacion__propietario__posesion__span
+{
     width: 100%;
     text-align: center;
+}
+
+.embarcacion__propietario__nombre__boton, .embarcacion__propietario__apellido__boton , .embarcacion__propietario__posesion__span {
+    font-size: 1.3rem;
 }
