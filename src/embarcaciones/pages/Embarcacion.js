@@ -86,12 +86,18 @@ export const Embarcacion = () => {
             }
             axios.put(`/api/db/embarcaciones/${embarcacion.Id}/m`, {embarcacion, campos}).then((response)=> {
                 console.log('Base consultada correctamente, respuesta: ', response);
+                //Para no hacer la consulta a la base al pedo
+                //sacar comentario para probar
+                //setSnapEmb(embarcacion);
             }).catch((err)=> {
                 console.log(err);
             })
         }
     }
 
+    let descartarCambios = () => {
+        setEmbarcacion(snapEmb);
+    }
 
 
     return(
@@ -104,10 +110,16 @@ export const Embarcacion = () => {
             {embarcacion ? llaves.filter((llave)=>llave !== 'nombre').map((llave)=>{
 
                 return(
+                    llave === 'Id' ? 
+                    <div className={`embarcacion__campo embarcacion__${llave}`}>
+                        <span className={`embarcacion__llave embarcacion__${llave}__label`}>{llave}: </span>
+                        <span name={llave} className={`embarcacion__${llave}__span entrada__input`}>{embarcacion[llave]}</span>
+                    </div>
+                    :
                     llave === 'contrato' || llave === 'seguro' || llave === 'baja' ? 
                     <div className={`embarcacion__campo embarcacion__${llave}`}>
                         <span className={`embarcacion__llave embarcacion__${llave}__label`}>{llave}: </span>
-                        <input type="date" onChange={(e)=>handleChangeEmb(e)} name={llave} value={/*llave === 'contrato' || llave === 'seguro' ? moment(embarcacion[llave]).format('DD[/]MM[/]YYYY') : */ embarcacion[llave]} clases={`embarcacion__${llave}__input`} />
+                        <input type="date" onChange={(e)=>handleChangeEmb(e)} name={llave} value={/*llave === 'contrato' || llave === 'seguro' ? moment(embarcacion[llave]).format('DD[/]MM[/]YYYY') : */ embarcacion[llave]} className={`embarcacion__${llave}__input`} />
                     </div>
                     :
                     <div className={`embarcacion__campo embarcacion__${llave}`}>
@@ -143,13 +155,16 @@ export const Embarcacion = () => {
                 })}
             </div>
             
-            {modificado ? 
-            <div className="embarcacion__flag">
+            <div className={`embarcacion__flag ${modificado ? 'embarcacion__flag--visible' : ''}`}>
+            {modificado ?
+                <>
                 <span className="embarcacion__flag__label">Datos Modificados</span>
-                <button onClick={guardarCambios} className="embarcacion__flag__guardar">Guardar Cambios</button>
-            </div>
+                <button onClick={guardarCambios} className="embarcacion__flag__boton simple-hover">GUARDAR</button>
+                <button onClick={descartarCambios} className="embarcacion__flag__boton simple-hover">DESCARTAR</button>
+                </>
             :''
             }
+            </div>
         </div>
     )
 };

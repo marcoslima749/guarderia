@@ -86,8 +86,17 @@
 
 .embarcacion__contrato {
     grid-area: contrato;
+    justify-self: center;
 }
 
+.embarcacion__contrato__input, .embarcacion__seguro__input, .embarcacion__baja__input {
+    font-family: inherit;
+    width: 10rem;
+    font-size: 1.3rem;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
 
 .embarcacion__matricula {
     grid-area: matricula;
@@ -95,6 +104,7 @@
 
 .embarcacion__seguro {
     grid-area: seguro;
+    justify-self: center;
 }
 
 .embarcacion__baja {
@@ -103,6 +113,33 @@
 
 .embarcacion__flag {
     grid-area: flag;
+    background-color: rgb(255, 179, 144);
+    height: 0;
+    min-height: 100%;
+    width: 0;
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+
+.embarcacion__flag--visible {
+    opacity: 1;
+}
+
+.embarcacion__flag__boton {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    height: 100%;
+    width: 6.5rem;
+    cursor: pointer;
 }
 
 .embarcacion__propietarios {
