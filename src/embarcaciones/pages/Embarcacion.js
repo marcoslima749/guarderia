@@ -17,8 +17,51 @@ export const Embarcacion = () => {
     let [snapEmb, setSnapEmb] = useState();
     let params = useParams();
 
+    let embarcacionNueva = {
+        Id: "Nueva",
+        categoria: "",
+        contrato: "",
+        eslora: "",
+        manga: "",
+        marca: "",
+        matricula: "",
+        modelo: "",
+        nombre: "",
+        puntal: "",
+        seguro: "",
+        tarifa: "",
+        tasa: "",
+        total: "",
+        //sacar comentario cuando haya una baja:
+        //baja: ""
+    }
+
+    let nuevoPropietario = [{
+        id : "Nuevo",
+        nombre : "",
+        apellido : "",
+        posesion: "" 
+    }]
+
     useEffect(() =>{
         console.log('render')
+        /*
+        Los campos Tarifa Tasa Total dependen del rango de precio asignado y la tarifa actual de ese rango.
+        Hay que sacar esos campos y poner el rango de precio para asignarlo en la creación.
+        Son tablas distintas y tendría que hacer una ruta post y consulta nuevas para asignar:
+
+        -Rango de precios
+        -Descuento
+        -Propietarios (si existe seleccionar de una lista, si no crearlo. Ver la posibilidad de que sean más de uno)
+
+        if(params.id === "new") {
+            setSnapEmb(embarcacionNueva);
+            setEmbarcacion(embarcacionNueva);
+            setPropietario(nuevoPropietario);
+            return;
+        }
+
+        */
         axios.get(`/api/db/embarcaciones/${params.id}`).then((response)=>{
             let res = response.data[0];
             res.contrato = moment(res.contrato).format('YYYY[-]MM[-]DD');

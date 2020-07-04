@@ -16,6 +16,7 @@ import { Resumen } from './resumen/pages/Resumen';
 import { Tareas } from './inicio/components/Tareas';
 import { Embarcacion } from './embarcaciones/pages/Embarcacion';
 import { Cliente } from './clientes/pages/Cliente';
+import { Boton } from './shared/components/Boton';
 
 export const App = () => {
     return (
@@ -39,7 +40,7 @@ export const App = () => {
                 </Dashboard>  
                 </Route>
                 <Route exact path="/resumen">
-                <Dashboard nombre="CYNM" descripcion="Resumen" side={true} >
+                <Dashboard nombre="CYNM" descripcion="Resumen" side={true} panel={<Boton path="#" clases="simple-hover embarcacion__boton-nuevo">Nuevo</Boton>} >
                     <Resumen />
                 </Dashboard>  
                 </Route>
