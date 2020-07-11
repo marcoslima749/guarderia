@@ -231,7 +231,8 @@ export const Tareas = () => {
     const eliminarTarea = (id) => {
         if(id < 1) { // es 0.algoo así que es nuevo
             console.log('eliminando una tarea nueva');
-            eliminarEnLista(id);
+            let tareaEliminada = lista.filter((tarea)=>tarea.idtareas === id)[0];
+            eliminarEnLista(tareaEliminada);
         } else {
             console.log('eliminando una tarea vieja');
             console.log('id: ', id);
