@@ -156,22 +156,74 @@ WHERE
 clientes.idclientes = '${id}';`
 
 const formaPago = (id) => `
-SELECT * FROM forma_de_pago WHERE clientes_idclientes = '${id}';
+SELECT forma_de_pago.descripcion
+FROM forma_de_pago
+JOIN forma_de_pago_has_clientes ON forma_de_pago_idforma_de_pago = forma_de_pago.idforma_de_pago
+WHERE
+forma_de_pago_has_clientes.clientes_idclientes = '${id}';
 `;
 
 const formaFacturacion = (id) => `
 SELECT * FROM forma_de_facturacion WHERE clientes_idclientes = '${id}';
 `;
 
+const telefonos = (id) => 
+    `SELECT
+    telefonos.telefono
+    FROM 
+    telefonos
+    JOIN clientes ON clientes.idclientes = telefonos.clientes_idclientes
+    WHERE
+    clientes.idclientes = '${id}';
+    `;
+
+
 const clientes = {
     todo: todo('clientes'),
     seleccionar : (id) => select('clientes', '*', `idclientes = '${id}'`),
     mails,
-    cliente,
+    telefonos,
     formaPago,
-    formaFacturacion
+    formaFacturacion,
+    cliente
 
 }
+
+/*
+LA CONSULTA PARA INSERTAR TODAS LAS MENSUALIDADES DE UN CLIENTE
+DESDE LA FECHA DE CONTRATO DE LA PRIMERA EMBARCACION
+EL idcliente en el CROSS JOIN deber ser el mismo id que en en la subquery del WHERE clause
+ej: 6.
+HAY QUE REVISAR LA SELECCIÓN DE LAS FECHAS PORQUE COMO SELECCIONA >= QUE EL DIA DEL CONTRATO
+EL PRIMER MES LO PASA POR ALTO
+(EN EL EJEMPLO FECHA CONTRATO ES 31/05/2018 Y PRIMERA MENSUALIDAD 01/06/2018)
+RESOLVER ESE PROBLEMA O BUSCAR UNA FORMA NUEVA DE CONSULTAR LAS FECHAS
+U OTRA FORMA DE REGISTRAR LOS INGRESOS
+(POR EJEMPLO SIEMPRE INGRESANDO EL PRIMERO DEL MES QUE SE LE VA A COBRAR)
+
+INSERT INTO mensualidad (periodo, clientes_idclientes)
+SELECT primero AS periodo, idcliente AS clientes_idclientes
+FROM
+primero_de_mes
+CROSS JOIN (SELECT '6' AS idcliente) AS CL
+WHERE
+primero >= (SELECT embarcaciones.contrato_fecha
+FROM
+embarcaciones
+WHERE
+embarcaciones.idembarcaciones =
+(SELECT embarcaciones.idembarcaciones
+FROM
+embarcaciones
+JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
+WHERE
+embarcaciones_has_clientes.clientes_idclientes = '6' LIMIT 1)
+)
+AND
+primero <= DATE(NOW()) ;
+
+
+ */
 
 
 

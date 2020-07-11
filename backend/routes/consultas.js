@@ -153,6 +153,15 @@ routes.get('/clientes/:id/m', (req, res)=> {
     })
 });
 
+routes.get('/clientes/:id/t', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.telefonos(id), (error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+});
+
 routes.get('/clientes/:id/f', (req, res)=> {
     const db = req.app.get('db');
     const id = req.params.id;
