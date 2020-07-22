@@ -36,6 +36,7 @@ export const Cliente = () => {
         axios.get(`/api/db/clientes/${params.id}`).then((response)=>{
             let res = response.data[0];
             res.fecha_registro = moment(res.fecha_registro).format('YYYY[-]MM[-]DD');
+            res.fecha_ingreso = moment(res.fecha_ingreso).format('YYYY[-]MM[-]DD');
             setCliente(JSON.parse(JSON.stringify(response.data[0])));
             setSnapCliente(JSON.parse(JSON.stringify(response.data[0])));
             setLlavesCliente(Object.keys(response.data[0]));
@@ -85,6 +86,24 @@ export const Cliente = () => {
     
 
     let guardarCambios = () => {
+        //verificar los campos modificados en cada tabla
+        let cambiosCliente = [];
+        let cambiosMail = {eliminados: [], nuevos: []};
+        
+        //cliente --> snap
+        
+        for(let llave in cliente) {
+            if(cliente[llave] !== snapCliente[llave]) {
+                cambiosCliente.push(llave);
+            }
+        }
+
+        //mails --> snap
+        mails.forEach((objM)=>{
+            
+        })
+        
+
 
     }
 
@@ -203,7 +222,7 @@ export const Cliente = () => {
                     cliente ?
 
                     llavesCliente.map((llave)=> {
-                        let tipo = llave ==='fecha_registro' ? 'date' : 'text';
+                        let tipo = llave ==='fecha_registro' || llave === 'fecha_ingreso' ? 'date' : 'text';
                         let label = llave === 'idclientes' ? 'ID' : llave.replace(/_/g, ' ');
                         let soloLectura = llave === 'idclientes';
                         return(

@@ -185,6 +185,12 @@ JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes
 WHERE clientes.idclientes = '${id}';`
 ;
 
+const cModificarCliente = (campo, valor, id) => modificar('clientes', campo, valor, 'idclientes', id);
+const cModificarMails = (campo, valor, id) => modificar('mails', campo, valor, 'idmails', id);
+const cModificarTelefonos = (campo, valor, id) => modificar('telefonos', campo, valor, 'idtelefonos', id);
+const cModificarFormaPago = (campo, valor, id) => modificar('forma_de_pago', campo, valor, 'idforma_de_pago', id);
+const cModificarFormaFacturacion = (campo, valor, id) => modificar('forma_de_facturacion', campo, valor, 'idforma_de_facturacion', id);
+
 
 const clientes = {
     todo: todo('clientes'),
@@ -194,7 +200,13 @@ const clientes = {
     formaPago,
     formaFacturacion,
     cliente,
-    listaEmb
+    listaEmb,
+    cModificarCliente,
+    cModificarMails,
+    cModificarTelefonos,
+    cModificarFormaPago,
+    cModificarFormaFacturacion
+
 
 }
 
