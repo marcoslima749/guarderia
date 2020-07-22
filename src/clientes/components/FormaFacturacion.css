@@ -1,0 +1,46 @@
+.cliente__forma-facturacion {
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6,1fr) 2rem 5rem;
+    grid-auto-rows: auto;
+    grid-template-areas:
+    "ff-main ff-main . . . . . ."
+    "ff-input ff-input ff-input ff-input ff-input ff-input ff-input ff-boton"
+    ;
+}
+
+.forma-facturacion__main-label {
+    grid-area: ff-main;
+}
+
+.forma-facturacion__entradas {
+    grid-area: ff-input;
+    display: grid;
+    grid-template-columns: repeat(5,1fr) 3rem;
+    grid-auto-rows: auto;
+    justify-items: center;
+}
+
+.forma-de-facturacion__boton-nuevo {
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: bold;
+    grid-area: ff-boton;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    border-radius: 3px;
+
+}
+
+.forma-facturacion__boton-cerrar {
+    cursor: pointer;
+    font-size: 1.3rem;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    place-self: center;
+}

@@ -177,6 +177,14 @@ const telefonos = (id) =>
     clientes.idclientes = '${id}';
     `;
 
+const listaEmb = (id) =>
+`SELECT embarcaciones.idembarcaciones AS id, embarcaciones.nombre
+FROM clientes
+JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
+JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
+WHERE clientes.idclientes = '${id}';`
+;
+
 
 const clientes = {
     todo: todo('clientes'),
@@ -185,7 +193,8 @@ const clientes = {
     telefonos,
     formaPago,
     formaFacturacion,
-    cliente
+    cliente,
+    listaEmb
 
 }
 
@@ -198,7 +207,7 @@ HAY QUE REVISAR LA SELECCIÓN DE LAS FECHAS PORQUE COMO SELECCIONA >= QUE EL DIA
 EL PRIMER MES LO PASA POR ALTO
 (EN EL EJEMPLO FECHA CONTRATO ES 31/05/2018 Y PRIMERA MENSUALIDAD 01/06/2018)
 RESOLVER ESE PROBLEMA O BUSCAR UNA FORMA NUEVA DE CONSULTAR LAS FECHAS
-U OTRA FORMA DE REGISTRAR LOS INGRESOS
+U OTRA FORMA DE REGISTRAR LOS INGRESOS DE EMBARCACIONES NUEVAS
 (POR EJEMPLO SIEMPRE INGRESANDO EL PRIMERO DEL MES QUE SE LE VA A COBRAR)
 
 INSERT INTO mensualidad (periodo, clientes_idclientes)
@@ -207,20 +216,32 @@ FROM
 primero_de_mes
 CROSS JOIN (SELECT '6' AS idcliente) AS CL
 WHERE
-primero >= (SELECT embarcaciones.contrato_fecha
-FROM
-embarcaciones
-WHERE
-embarcaciones.idembarcaciones =
-(SELECT embarcaciones.idembarcaciones
+primero >= (
+SELECT MIN(embarcaciones.contrato_fecha)
 FROM
 embarcaciones
 JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
 WHERE
-embarcaciones_has_clientes.clientes_idclientes = '6' LIMIT 1)
+embarcaciones_has_clientes.clientes_idclientes = '6'
 )
 AND
 primero <= DATE(NOW()) ;
+
+CONSULTA PARA INSERTAR EL DETALLE MENSUALIDAD EN UNA MENSUALIDAD DE UN CLIENTE
+CON CONCEPTO SALDO INCIAL SIN DATOS EXTRAORDINARIOS
+PARA CONSTRUIR DESDE JAVASCRIPT
+
+INSERT INTO detalle_mensualidad (
+porcentaje_cuota, porcentaje_interes, mensualidad_idmensualidad, embarcaciones_idembarcaciones,
+forma_de_facturacion_idforma_de_facturacion, valor_contingencia, observacion,
+concepto_producto_idconcepto_producto
+)
+VALUES (
+'100', '0', '${mensualidadId}', '${embarcacionId}',
+'${formaDeFacturacionId}', '${valor ? valor : null}', '${observacion ? observacion : null}',
+'1'  
+)
+;
 
 
  */

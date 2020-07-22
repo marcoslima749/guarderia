@@ -180,6 +180,14 @@ routes.get('/clientes/:id/p', (req, res)=> {
     })
 });
 
+routes.get('/clientes/:id/emb', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.listaEmb(id), (error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+});
 
 routes.get('/clientes/:id', (req, res)=> {
     const db = req.app.get('db');

@@ -1,0 +1,26 @@
+.chip__container {
+    display: inline-flex;
+    padding: 0 25px;
+    margin: 1px;
+    height: 40px;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    align-items: center;
+}
+
+.chip__cerrar {
+    padding-left: 10px;
+    color: #888;
+    font-weight: bold;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .chip__cerrar:hover {
+    color: #000;
+  }

@@ -1,7 +1,145 @@
 .clientes__container {
+    box-sizing: border-box;
+    font-size: 13px;
+    font-family: 'shareTech';
+    padding: 0 20px;
     min-width: 100%;
     width: 0;
     min-height: 100%;
     height: 0;
     overflow: auto;
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-rows: 3rem 3rem repeat(4,1fr) 2rem 2rem;
+    grid-template-areas:
+    "cliente cliente cliente cliente cliente cliente"
+    "cliente cliente cliente cliente cliente cliente"
+    "cliente cliente cliente cliente cliente cliente"
+    "contacto contacto contacto contacto contacto contacto"
+    "pago pago pago pago pago pago"
+    "fc fc fc fc fc fc"
+    "emb emb emb emb emb emb"
+    "flag flag flag flag flag flag";
+    justify-items: center;
+}
+
+.cliente__datos-cliente {
+    box-sizing: border-box;
+    grid-area: cliente;
+    /* background-color: aquamarine; */
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 1fr;
+    grid-auto-flow: row;
+    border: 1px solid grey;
+}
+
+.cliente__campo {
+    font-size: 1rem;
+}
+
+.clientes__container .entrada__input {
+    font-size: 1rem;
+}
+
+.cliente__datos-contacto {
+    box-sizing: border-box;
+    padding: 10px;
+    grid-area: contacto;
+    /* background-color: blanchedalmond; */
+    display: flex;
+    width: 100%;
+    border: 1px solid grey;
+}
+
+.cliente__mails, .cliente__telefonos {
+    width: 50%;
+}
+
+
+.cliente__forma-pago {
+    grid-area: pago;
+    /* background-color: chocolate; */
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid grey;
+    padding: 10px;
+}
+
+.cliente__forma-facturacion {
+    grid-area: fc;
+    /* background-color: crimson; */
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid grey;
+}
+
+.clientes__embarcacion__embarcaciones {
+    box-sizing: border-box;
+    width: 100%;
+    grid-area: emb;
+    /* background-color: darkgreen ; */
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid grey;
+}
+
+.clientes__embarcacion__embarcaciones span {
+    width: auto;
+    text-transform: capitalize;
+}
+
+
+pre {
+    font-family: 'ShareTech';
+}
+
+[class*=label], span {
+    text-transform: capitalize;
+    font-size: 1rem;
+}
+
+.clientes__embarcacion__nombre__boton {
+    display: inline-flex;
+    padding: 0 60px;
+    margin: 1px;
+    height: 100%;
+    border-radius: 3px;
+    align-items: center;
+}
+
+.cliente__flag {
+    grid-area: flag;
+    background-color: rgb(255, 179, 144);
+    height: 0;
+    min-height: 100%;
+    width: 0;
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+
+.cliente__flag--visible {
+    opacity: 1;
+}
+
+.cliente__flag__boton {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    height: 100%;
+    width: 6.5rem;
+    cursor: pointer;
 }

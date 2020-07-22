@@ -1,11 +1,12 @@
 import React from 'react';
-import { Entrada } from '../../shared/components/Entrada';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { useRouterMatch, useParams } from 'react-router-dom';
-import { Boton } from "../../shared/components/Boton";
 import './Embarcacion.css';
+import { FlagModificado } from '../components/FlagModificado';
+import { Propietarios } from '../components/Propietarios';
+import { CampoEditable } from '../components/CampoEditable';
 
 const moment = require('moment');
 
@@ -65,7 +66,6 @@ export const Embarcacion = () => {
         axios.get(`/api/db/embarcaciones/${params.id}`).then((response)=>{
             let res = response.data[0];
             res.contrato = moment(res.contrato).format('YYYY[-]MM[-]DD');
-            console.log('seguro: ', res.seguro)
             res.seguro = moment(res.seguro).format('YYYY[-]MM[-]DD');
             setSnapEmb(res);
             setEmbarcacion(res);
@@ -98,7 +98,7 @@ export const Embarcacion = () => {
             setModificado(false);
         };
 
-    }, [embarcacion])
+    }, [embarcacion, snapEmb])
 
     let handleChangeEmb = (e) => {
         let target = e.target;
@@ -111,7 +111,7 @@ export const Embarcacion = () => {
 
     let guardarCambios = () => {
         let campos = []
-            Object.keys(embarcacion).forEach((llave)=> {
+            llaves.forEach((llave)=> {
             if(embarcacion[llave] !== snapEmb[llave]) {
                 campos.push(llave);
             }
@@ -129,9 +129,8 @@ export const Embarcacion = () => {
             }
             axios.put(`/api/db/embarcaciones/${embarcacion.Id}/m`, {embarcacion, campos}).then((response)=> {
                 console.log('Base consultada correctamente, respuesta: ', response);
-                //Para no hacer la consulta a la base al pedo
-                //sacar comentario para probar
-                //setSnapEmb(embarcacion);
+                //Iguala el snap al state actual para no tener que consultar a la base de nuevo
+                setSnapEmb(embarcacion);
             }).catch((err)=> {
                 console.log(err);
             })
@@ -145,66 +144,34 @@ export const Embarcacion = () => {
 
     return(
         <div className="embarcacion__container">
-
-            <div className="embarcacion__nombre">
-                <Entrada handleChange={handleChangeEmb} name="nombre" value={embarcacion.nombre} clases="embarcacion__nombre__input" />
-            </div>
-
-            {embarcacion ? llaves.filter((llave)=>llave !== 'nombre').map((llave)=>{
-
+            {embarcacion ? llaves.map((llave)=>{
+                let soloLectura = llave === 'Id';
+                let showLabel = llave !== 'nombre';
+                let tipo = llave === 'contrato' || llave === 'seguro' || llave === 'baja' ? 'date' : 'text';
                 return(
-                    llave === 'Id' ? 
-                    <div className={`embarcacion__campo embarcacion__${llave}`}>
-                        <span className={`embarcacion__llave embarcacion__${llave}__label`}>{llave}: </span>
-                        <span name={llave} className={`embarcacion__${llave}__span entrada__input`}>{embarcacion[llave]}</span>
-                    </div>
-                    :
-                    llave === 'contrato' || llave === 'seguro' || llave === 'baja' ? 
-                    <div className={`embarcacion__campo embarcacion__${llave}`}>
-                        <span className={`embarcacion__llave embarcacion__${llave}__label`}>{llave}: </span>
-                        <input type="date" onChange={(e)=>handleChangeEmb(e)} name={llave} value={/*llave === 'contrato' || llave === 'seguro' ? moment(embarcacion[llave]).format('DD[/]MM[/]YYYY') : */ embarcacion[llave]} className={`embarcacion__${llave}__input`} />
-                    </div>
-                    :
-                    <div className={`embarcacion__campo embarcacion__${llave}`}>
-                        <span className={`embarcacion__llave embarcacion__${llave}__label`}>{llave}: </span>
-                        <Entrada handleChange={handleChangeEmb} name={llave} value={/*llave === 'contrato' || llave === 'seguro' ? moment(embarcacion[llave]).format('DD[/]MM[/]YYYY') : */ embarcacion[llave]} clases={`embarcacion__${llave}__input`} />
-                    </div>
+                    <CampoEditable
+                        showLabel={showLabel}
+                        label={llave}
+                        soloLectura={soloLectura}
+                        tipo={tipo}
+                        entidad="embarcacion"
+                        handler={handleChangeEmb}
+                        llave={llave}
+                        valor={embarcacion[llave]}
+                    />
                 )
             }) : '...'}
             
-            <div className="embarcacion__propietarios">
-                <span className="embarcacion__propietarios__label">
-                    Propietarios: 
-                </span>
-                {propietario && propietario.map((prop)=> {
-                    return(
-                        <>
-                        <div className="embarcacion__propietario__campo">
-                        <span className="embarcacion__propietario__nombre__label">Nombre:</span>
-                        <Boton path={`/clientes/${prop.id}`}  clases={`embarcacion__propietario__nombre__boton simple-hover`} >{prop.nombre}</Boton>
-                        </div>
-
-                        <div className="embarcacion__propietario__campo">
-                        <span className="embarcacion__propietario__apellido__label">Apellido:</span>
-                        <Boton path={`/clientes/${prop.id}`} clases={`embarcacion__propietario__apellido__boton simple-hover`}>{prop.apellido}</Boton>
-                        </div>
-
-                        <div className="embarcacion__propietario__campo">
-                        <span className="embarcacion__propietario__posesion__label">%:</span>
-                        <span  className={`embarcacion__propietario__posesion__span`}>{prop.posesion}</span>
-                        </div>
-                        </>
-                    )
-                })}
-            </div>
+            <Propietarios propietario={propietario} />
             
             <div className={`embarcacion__flag ${modificado ? 'embarcacion__flag--visible' : ''}`}>
             {modificado ?
-                <>
-                <span className="embarcacion__flag__label">Datos Modificados</span>
-                <button onClick={guardarCambios} className="embarcacion__flag__boton simple-hover">GUARDAR</button>
-                <button onClick={descartarCambios} className="embarcacion__flag__boton simple-hover">DESCARTAR</button>
-                </>
+                <FlagModificado
+                    guardar={guardarCambios}
+                    descartar={descartarCambios}
+                    clasesLabel="embarcacion__flag__label"
+                    clasesBoton="embarcacion__flag__boton simple-hover"  
+                />
             :''
             }
             </div>
