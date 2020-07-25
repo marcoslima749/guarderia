@@ -11,6 +11,7 @@ import { ListaEmbarcaciones } from '../../shared/components/ListaEmbarcaciones';
 import { FormaFacturacion } from '../components/FormaFacturacion';
 import { verificarCambios } from '../../shared/util/verificarCambios';
 import { FlagModificado } from '../../embarcaciones/components/FlagModificado';
+import { objetosNoIncluidos } from '../../shared/util/objetosNoIncluidos';
 
 const moment = require('moment');
 
@@ -25,12 +26,12 @@ export const Cliente = () => {
     let [formaPago, setFormaPago] = useState([]);
     let [snapFormaPago, setSnapFormaPago] = useState([]);
     let [formaFacturacion, setFormaFacturacion] = useState([]);
-    let [snapMaldito, setSnapMaldito] = useState([]);
+    let [snapFormaFacturacion, setSnapFormaFacturacion] = useState([]);
     let [listaEmb, setListaEmb] = useState([]);
     let [modificado, setModificado] = useState(false);
 
     let params = useParams();
-
+ 
     useEffect(() =>{
         console.log('render')
         axios.get(`/api/db/clientes/${params.id}`).then((response)=>{
@@ -54,7 +55,7 @@ export const Cliente = () => {
         
         axios.get(`/api/db/clientes/${params.id}/f`).then((response)=>{
             setFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
-            setSnapMaldito(JSON.parse(JSON.stringify(response.data)));
+            setSnapFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
 
         });
         
@@ -77,33 +78,80 @@ export const Cliente = () => {
         arrCambio.push(verificarCambios(mails, snapMails));
         arrCambio.push(verificarCambios(telefonos, snapTelefonos));
         arrCambio.push(verificarCambios(formaPago, snapFormaPago));
-        arrCambio.push(verificarCambios(formaFacturacion, snapMaldito));
+        arrCambio.push(verificarCambios(formaFacturacion, snapFormaFacturacion));
         let cambio = arrCambio.some((b)=>b);
 
         setModificado(cambio);
 
-    }, [cliente, mails, telefonos, formaFacturacion, formaPago, snapCliente, snapMails, snapTelefonos, snapMaldito, snapFormaPago]);
+    }, [cliente, mails, telefonos, formaFacturacion, formaPago, snapCliente, snapMails, snapTelefonos, snapFormaFacturacion, snapFormaPago]);
     
 
     let guardarCambios = () => {
         //verificar los campos modificados en cada tabla
-        let cambiosCliente = [];
-        let cambiosMail = {eliminados: [], nuevos: []};
+        let cambios = {
+            cliente : { idclientes: cliente.idclientes },
+            mails : {eliminados: [], nuevos: []},
+            telefonos : {eliminados: [], nuevos: []},
+            formaPago : {eliminados: [], nuevos: []},
+            formaFacturacion : []
+        };
+
+
         
         //cliente --> snap
         
         for(let llave in cliente) {
             if(cliente[llave] !== snapCliente[llave]) {
-                cambiosCliente.push(llave);
+                cambios.cliente[llave] = cliente[llave];
             }
         }
 
-        //mails --> snap
-        mails.forEach((objM)=>{
-            
-        })
-        
+        //forma de facturacion es un array que contiene objetos con varias propiedades
+        //hay que verificar también qué campo cambió en qué objeto
 
+        //forma de facturacion
+        
+        cambios.formaFacturacion = formaFacturacion.map((forma, ind)=>{
+            let formaMod = {idforma_de_facturacion : forma.idforma_de_facturacion}
+            
+            for(let llave in forma) {
+                if(llave === 'idforma_de_facturacion'){
+                    continue;
+                }
+                if(forma[llave] !== snapFormaFacturacion[ind]?.[llave]) {
+                    formaMod[llave] = forma[llave]
+                }
+            }
+            return formaMod
+        })
+
+        
+        //mails que no están en el snap = mails nuevos
+        cambios.mails.nuevos = objetosNoIncluidos(mails, snapMails);
+        //mails en snap que no están en los mails actuales = mails eliminados 
+        cambios.mails.eliminados = objetosNoIncluidos(snapMails, mails);
+        
+        //telefonos
+        cambios.telefonos.nuevos = objetosNoIncluidos(telefonos, snapTelefonos);
+        cambios.telefonos.eliminados = objetosNoIncluidos(snapTelefonos, telefonos);
+        
+        //formas de pago
+        cambios.formaPago.nuevos = objetosNoIncluidos(formaPago, snapFormaPago);
+        cambios.formaPago.eliminados = objetosNoIncluidos(snapFormaPago, formaPago);
+
+        //limpiando tablas sin cambios (ver una forma de no agregar estos datos cuando no hay cambios)
+        Object.keys(cambios.cliente).length === 1 && delete cambios.cliente;
+        cambios.mails.nuevos.length === 0 && cambios.mails.eliminados.length === 0 && delete cambios.mails;
+        cambios.telefonos.nuevos.length === 0 && cambios.telefonos.eliminados.length === 0 && delete cambios.telefonos;
+        cambios.formaPago.nuevos.length === 0 && cambios.formaPago.eliminados.length === 0 && delete cambios.formaPago;
+        cambios.formaFacturacion.forEach((forma, ind)=>{
+            if (Object.keys(forma).length === 1) {
+                cambios.formaFacturacion.splice(ind,1);
+            }
+        });
+        cambios.formaFacturacion.length === 0 && delete cambios.formaFacturacion;
+ 
+        console.log('cambios: ', cambios);
 
     }
 
@@ -113,7 +161,7 @@ export const Cliente = () => {
         setMails(JSON.parse(JSON.stringify(snapMails)));
         setTelefonos(JSON.parse(JSON.stringify(snapTelefonos)));
         setFormaPago(JSON.parse(JSON.stringify(snapFormaPago)));
-        setFormaFacturacion(JSON.parse(JSON.stringify(snapMaldito)));
+        setFormaFacturacion(JSON.parse(JSON.stringify(snapFormaFacturacion)));
 
     }
 
