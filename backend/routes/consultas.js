@@ -144,43 +144,53 @@ routes.get('/embarcaciones/:id', (req, res)=> {
 });
 
 
-routes.get('/clientes/:id/m', (req, res)=> {
+routes.get('/clientes/:id/mails', (req, res)=> {
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.mails(id), (error, results, fields)=>{
+    db.query(sql.clientes.mails.consultar(id), (error, results, fields)=>{
         if (error) throw error;
         res.json(results);
     })
 });
 
-routes.get('/clientes/:id/t', (req, res)=> {
+routes.get('/clientes/:id/telefonos', (req, res)=> {
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.telefonos(id), (error, results, fields)=>{
+    db.query(sql.clientes.telefonos.consultar(id), (error, results, fields)=>{
         if (error) throw error;
         res.json(results);
     })
 });
 
-routes.get('/clientes/:id/f', (req, res)=> {
+routes.get('/clientes/:id/forma-de-facturacion', (req, res)=> {
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.formaFacturacion(id), (error, results, fields)=>{
+    db.query(sql.clientes.forma_de_facturacion.consultar(id), (error, results, fields)=>{
         if (error) throw error;
         res.json(results);
     })
 });
 
-routes.get('/clientes/:id/p', (req, res)=> {
+routes.get('/clientes/:id/forma-de-pago', (req, res)=> {
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.formaPago(id), (error, results, fields)=>{
+    db.query(sql.clientes.forma_de_pago.consultar(id), (error, results, fields)=>{
         if (error) throw error;
         res.json(results);
     })
 });
 
-routes.get('/clientes/:id/emb', (req, res)=> {
+routes.get('/formas-de-pago', (req, res)=> {
+    const db = req.app.get('db');
+    db.query(sql.listaFormasPago.consultar(),(error, results, fields)=>{
+        if (error) throw error;
+        res.json(results);
+    })
+
+})
+
+
+routes.get('/clientes/:id/embarcaciones', (req, res)=> {
     const db = req.app.get('db');
     const id = req.params.id;
     db.query(sql.clientes.listaEmb(id), (error, results, fields)=>{
@@ -188,6 +198,78 @@ routes.get('/clientes/:id/emb', (req, res)=> {
         res.json(results);
     })
 });
+
+routes.get('/clientes/:id/observaciones', (req, res)=>{
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.observaciones.consultar(id), (error, results, fields)=>{
+        if(error) throw error;
+        res.json(results);
+    })
+})
+
+routes.put('/clientes/:id/guardar-cambios',(req, res) => {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    console.log('req.body: ', req.body);
+    let cambios = JSON.parse(JSON.stringify(req.body));
+    let consulta = '';
+    
+    for (let tabla in cambios) {
+        switch (tabla) {
+            case 'clientes':
+                for (let campo in cambios.clientes) {
+                    if(campo === 'idclientes'){
+                        continue;
+                    }
+                    consulta = consulta + sql.clientes.modificarCliente(campo, cambios.clientes[campo], cambios.clientes.idclientes) + ';'; //los ; tienen que venir en la misma sentencia!
+                }
+            break;
+            case 'mails':
+                let consultaMails = '';
+                if (cambios.mails.insertar) {consultaMails =  consultaMails + cambios.mails.insertar.map((mail)=> sql.clientes.mails.insertar(id,mail.mail)).join('');}
+                if (cambios.mails.eliminar) {consultaMails =  consultaMails + cambios.mails.eliminar.map((mail)=> sql.clientes.mails.eliminar(mail.idmails)).join('');}
+                console.log('append mails: ', consultaMails)
+                consulta = consulta + consultaMails;
+            break;
+            case 'telefonos':
+                
+                let consultaTelefonos = '';
+                if (cambios.telefonos.insertar) {consultaTelefonos =  consultaTelefonos + cambios.telefonos.insertar.map((tel)=> sql.clientes.telefonos.insertar(id,tel.telefono)).join('');}
+                if (cambios.telefonos.eliminar) {consultaTelefonos =  consultaTelefonos + cambios.telefonos.eliminar.map((tel)=> sql.clientes.telefonos.eliminar(tel.idtelefonos)).join('');}
+                console.log('append telefonos: ', consultaTelefonos)
+                consulta = consulta + consultaTelefonos;
+                break;
+            case 'observaciones':
+                    
+                let consultaObservaciones = '';
+                if (cambios.observaciones.insertar) {consultaObservaciones =  consultaObservaciones + cambios.observaciones.insertar.map((obs)=> sql.clientes.observaciones.insertar(id,obs.observacion)).join('');}
+                if (cambios.observaciones.eliminar) {consultaObservaciones =  consultaObservaciones + cambios.observaciones.eliminar.map((obs)=> sql.clientes.observaciones.eliminar(obs.idobservaciones)).join('');}
+                console.log('append telefonos: ', consultaObservaciones)
+                consulta = consulta + consultaObservaciones;
+                    
+            break;
+            
+            case 'forma_de_pago':
+                
+                let consultaFormaDePago = '';
+                if (cambios.forma_de_pago.insertar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.insertar.map((forma)=> sql.clientes.forma_de_pago.insertar(id,forma.forma_de_pago_idforma_de_pago)).join('');}
+                if (cambios.forma_de_pago.eliminar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.eliminar.map((forma)=> sql.clientes.forma_de_pago.eliminar(forma.idforma_de_pago_has_clientes)).join('');}
+                console.log('append forma de pago: ', consultaFormaDePago)
+                consulta = consulta + consultaFormaDePago;
+                
+                
+            break;
+            case 'forma_de_facturacion':
+            break;
+            default:
+                
+        }
+    }
+
+    res.send(consulta);
+    
+})
 
 routes.get('/clientes/:id', (req, res)=> {
     const db = req.app.get('db');

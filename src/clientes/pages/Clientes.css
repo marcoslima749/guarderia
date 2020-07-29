@@ -16,7 +16,7 @@
     "cliente cliente cliente cliente cliente cliente"
     "cliente cliente cliente cliente cliente cliente"
     "contacto contacto contacto contacto contacto contacto"
-    "pago pago pago pago pago pago"
+    "pago pago pago observaciones observaciones observaciones"
     "fc fc fc fc fc fc"
     "emb emb emb emb emb emb"
     "flag flag flag flag flag flag";
@@ -75,6 +75,14 @@
     width: 100%;
     box-sizing: border-box;
     border: 1px solid grey;
+}
+
+.cliente__observaciones {
+    grid-area: observaciones;
+    box-sizing: border-box;
+    width: 100%;
+    border: 1px solid grey;
+    padding: 10px;
 }
 
 .clientes__embarcacion__embarcaciones {

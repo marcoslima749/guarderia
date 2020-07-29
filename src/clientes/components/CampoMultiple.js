@@ -5,7 +5,7 @@ import { Chip } from './Chip';
 import './CampoMultiple.css';
 import { useEffect } from 'react';
 
-export const CampoMultiple = ({datos, entidad, llave, handler, handleEliminar, objKey, label = '', tipo = 'text', soloLectura = false, showLabel = false}) => {
+export const CampoMultiple = ({validacion, datos, entidad, llave, handler, handleEliminar, objKey, label = '', tipo = 'text', soloLectura = false, showLabel = false}) => {
     let [listaChips, setListaChips] = useState([]);
     let [valorInput, setValorInput] = useState('');
     
@@ -20,24 +20,23 @@ export const CampoMultiple = ({datos, entidad, llave, handler, handleEliminar, o
     
     let handleEnter = (e) => {
 
-
         if (e.key !== 'Enter' || e.target.value === '') {
             return;
         }
 
         let valor = e.target.value;
 
-        //reemplazar con
-        handler({[objKey]: valor});
-
-        // setListaChips((prevChips)=> {
-        //     let newChips = [...prevChips, {[objKey]: valor}];
-        //     console.log(newChips);
-        //     return(newChips);
-        // });
-
+        if (validacion) {
+            validacion(valor, handleSuccess)
+        } else {
+            handleSuccess({[objKey]: valor})
+        }
+        
+    }
+    
+    let handleSuccess = (obj) => {
+        handler(obj);
         setValorInput('');
-
     }
 
 

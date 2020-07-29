@@ -12,6 +12,7 @@ import { FormaFacturacion } from '../components/FormaFacturacion';
 import { verificarCambios } from '../../shared/util/verificarCambios';
 import { FlagModificado } from '../../embarcaciones/components/FlagModificado';
 import { objetosNoIncluidos } from '../../shared/util/objetosNoIncluidos';
+import { useRef } from 'react';
 
 const moment = require('moment');
 
@@ -25,6 +26,9 @@ export const Cliente = () => {
     let [snapTelefonos, setSnapTelefonos] = useState([]);
     let [formaPago, setFormaPago] = useState([]);
     let [snapFormaPago, setSnapFormaPago] = useState([]);
+    let listaFormasDePago = useRef();
+    let [observaciones, setObservaciones] = useState([]);
+    let [snapObservaciones, setSnapObservaciones] = useState([]);
     let [formaFacturacion, setFormaFacturacion] = useState([]);
     let [snapFormaFacturacion, setSnapFormaFacturacion] = useState([]);
     let [listaEmb, setListaEmb] = useState([]);
@@ -43,30 +47,39 @@ export const Cliente = () => {
             setLlavesCliente(Object.keys(response.data[0]));
         });
         
-        axios.get(`/api/db/clientes/${params.id}/m`).then((response)=>{
+        axios.get(`/api/db/clientes/${params.id}/mails`).then((response)=>{
             setMails(JSON.parse(JSON.stringify(response.data)));
             setSnapMails(JSON.parse(JSON.stringify(response.data)));
         });
         
-        axios.get(`/api/db/clientes/${params.id}/t`).then((response)=>{
+        axios.get(`/api/db/clientes/${params.id}/telefonos`).then((response)=>{
             setTelefonos(JSON.parse(JSON.stringify(response.data)));
             setSnapTelefonos(JSON.parse(JSON.stringify(response.data)));
         });
         
-        axios.get(`/api/db/clientes/${params.id}/f`).then((response)=>{
+        axios.get(`/api/db/clientes/${params.id}/forma-de-facturacion`).then((response)=>{
             setFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
             setSnapFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
 
         });
         
-        axios.get(`/api/db/clientes/${params.id}/p`).then((response)=>{
+        axios.get(`/api/db/clientes/${params.id}/forma-de-pago`).then((response)=>{
             setFormaPago(JSON.parse(JSON.stringify(response.data)));
             setSnapFormaPago(JSON.parse(JSON.stringify(response.data)));
         });
+
+        axios.get(`/api/db/clientes/${params.id}/observaciones`).then((response)=>{
+            setObservaciones(JSON.parse(JSON.stringify(response.data)));
+            setSnapObservaciones(JSON.parse(JSON.stringify(response.data)));
+        })
         
-        axios.get(`/api/db/clientes/${params.id}/emb`).then((response)=>{
+        axios.get(`/api/db/clientes/${params.id}/embarcaciones`).then((response)=>{
             setListaEmb(JSON.parse(JSON.stringify(response.data)));
         });
+
+        axios.get('/api/db/formas-de-pago').then((response)=>{
+            listaFormasDePago.current = response.data;
+        })
 
     }, [params.id]);
 
@@ -79,21 +92,23 @@ export const Cliente = () => {
         arrCambio.push(verificarCambios(telefonos, snapTelefonos));
         arrCambio.push(verificarCambios(formaPago, snapFormaPago));
         arrCambio.push(verificarCambios(formaFacturacion, snapFormaFacturacion));
+        arrCambio.push(verificarCambios(observaciones, snapObservaciones));
         let cambio = arrCambio.some((b)=>b);
 
         setModificado(cambio);
 
-    }, [cliente, mails, telefonos, formaFacturacion, formaPago, snapCliente, snapMails, snapTelefonos, snapFormaFacturacion, snapFormaPago]);
+    }, [cliente, mails, telefonos, formaFacturacion, formaPago, observaciones, snapCliente, snapMails, snapTelefonos, snapFormaFacturacion, snapFormaPago, snapObservaciones]);
     
 
     let guardarCambios = () => {
         //verificar los campos modificados en cada tabla
         let cambios = {
-            cliente : { idclientes: cliente.idclientes },
-            mails : {eliminados: [], nuevos: []},
-            telefonos : {eliminados: [], nuevos: []},
-            formaPago : {eliminados: [], nuevos: []},
-            formaFacturacion : []
+            clientes : { idclientes: cliente.idclientes },
+            mails : {eliminar: [], insertar: []},
+            telefonos : {eliminar: [], insertar: []},
+            forma_de_pago : {eliminar: [], insertar: []},
+            observaciones : {eliminar: [], insertar: []},
+            forma_de_facturacion : []
         };
 
 
@@ -102,7 +117,7 @@ export const Cliente = () => {
         
         for(let llave in cliente) {
             if(cliente[llave] !== snapCliente[llave]) {
-                cambios.cliente[llave] = cliente[llave];
+                cambios.clientes[llave] = cliente[llave];
             }
         }
 
@@ -111,7 +126,7 @@ export const Cliente = () => {
 
         //forma de facturacion
         
-        cambios.formaFacturacion = formaFacturacion.map((forma, ind)=>{
+        cambios.forma_de_facturacion = formaFacturacion.map((forma, ind)=>{
             let formaMod = {idforma_de_facturacion : forma.idforma_de_facturacion}
             
             for(let llave in forma) {
@@ -127,30 +142,51 @@ export const Cliente = () => {
 
         
         //mails que no están en el snap = mails nuevos
-        cambios.mails.nuevos = objetosNoIncluidos(mails, snapMails);
+        cambios.mails.insertar = objetosNoIncluidos(mails, snapMails);
         //mails en snap que no están en los mails actuales = mails eliminados 
-        cambios.mails.eliminados = objetosNoIncluidos(snapMails, mails);
+        cambios.mails.eliminar = objetosNoIncluidos(snapMails, mails);
         
         //telefonos
-        cambios.telefonos.nuevos = objetosNoIncluidos(telefonos, snapTelefonos);
-        cambios.telefonos.eliminados = objetosNoIncluidos(snapTelefonos, telefonos);
+        cambios.telefonos.insertar = objetosNoIncluidos(telefonos, snapTelefonos);
+        cambios.telefonos.eliminar = objetosNoIncluidos(snapTelefonos, telefonos);
         
         //formas de pago
-        cambios.formaPago.nuevos = objetosNoIncluidos(formaPago, snapFormaPago);
-        cambios.formaPago.eliminados = objetosNoIncluidos(snapFormaPago, formaPago);
+        cambios.forma_de_pago.insertar = objetosNoIncluidos(formaPago, snapFormaPago);
+        cambios.forma_de_pago.eliminar = objetosNoIncluidos(snapFormaPago, formaPago);
+        
+        //observaciones
+        cambios.observaciones.insertar = objetosNoIncluidos(observaciones, snapObservaciones);
+        cambios.observaciones.eliminar = objetosNoIncluidos(snapObservaciones, observaciones);
 
-        //limpiando tablas sin cambios (ver una forma de no agregar estos datos cuando no hay cambios)
-        Object.keys(cambios.cliente).length === 1 && delete cambios.cliente;
-        cambios.mails.nuevos.length === 0 && cambios.mails.eliminados.length === 0 && delete cambios.mails;
-        cambios.telefonos.nuevos.length === 0 && cambios.telefonos.eliminados.length === 0 && delete cambios.telefonos;
-        cambios.formaPago.nuevos.length === 0 && cambios.formaPago.eliminados.length === 0 && delete cambios.formaPago;
-        cambios.formaFacturacion.forEach((forma, ind)=>{
+
+        //limpiando tablas sin cambios (hay que ver una forma de no agregar estos datos cuando no hay cambios)
+        Object.keys(cambios.clientes).length === 1 && delete cambios.clientes;
+        cambios.mails.insertar.length === 0 && delete cambios.mails.insertar;
+        cambios.mails.eliminar.length === 0 && delete cambios.mails.eliminar;
+        Object.keys(cambios.mails).length === 0 && delete cambios.mails;
+        cambios.telefonos.insertar.length === 0 && delete cambios.telefonos.insertar;
+        cambios.telefonos.eliminar.length === 0 && delete cambios.telefonos.eliminar;
+        Object.keys(cambios.telefonos).length === 0 && delete cambios.telefonos;
+        cambios.forma_de_pago.insertar.length === 0 && delete cambios.forma_de_pago.insertar;
+        cambios.forma_de_pago.eliminar.length === 0 && delete cambios.forma_de_pago.eliminar;
+        Object.keys(cambios.forma_de_pago).length === 0 && delete cambios.forma_de_pago;
+        cambios.observaciones.insertar.length === 0 && delete cambios.observaciones.insertar;
+        cambios.observaciones.eliminar.length === 0 && delete cambios.observaciones.eliminar;
+        Object.keys(cambios.observaciones).length === 0 && delete cambios.observaciones;
+
+        cambios.forma_de_facturacion.forEach((forma, ind)=>{
             if (Object.keys(forma).length === 1) {
-                cambios.formaFacturacion.splice(ind,1);
+                cambios.forma_de_facturacion.splice(ind,1);
             }
         });
-        cambios.formaFacturacion.length === 0 && delete cambios.formaFacturacion;
+        cambios.forma_de_facturacion.length === 0 && delete cambios.forma_de_facturacion;
  
+        axios.put(`/api/db/clientes/${params.id}/guardar-cambios`, cambios).then((response)=>{
+            console.log('response: ', response)
+        }).catch((error)=>{
+            throw error;
+        })
+        
         console.log('cambios: ', cambios);
 
     }
@@ -162,6 +198,7 @@ export const Cliente = () => {
         setTelefonos(JSON.parse(JSON.stringify(snapTelefonos)));
         setFormaPago(JSON.parse(JSON.stringify(snapFormaPago)));
         setFormaFacturacion(JSON.parse(JSON.stringify(snapFormaFacturacion)));
+        setObservaciones(JSON.parse(JSON.stringify(snapObservaciones)));
 
     }
 
@@ -262,6 +299,31 @@ export const Cliente = () => {
             return(newFormaPago);
         })
     }
+
+    let validarFormaPago = (valor, callback) => {
+        let forma = listaFormasDePago.current.filter((forma)=> forma.descripcion === valor);
+        if(forma.length > 0 ) {
+            callback({descripcion : valor, forma_de_pago_idforma_de_pago: forma[0].idforma_de_pago})
+        }
+    }
+
+    let hancleChangeObservaciones = (obj) => {
+        setObservaciones((prevObservaciones)=>{
+            let newObservaciones = [...prevObservaciones, obj];
+            return(newObservaciones);
+        })
+    }
+
+    let handleEliminarObservaciones = (ind) => {
+        setObservaciones((prevObservaciones)=>{
+            let newObservaciones = prevObservaciones.filter((_e, i) =>{
+                return i !== ind;
+            })
+            return(newObservaciones);
+        })
+    }
+
+
     
     return(
         <div className="clientes__container">
@@ -295,69 +357,73 @@ export const Cliente = () => {
 
                 <div className="cliente__mails">
                     <span>mails: </span>
-                        {
-                            mails ? 
                                 
-                                    <CampoMultiple
-                                        showLabel={false}
-                                        soloLectura={false}
-                                        tipo={'mail'}
-                                        entidad="cliente"
-                                        handler={handleChangeMails}
-                                        handleEliminar={handleEliminarMail}
-                                        llave={'mail'}
-                                        datos={mails}
-                                        objKey={'mail'}
-                                    />
+                    <CampoMultiple
+                        showLabel={false}
+                        soloLectura={false}
+                        tipo={'mail'}
+                        entidad="cliente"
+                        handler={handleChangeMails}
+                        handleEliminar={handleEliminarMail}
+                        llave={'mail'}
+                        datos={mails}
+                        objKey={'mail'}
+                    />
                                 
-                        
-                        
-                        : '...'
-                        }
                 </div>
 
                 <div className="cliente__telefonos">
                     <span>telefonos: </span>
-                    {
-                        telefonos ? 
+
+                    <CampoMultiple
+                        showLabel={false}
+                        soloLectura={false}
+                        tipo={'text'}
+                        entidad="cliente"
+                        handler={handleChangeTelefonos}
+                        handleEliminar={handleEliminarTelefono}
+                        llave={'telefono'}
+                        datos={telefonos}
+                        objKey='telefono'
+                    />
                             
-                                <CampoMultiple
-                                    showLabel={false}
-                                    soloLectura={false}
-                                    tipo={'text'}
-                                    entidad="cliente"
-                                    handler={handleChangeTelefonos}
-                                    handleEliminar={handleEliminarTelefono}
-                                    llave={'telefono'}
-                                    datos={telefonos}
-                                    objKey='telefono'
-                                />
-                            
-                    : '...' 
-                    }
                 </div>
             
             </div>
 
             <div className="cliente__forma-pago">
                 <span>forma de pago: </span>
-                {
-                    formaPago ? 
+
+                <CampoMultiple
+                    validacion={validarFormaPago}
+                    showLabel={false}
+                    soloLectura={false}
+                    tipo={'text'}
+                    entidad="cliente"
+                    handler={handleChangeFormaPago}
+                    handleEliminar={handleEliminarFormaPago}
+                    llave={'forma-de-pago'}
+                    datos={formaPago}
+                    objKey='descripcion'
+                />
                     
-                            <CampoMultiple
-                                showLabel={false}
-                                soloLectura={false}
-                                tipo={'text'}
-                                entidad="cliente"
-                                handler={handleChangeFormaPago}
-                                handleEliminar={handleEliminarFormaPago}
-                                llave={'forma-de-pago'}
-                                datos={formaPago}
-                                objKey='descripcion'
-                            />
-                    
-                     : '...' 
-                }
+            </div>
+
+            <div className="cliente__observaciones">
+                <span>Observaciones: </span>
+
+                <CampoMultiple
+                    showLabel={false}
+                    soloLectura={false}
+                    tipo={'text'}
+                    entidad='cliente'
+                    handler={hancleChangeObservaciones}
+                    handleEliminar={handleEliminarObservaciones}
+                    llave='observacion'
+                    datos={observaciones}
+                    objKey='observacion'
+                    />
+
             </div>
 
             {

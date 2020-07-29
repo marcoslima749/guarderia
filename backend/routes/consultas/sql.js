@@ -117,15 +117,18 @@ const embarcaciones = {
 }
 
 
-const mails = id =>
+const obtenerMails = id =>
 `SELECT
-mails.mail
+mails.mail, mails.idmails
 FROM 
 mails
 JOIN clientes ON clientes.idclientes = mails.clientes_idclientes
 WHERE
 clientes.idclientes = '${id}';
 `;
+
+const agregarMail = (idCliente, mail) => `INSERT INTO mails (clientes_idclientes, mail) VALUES ('${idCliente}', '${mail}');`;
+const eliminarMail = (idMail) => `DELETE FROM mails WHERE (idmails = '${idMail}');`;
 
 //ESTAS CONSULTAS ASUMEN QUE TODOS LOS DATOS ESTÁN INGRESADOS. ESTE ES SÓLO EL CASO DE LUMAGO
 //POR ESO EL RESTO VUELVE UN ARRAY VACÍO, PORQUE NO SE PUEDEN CUMPLIR TODAS LAS CONDICIONES
@@ -156,26 +159,32 @@ WHERE
 clientes.idclientes = '${id}';`
 
 const formaPago = (id) => `
-SELECT forma_de_pago.descripcion
+SELECT descripcion, forma_de_pago_idforma_de_pago, idforma_de_pago_has_clientes
 FROM forma_de_pago
 JOIN forma_de_pago_has_clientes ON forma_de_pago_idforma_de_pago = forma_de_pago.idforma_de_pago
 WHERE
 forma_de_pago_has_clientes.clientes_idclientes = '${id}';
 `;
 
+const insertarFormaPago = (idCliente, idFormaPago, numero) => `INSERT INTO forma_de_pago_has_clientes (clientes_idclientes, forma_de_pago_idforma_de_pago ${numero ? ', numero' : '' }) VALUES ('${idCliente}','${idFormaPago}', ${numero ? ", '" + numero + "'" : ""});`
+const eliminarFormaPago = (idFormaPagoHasClientes) => `DELETE FROM forma_de_pago_has_clientes WHERE (idforma_de_pago_has_clientes = '${idFormaPagoHasClientes}');`
+
 const formaFacturacion = (id) => `
 SELECT * FROM forma_de_facturacion WHERE clientes_idclientes = '${id}';
 `;
 
-const telefonos = (id) => 
+const obtenerTelefonos = (id) => 
     `SELECT
-    telefonos.telefono
+    telefonos.telefono, telefonos.idtelefonos
     FROM 
     telefonos
     JOIN clientes ON clientes.idclientes = telefonos.clientes_idclientes
     WHERE
     clientes.idclientes = '${id}';
     `;
+
+const insertarTelefono = (idCliente, telefono, observ) => `INSERT INTO telefonos (clientes_idclientes, telefono${observ ? ', observacion' : '' }) VALUES('${idCliente}' , '${telefono}'${observ ? ",'" + observ + "'" : "" });`;
+const eliminarTelefono = (idTelefono) => `DELETE FROM telefonos WHERE idtelefonos = '${idTelefono}';`
 
 const listaEmb = (id) =>
 `SELECT embarcaciones.idembarcaciones AS id, embarcaciones.nombre
@@ -185,29 +194,51 @@ JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes
 WHERE clientes.idclientes = '${id}';`
 ;
 
+const obtenerObservaciones = (id) =>
+`SELECT * FROM observaciones WHERE observaciones.clientes_idclientes = '${id}';`;
+const insertarObservacion = (idCliente, obs) => `INSERT INTO observaciones (clientes_idclientes, observacion) VALUES ('${idCliente}', '${obs}')`;
+const eliminarObservacion = (idObs) => `DELETE FROM observaciones WHERE idobservaciones = '${idObs}'`;
+
 const cModificarCliente = (campo, valor, id) => modificar('clientes', campo, valor, 'idclientes', id);
-const cModificarMails = (campo, valor, id) => modificar('mails', campo, valor, 'idmails', id);
-const cModificarTelefonos = (campo, valor, id) => modificar('telefonos', campo, valor, 'idtelefonos', id);
-const cModificarFormaPago = (campo, valor, id) => modificar('forma_de_pago', campo, valor, 'idforma_de_pago', id);
 const cModificarFormaFacturacion = (campo, valor, id) => modificar('forma_de_facturacion', campo, valor, 'idforma_de_facturacion', id);
 
 
 const clientes = {
     todo: todo('clientes'),
     seleccionar : (id) => select('clientes', '*', `idclientes = '${id}'`),
-    mails,
-    telefonos,
-    formaPago,
-    formaFacturacion,
+    mails: {
+            consultar : obtenerMails,
+            insertar : agregarMail,
+            eliminar : eliminarMail
+            },
+    telefonos: {
+                consultar: obtenerTelefonos,
+                insertar: insertarTelefono,
+                eliminar: eliminarTelefono 
+                },
+    forma_de_pago: {
+                    consultar: formaPago,
+                    insertar : insertarFormaPago,
+                    eliminar: eliminarFormaPago
+                    },
+    observaciones : {
+                    consultar : obtenerObservaciones,
+                    insertar: insertarObservacion,
+                    eliminar: eliminarObservacion
+                    },
+    forma_de_facturacion: {
+                            consultar: formaFacturacion
+                            },
     cliente,
     listaEmb,
-    cModificarCliente,
-    cModificarMails,
-    cModificarTelefonos,
-    cModificarFormaPago,
-    cModificarFormaFacturacion
+    modificarCliente : cModificarCliente,
+    modificarFormaFacturacion : cModificarFormaFacturacion
 
 
+}
+
+let listaFormasPago = {
+    consultar : ()=> 'SELECT * FROM forma_de_pago;'
 }
 
 /*
@@ -265,5 +296,6 @@ VALUES (
 module.exports = {
     tareas,
     embarcaciones,
-    clientes
+    clientes,
+    listaFormasPago
 }
