@@ -130,9 +130,6 @@ clientes.idclientes = '${id}';
 const agregarMail = (idCliente, mail) => `INSERT INTO mails (clientes_idclientes, mail) VALUES ('${idCliente}', '${mail}');`;
 const eliminarMail = (idMail) => `DELETE FROM mails WHERE (idmails = '${idMail}');`;
 
-//ESTAS CONSULTAS ASUMEN QUE TODOS LOS DATOS ESTÁN INGRESADOS. ESTE ES SÓLO EL CASO DE LUMAGO
-//POR ESO EL RESTO VUELVE UN ARRAY VACÍO, PORQUE NO SE PUEDEN CUMPLIR TODAS LAS CONDICIONES
-//QUIZAS CONVIENE HACER CONSULTAS SEPARADAS PARA TENER LOS DATOS EXISTENTES
 
 const cliente = id => `
 SELECT
@@ -159,7 +156,7 @@ WHERE
 clientes.idclientes = '${id}';`
 
 const formaPago = (id) => `
-SELECT descripcion, forma_de_pago_idforma_de_pago, idforma_de_pago_has_clientes
+SELECT *
 FROM forma_de_pago
 JOIN forma_de_pago_has_clientes ON forma_de_pago_idforma_de_pago = forma_de_pago.idforma_de_pago
 WHERE

@@ -13,6 +13,7 @@ import { verificarCambios } from '../../shared/util/verificarCambios';
 import { FlagModificado } from '../../embarcaciones/components/FlagModificado';
 import { objetosNoIncluidos } from '../../shared/util/objetosNoIncluidos';
 import { useRef } from 'react';
+import { DetalleFormaPago } from '../components/DetalleFormaPago';
 
 const moment = require('moment');
 
@@ -33,6 +34,7 @@ export const Cliente = () => {
     let [snapFormaFacturacion, setSnapFormaFacturacion] = useState([]);
     let [listaEmb, setListaEmb] = useState([]);
     let [modificado, setModificado] = useState(false);
+    let [detalleFormaPago, setDetalleFormaPago] = useState(null);
 
     let params = useParams();
  
@@ -98,6 +100,31 @@ export const Cliente = () => {
         setModificado(cambio);
 
     }, [cliente, mails, telefonos, formaFacturacion, formaPago, observaciones, snapCliente, snapMails, snapTelefonos, snapFormaFacturacion, snapFormaPago, snapObservaciones]);
+
+    let handleDescartarDetalleFP = () =>{
+        setDetalleFormaPago(null);
+    } 
+
+    let handleGuardarDetalleFP = (formaGuardada) => {
+        if(formaGuardada.numero === ""){
+            formaGuardada.numero = null;
+        }
+
+        setFormaPago((prevFormaPago)=> {
+            let newFormaPago = prevFormaPago.map((forma)=>{
+                if(forma.idforma_de_pago_has_clientes === formaGuardada.idforma_de_pago_has_clientes){
+                    return formaGuardada
+                } else {
+                    return forma
+                };
+            });
+
+            return(newFormaPago);
+        });
+
+        setDetalleFormaPago(null);
+    }
+
     
 
     let guardarCambios = () => {
@@ -393,8 +420,19 @@ export const Cliente = () => {
 
             <div className="cliente__forma-pago">
                 <span>forma de pago: </span>
+                {
+                    detalleFormaPago ?
+
+                <DetalleFormaPago
+                    detalle={detalleFormaPago}
+                    handleGuardar={handleGuardarDetalleFP}
+                    handleDescartar={handleDescartarDetalleFP}
+                />
+                    :
 
                 <CampoMultiple
+                    chipsHandleClick={setDetalleFormaPago}
+                    chipsClases='simple-hover'
                     validacion={validarFormaPago}
                     showLabel={false}
                     soloLectura={false}
@@ -406,6 +444,9 @@ export const Cliente = () => {
                     datos={formaPago}
                     objKey='descripcion'
                 />
+
+                }
+
                     
             </div>
 

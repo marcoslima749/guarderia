@@ -5,7 +5,7 @@ import { Chip } from './Chip';
 import './CampoMultiple.css';
 import { useEffect } from 'react';
 
-export const CampoMultiple = ({validacion, datos, entidad, llave, handler, handleEliminar, objKey, label = '', tipo = 'text', soloLectura = false, showLabel = false}) => {
+export const CampoMultiple = ({chipsHandleClick = ()=>{}, chipsClases = '', validacion, datos, entidad, llave, handler, handleEliminar, objKey, label = '', tipo = 'text', soloLectura = false, showLabel = false}) => {
     let [listaChips, setListaChips] = useState([]);
     let [valorInput, setValorInput] = useState('');
     
@@ -44,11 +44,11 @@ export const CampoMultiple = ({validacion, datos, entidad, llave, handler, handl
         <div className="campo-multiple__container">
             <div className="chips__container">
                 {
-                    listaChips.length > 0 ? listaChips.map((c, i)=> <Chip value={c[objKey]} ind={i} handleEliminar={handleEliminar} />) : <div style={{height: '40px', margin: '1px'}}></div>
+                    listaChips.length > 0 ? listaChips.map((c, i)=> <Chip handleClick={()=>chipsHandleClick(c)} clases={chipsClases} value={c[objKey]} ind={i} handleEliminar={handleEliminar} />) : <div style={{height: '40px', margin: '1px'}}></div>
                 }
             </div>
             <Entrada
-                placeHolder={`${llave === 'forma-de-pago' ? 'nueva' : 'nuevo'} ${llave.replace(/[_-]/g,' ')}`}
+                placeHolder={`${llave === 'forma-de-pago' || llave === 'observaciones'  ? 'nueva' : 'nuevo'} ${llave.replace(/[_-]/g,' ')}`}
                 soloLectura={soloLectura}
                 showLabel={showLabel}
                 label={label}
