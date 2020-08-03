@@ -49,6 +49,7 @@ export const FormaFacturacion = ({datos = [], handler = ()=>{}, clienteID, handl
                                     return(
 
                                         <CampoEditable
+                                        key={id + '-' + llave}
                                         placeHolder={label}
                                         id={id}
                                         showLabel={false}
@@ -62,7 +63,7 @@ export const FormaFacturacion = ({datos = [], handler = ()=>{}, clienteID, handl
                                         />
                                         
                                     )
-                                    }), <span onClick={()=>handleEliminarForma(id)} className="forma-facturacion__boton-cerrar simple-hover">&times;</span>]
+                                    }), <span key={id + '-Eliminar'} onClick={()=>handleEliminarForma(id)} className="forma-facturacion__boton-cerrar simple-hover">&times;</span>]
                                 )
                                 
                                 }

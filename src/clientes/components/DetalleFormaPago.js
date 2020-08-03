@@ -15,7 +15,7 @@ export const DetalleFormaPago = ({clases = '', detalle, handleGuardar = ()=>{}, 
 
     return(
         <div className={`forma-de-pago__detalle__container ${clases}`}>
-            <div class="forma-de-pago__detalle__inputs">
+            <div className="forma-de-pago__detalle__inputs">
                 <Entrada handleChange={handleChangeDetalle} name='descripcion' clases='forma-de-pago__detalle__descripcion' value={detalleState.descripcion} placeHolder='Descripción' />
                 <Entrada handleChange={handleChangeDetalle} name='numero' clases='forma-de-pago__detalle__numero' value={detalleState.numero} placeHolder='Número' />
             </div>

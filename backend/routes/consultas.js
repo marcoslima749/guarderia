@@ -253,14 +253,22 @@ routes.put('/clientes/:id/guardar-cambios',(req, res) => {
             case 'forma_de_pago':
                 
                 let consultaFormaDePago = '';
-                if (cambios.forma_de_pago.insertar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.insertar.map((forma)=> sql.clientes.forma_de_pago.insertar(id,forma.forma_de_pago_idforma_de_pago)).join('');}
+                if (cambios.forma_de_pago.insertar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.insertar.map((forma)=> sql.clientes.forma_de_pago.insertar(id,forma.forma_de_pago_idforma_de_pago, forma.numero)).join('');}
                 if (cambios.forma_de_pago.eliminar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.eliminar.map((forma)=> sql.clientes.forma_de_pago.eliminar(forma.idforma_de_pago_has_clientes)).join('');}
                 console.log('append forma de pago: ', consultaFormaDePago)
                 consulta = consulta + consultaFormaDePago;
                 
                 
-            break;
-            case 'forma_de_facturacion':
+                break;
+                case 'forma_de_facturacion':
+                    
+                    let consultaFormaFacturacion = '';
+                    if (cambios.forma_de_facturacion.insertar) {consultaFormaFacturacion =  consultaFormaFacturacion + cambios.forma_de_facturacion.insertar.map((forma)=> sql.clientes.forma_de_facturacion.insertar(forma.numero_cliente, forma.razon_social, forma.documento, forma.iva, forma.tipo_de_factura,id)).join('');}
+                    if (cambios.forma_de_facturacion.eliminar) {consultaFormaFacturacion =  consultaFormaFacturacion + cambios.forma_de_facturacion.eliminar.map((forma)=> sql.clientes.forma_de_facturacion.eliminar(forma.idforma_de_facturacion)).join('');}
+                    console.log('append forma de facturacion: ', consultaFormaFacturacion)
+                    consulta = consulta + consultaFormaFacturacion;
+
+
             break;
             default:
                 

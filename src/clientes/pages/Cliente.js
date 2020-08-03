@@ -12,6 +12,7 @@ import { FormaFacturacion } from '../components/FormaFacturacion';
 import { verificarCambios } from '../../shared/util/verificarCambios';
 import { FlagModificado } from '../../embarcaciones/components/FlagModificado';
 import { objetosNoIncluidos } from '../../shared/util/objetosNoIncluidos';
+import { objetosNoIncluidosID } from '../../shared/util/objetosNoIncluidosID';
 import { useRef } from 'react';
 import { DetalleFormaPago } from '../components/DetalleFormaPago';
 
@@ -133,9 +134,9 @@ export const Cliente = () => {
             clientes : { idclientes: cliente.idclientes },
             mails : {eliminar: [], insertar: []},
             telefonos : {eliminar: [], insertar: []},
-            forma_de_pago : {eliminar: [], insertar: []},
             observaciones : {eliminar: [], insertar: []},
-            forma_de_facturacion : []
+            forma_de_pago : {eliminar: [], insertar: []},
+            forma_de_facturacion : {eliminar: [], insertar: [], modificar:[]}
         };
 
 
@@ -152,8 +153,38 @@ export const Cliente = () => {
         //hay que verificar también qué campo cambió en qué objeto
 
         //forma de facturacion
+
+        cambios.forma_de_facturacion.insertar = formaFacturacion.filter((forma)=> {
+            return forma.idforma_de_facturacion < 1;
+        });
+
+
+        let ffModificarEliminar = formaFacturacion.filter((forma)=> {
+            return forma.idforma_de_facturacion >= 1;
+        });
         
-        cambios.forma_de_facturacion = formaFacturacion.map((forma, ind)=>{
+        //comparar solo el ID
+        cambios.forma_de_facturacion.eliminar = objetosNoIncluidosID(snapFormaFacturacion, ffModificarEliminar, 'idforma_de_facturacion')
+        
+        console.log('eliminar ', cambios.forma_de_facturacion.eliminar);
+        
+        let ffModificar = ffModificarEliminar.filter((ff)=>{
+            let modificar = true;
+            cambios.forma_de_facturacion.eliminar.forEach((elim)=>{
+                if (elim.idforma_de_facturacion === ff.idforma_de_facturacion){
+                    modificar = false;
+                }
+            });
+            return modificar;
+        });
+        
+
+        cambios.forma_de_facturacion.modificar = ffModificar.map((forma, ind)=>{
+            
+            if(forma.idforma_de_facturacion < 1) {
+                return forma;
+            }
+
             let formaMod = {idforma_de_facturacion : forma.idforma_de_facturacion}
             
             for(let llave in forma) {
@@ -168,6 +199,11 @@ export const Cliente = () => {
         })
 
         
+        
+        //formas de pago
+        cambios.forma_de_pago.insertar = objetosNoIncluidos(formaPago, snapFormaPago);
+        cambios.forma_de_pago.eliminar = objetosNoIncluidos(snapFormaPago, formaPago);
+        
         //mails que no están en el snap = mails nuevos
         cambios.mails.insertar = objetosNoIncluidos(mails, snapMails);
         //mails en snap que no están en los mails actuales = mails eliminados 
@@ -177,13 +213,10 @@ export const Cliente = () => {
         cambios.telefonos.insertar = objetosNoIncluidos(telefonos, snapTelefonos);
         cambios.telefonos.eliminar = objetosNoIncluidos(snapTelefonos, telefonos);
         
-        //formas de pago
-        cambios.forma_de_pago.insertar = objetosNoIncluidos(formaPago, snapFormaPago);
-        cambios.forma_de_pago.eliminar = objetosNoIncluidos(snapFormaPago, formaPago);
-        
         //observaciones
         cambios.observaciones.insertar = objetosNoIncluidos(observaciones, snapObservaciones);
         cambios.observaciones.eliminar = objetosNoIncluidos(snapObservaciones, observaciones);
+        
 
 
         //limpiando tablas sin cambios (hay que ver una forma de no agregar estos datos cuando no hay cambios)
@@ -200,14 +233,28 @@ export const Cliente = () => {
         cambios.observaciones.insertar.length === 0 && delete cambios.observaciones.insertar;
         cambios.observaciones.eliminar.length === 0 && delete cambios.observaciones.eliminar;
         Object.keys(cambios.observaciones).length === 0 && delete cambios.observaciones;
-
-        cambios.forma_de_facturacion.forEach((forma, ind)=>{
+        
+        cambios.forma_de_facturacion.modificar.forEach((forma, ind)=>{
             if (Object.keys(forma).length === 1) {
-                cambios.forma_de_facturacion.splice(ind,1);
+                cambios.forma_de_facturacion.modificar.splice(ind,1);
             }
         });
-        cambios.forma_de_facturacion.length === 0 && delete cambios.forma_de_facturacion;
- 
+        cambios.forma_de_facturacion.insertar.forEach((forma, ind)=>{
+            if (Object.keys(forma).length === 1) {
+                cambios.forma_de_facturacion.insertar.splice(ind,1);
+            }
+        });
+        cambios.forma_de_facturacion.eliminar.forEach((forma, ind)=>{
+            if (Object.keys(forma).length === 1) {
+                cambios.forma_de_facturacion.eliminar.splice(ind,1);
+            }
+        });
+
+        cambios.forma_de_facturacion.eliminar.length === 0 && delete cambios.forma_de_facturacion.eliminar;
+        cambios.forma_de_facturacion.insertar.length === 0 && delete cambios.forma_de_facturacion.insertar;
+        cambios.forma_de_facturacion.modificar.length === 0 && delete cambios.forma_de_facturacion.modificar;
+        Object.keys(cambios.forma_de_facturacion).length === 0 && delete cambios.forma_de_facturacion;
+
         axios.put(`/api/db/clientes/${params.id}/guardar-cambios`, cambios).then((response)=>{
             console.log('response: ', response)
         }).catch((error)=>{
@@ -231,7 +278,6 @@ export const Cliente = () => {
 
     let handleNuevaForma = (nuevaForma) => {
         setFormaFacturacion((prevForma)=>{
-            console.log('click')
             return [...prevForma, nuevaForma]
         })
     }
@@ -241,17 +287,12 @@ export const Cliente = () => {
         let value = e.target.value;
         setFormaFacturacion((prevForma)=>{
 
-            let resto = prevForma.filter((forma)=>{
-                return forma.idforma_de_facturacion !== id
+            let newForma = prevForma.map((forma)=>{
+                if(forma.idforma_de_facturacion === id){
+                    forma[name] = value;
+                }
+                return forma;
             });
-
-            let targetForma = prevForma.filter((forma)=>{
-                return forma.idforma_de_facturacion === id
-            })[0];
-
-            targetForma[name] = value;
-
-            let newForma = [...resto, targetForma];
 
             return(newForma);
 
@@ -312,8 +353,9 @@ export const Cliente = () => {
     }
     
     let handleChangeFormaPago = (obj) => {
+        let objCompleto = {...obj, idforma_de_pago_has_clientes : Math.random(), numero : null, clientes_idclientes : Number(params.id)}
         setFormaPago((prevFormaPago)=>{
-            let newFormaPago = [...prevFormaPago, obj];
+            let newFormaPago = [...prevFormaPago, objCompleto];
             return(newFormaPago);
         })
     }
@@ -364,6 +406,7 @@ export const Cliente = () => {
                         let soloLectura = llave === 'idclientes';
                         return(
                             <CampoEditable
+                            key={llave}
                             showLabel={true}
                             label={label}
                             soloLectura={soloLectura}

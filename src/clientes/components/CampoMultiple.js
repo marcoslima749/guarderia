@@ -44,7 +44,7 @@ export const CampoMultiple = ({chipsHandleClick = ()=>{}, chipsClases = '', vali
         <div className="campo-multiple__container">
             <div className="chips__container">
                 {
-                    listaChips.length > 0 ? listaChips.map((c, i)=> <Chip handleClick={()=>chipsHandleClick(c)} clases={chipsClases} value={c[objKey]} ind={i} handleEliminar={handleEliminar} />) : <div style={{height: '40px', margin: '1px'}}></div>
+                    listaChips.length > 0 ? listaChips.map((c, i)=> <Chip key={Math.random()} handleClick={()=>chipsHandleClick(c)} clases={chipsClases} value={c[objKey]} ind={i} handleEliminar={handleEliminar} />) : <div style={{height: '40px', margin: '1px'}}></div>
                 }
             </div>
             <Entrada

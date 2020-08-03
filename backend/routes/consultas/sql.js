@@ -163,11 +163,20 @@ WHERE
 forma_de_pago_has_clientes.clientes_idclientes = '${id}';
 `;
 
-const insertarFormaPago = (idCliente, idFormaPago, numero) => `INSERT INTO forma_de_pago_has_clientes (clientes_idclientes, forma_de_pago_idforma_de_pago ${numero ? ', numero' : '' }) VALUES ('${idCliente}','${idFormaPago}', ${numero ? ", '" + numero + "'" : ""});`
+const insertarFormaPago = (idCliente, idFormaPago, numero) => `INSERT INTO forma_de_pago_has_clientes (clientes_idclientes, forma_de_pago_idforma_de_pago ${numero ? ', numero' : '' }) VALUES ('${idCliente}','${idFormaPago}'${numero ? ",'" + numero + "'" : ""});`
 const eliminarFormaPago = (idFormaPagoHasClientes) => `DELETE FROM forma_de_pago_has_clientes WHERE (idforma_de_pago_has_clientes = '${idFormaPagoHasClientes}');`
 
 const formaFacturacion = (id) => `
 SELECT * FROM forma_de_facturacion WHERE clientes_idclientes = '${id}';
+`;
+
+const insertarFormaFacturacion = (numero_cliente, razon_social, documento, iva, tipo_de_factura, clientes_idclientes) => `
+INSERT INTO forma_de_facturacion (numero_cliente, razon_social, documento, iva, tipo_de_factura, clientes_idclientes)
+VALUES ('${numero_cliente}', '${razon_social}', '${documento}', '${iva}', '${tipo_de_factura}', '${clientes_idclientes}');
+`;
+
+const eliminarFormaFacturacion = (idforma_de_facturacion) => `
+DELETE FROM forma_de_facturacion WHERE (idforma_de_facturacion = '${idforma_de_facturacion}');
 `;
 
 const obtenerTelefonos = (id) => 
@@ -224,7 +233,9 @@ const clientes = {
                     eliminar: eliminarObservacion
                     },
     forma_de_facturacion: {
-                            consultar: formaFacturacion
+                            consultar: formaFacturacion,
+                            insertar: insertarFormaFacturacion,
+                            eliminar: eliminarFormaFacturacion
                             },
     cliente,
     listaEmb,
