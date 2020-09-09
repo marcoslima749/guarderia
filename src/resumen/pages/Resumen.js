@@ -10,6 +10,7 @@ export const Resumen = ({clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
     let {path} = useRouteMatch();
+    
 
     useEffect(()=> {
         axios.get('/api/db/resumen').then((response)=>{
@@ -42,10 +43,11 @@ export const Resumen = ({clases}) => {
                 {
                     llaves.filter((llave)=>llave !== 'IDc').map((llave)=> {
                         return(
-                            <span key={llave} className={`${llave === 'Embarcacion' || llave === 'Cliente' ? 'simple-hover': '' } embarcaciones__campo embarcacion__${llave}`}>
+                            <span key={llave} className={`${llave === 'Embarcacion' || llave === 'Cliente' || llave === 'Estado' ? 'simple-hover': '' } embarcaciones__campo embarcacion__${llave}`}>
                                 {
                                     llave === 'Embarcacion' ? <Boton path={`/embarcaciones/${emb.ID}`}>{emb[llave]}</Boton>
                                     : llave === 'Cliente' ? <Boton path={`/clientes/${emb.IDc}`} >{emb[llave]}</Boton> 
+                                    : llave === 'Estado' ? <Boton path={`/clientes/${emb.IDc}/cta-cte`} >{emb[llave]}</Boton> 
                                     : llave === 'Contrato' || llave === 'Seguro' ? moment(emb[llave]).format('DD[-]MM[-]YYYY') 
                                     : emb[llave]
                                 }

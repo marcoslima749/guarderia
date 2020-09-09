@@ -25,9 +25,9 @@ export const App = () => {
                     <Home />
                 </Route>
                 <Route exact path="/login">
-                <Dashboard clases="dashboard--home">
-                    <Login />
-                </Dashboard>  
+                    <Dashboard clases="dashboard--home">
+                        <Login />
+                    </Dashboard>  
                 </Route>
                 <Route exact path="/register">
                     <Register />
@@ -35,24 +35,29 @@ export const App = () => {
                 {/* a partir de acá está logueado */}
 
                 <Route exact path="/inicio">
-                <Dashboard nombre="CYNM" descripcion="Tareas" side={true} >
-                    <Tareas />
-                </Dashboard>  
+                    <Dashboard nombre="CYNM" descripcion="Tareas" side={true} >
+                        <Tareas />
+                    </Dashboard>  
                 </Route>
                 <Route exact path="/resumen">
-                <Dashboard nombre="CYNM" descripcion="Resumen" side={true} panel={<Boton path="#" clases="simple-hover embarcacion__boton-nuevo">Nuevo</Boton>} >
-                    <Resumen />
-                </Dashboard>  
+                    <Dashboard nombre="CYNM" descripcion="Resumen" side={true} panel={<Boton path="#" clases="simple-hover embarcacion__boton-nuevo">Nuevo</Boton>} >
+                        <Resumen />
+                    </Dashboard>  
                 </Route>
                 <Route path="/embarcaciones/:id">
-                <Dashboard nombre="CYNM" descripcion="embarcaciones" side={true} >
-                    <Embarcacion />
-                </Dashboard>  
+                    <Dashboard nombre="CYNM" descripcion="embarcaciones" side={true} >
+                        <Embarcacion />
+                    </Dashboard>  
+                </Route>
+                <Route path="/clientes/:id/cta-cte">
+                    <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
+                        <h1>ESTADO DE CUENTA</h1>
+                    </Dashboard>  
                 </Route>
                 <Route path="/clientes/:id">
-                <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
-                    <Cliente />
-                </Dashboard>  
+                    <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
+                        <Cliente />
+                    </Dashboard>  
                 </Route>
                 <Redirect to="/" />
             </Switch>
