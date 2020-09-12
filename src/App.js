@@ -17,6 +17,7 @@ import { Tareas } from './inicio/components/Tareas';
 import { Embarcacion } from './embarcaciones/pages/Embarcacion';
 import { Cliente } from './clientes/pages/Cliente';
 import { Boton } from './shared/components/Boton';
+import { CuentaCorriente } from './cuentacorriente/pages/CuentaCorriente';
 
 export const App = () => {
     return (
@@ -51,7 +52,7 @@ export const App = () => {
                 </Route>
                 <Route path="/clientes/:id/cta-cte">
                     <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
-                        <h1>ESTADO DE CUENTA</h1>
+                        <CuentaCorriente />
                     </Dashboard>  
                 </Route>
                 <Route path="/clientes/:id">

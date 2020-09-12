@@ -20,6 +20,10 @@
 .env.test.local
 .env.production.local
 
+/src/cuentacorriente/HistoricoCuentasCorrientesMuestra.pdf
+/src/cuentacorriente/ModeloCuentaCorriente.xlsx
+/src/cuentacorriente/ResumenBancoMuestra.pdf
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

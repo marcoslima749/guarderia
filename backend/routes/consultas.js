@@ -208,14 +208,12 @@ routes.get('/clientes/:id/observaciones', (req, res)=>{
     })
 })
 
-/*
 
-ESTA ES LA CONSULTA DESDE EL FRONTEND AL BACKEND
 
 routes.get('/clientes/:id/cta-cte/cuotas', (req, res)=>{
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.cuenta.cuotas(id), (error, results, fields)=>{
+    db.query(sql.clientes.cta_cte.cuotas(id), (error, results, fields)=>{
         if(error) throw error;
         res.json(results);
     })
@@ -224,22 +222,32 @@ routes.get('/clientes/:id/cta-cte/cuotas', (req, res)=>{
 routes.get('/clientes/:id/cta-cte/tasas', (req, res)=>{
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.cuenta.tasas(id), (error, results, fields)=>{
+    db.query(sql.clientes.cta_cte.tasas(id), (error, results, fields)=>{
         if(error) throw error;
         res.json(results);
     })
+})
 
 routes.get('/clientes/:id/cta-cte/pagos', (req, res)=>{
     const db = req.app.get('db');
     const id = req.params.id;
-    db.query(sql.clientes.cuenta.pagos(id), (error, results, fields)=>{
+    db.query(sql.clientes.cta_cte.pagos(id), (error, results, fields)=>{
+        if(error) throw error;
+        res.json(results);
+    })
+})
+
+routes.get('/clientes/:id/cta-cte', (req, res)=>{
+    const db = req.app.get('db');
+    const id = req.params.id;
+    db.query(sql.clientes.cta_cte.estado(id), (error, results, fields)=>{
         if(error) throw error;
         res.json(results);
     })
 })
 
 
-*/
+
 
 routes.put('/clientes/:id/guardar-cambios',(req, res) => {
     const db = req.app.get('db');

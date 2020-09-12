@@ -10,12 +10,17 @@ export const Resumen = ({clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
     let {path} = useRouteMatch();
+    let [cuentaCorriente, setCuentaCorriente] = useState([])
     
 
     useEffect(()=> {
         axios.get('/api/db/resumen').then((response)=>{
             console.log(response);
             actualizarLista(response.data);
+            const arrConsultas = response.data.map(el=>axios.get(`/api/db/clientes/${el.IDc}/cta-cte`).then(res=>res.data));
+            Promise.all(arrConsultas).then( arrCtaCtes => {
+                setCuentaCorriente(arrCtaCtes);
+            }).catch(error=>{throw error;});
         }).catch((error)=>{
             throw error;
         });
