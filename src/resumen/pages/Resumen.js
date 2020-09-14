@@ -10,22 +10,50 @@ export const Resumen = ({clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
     let {path} = useRouteMatch();
-    let [cuentaCorriente, setCuentaCorriente] = useState([])
+    let [cuentaCorriente, setCuentaCorriente] = useState([]);
     
 
     useEffect(()=> {
         axios.get('/api/db/resumen').then((response)=>{
-            console.log(response);
+            console.log(response.data);
             actualizarLista(response.data);
-            const arrConsultas = response.data.map(el=>axios.get(`/api/db/clientes/${el.IDc}/cta-cte`).then(res=>res.data));
-            Promise.all(arrConsultas).then( arrCtaCtes => {
-                setCuentaCorriente(arrCtaCtes);
+            const arrConsultas = response.data.map(el=>axios.get(`/api/db/clientes/${el.IDc}/cta-cte`));
+            Promise.all(arrConsultas).then( res => {
+                let newCtaCte = res.map(r => r.data);
+                console.log(newCtaCte);
+                setCuentaCorriente(newCtaCte);
             }).catch(error=>{throw error;});
         }).catch((error)=>{
             throw error;
         });
+        
+    }, []);
 
-    }, [])
+    useEffect(()=>{
+
+        cuentaCorriente.forEach(ctacte => {
+            if(ctacte.length === 0) return;
+
+            let suma = ctacte.reduce((acc, curr)=> {
+                return curr.IDp !== null ? acc - curr.Haber : acc + curr.Debe;
+            }, 0);
+
+            console.log("suma", suma);
+
+            setListaEmb((prevListaEmb)=> {
+                let newListaEmb = prevListaEmb.map((emb)=>{
+                    if(emb.IDc === ctacte[0].IDcl){
+                        emb.Estado = suma <= 0 ? "Al Día" : "Pendiente";
+                        emb.Pendiente = suma;
+                    }
+                    return emb;
+                });
+                return newListaEmb;
+            });
+
+        });
+
+    }, [cuentaCorriente])
 
     const actualizarLista = (datos) => {
         setLlaves(Object.keys(datos[0]));

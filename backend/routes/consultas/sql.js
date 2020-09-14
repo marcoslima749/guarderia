@@ -219,7 +219,7 @@ JOIN clientes ON clientes.idclientes = mensualidad.clientes_idclientes
 JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
 JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
 
-WHERE clientes.idclientes = '1'
+WHERE clientes.idclientes = '${idCliente}'
 AND detalle_mensualidad.concepto_producto_idconcepto_producto = '1'
 
 UNION
