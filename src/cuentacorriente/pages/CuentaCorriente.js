@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
+import './CuentaCorriente.css';
+
 const moment = require('moment');
 
 let maqueta = [{
@@ -75,23 +77,25 @@ periodo: "2019-10-07T03:00:00.000Z",
 }
 ]
 
-const fcs = (objCtaCte) => {
+
+const sumarColumna = (objCtaCte, strColumna) => {
     return objCtaCte.reduce((acc, curr)=> {
-        return curr.IDp !== null ? acc - curr.Haber : acc + curr.Debe;
+        return acc + curr[strColumna];
     }, 0);
-};
+}
 
 
-export const CuentaCorriente = ({ctacte = maqueta, funcCalcularSaldo = fcs}) => {
+export const CuentaCorriente = ({ctacte = maqueta}) => {
 
-let saldo = funcCalcularSaldo(ctacte);
+let totalDebe = sumarColumna(ctacte, 'Debe');
+let totalHaber = sumarColumna(ctacte, 'Haber');
 
 let celdas = ctacte.reduce((acc, curr) => {
     return(
         {
             saldoAcumulado : acc.saldoAcumulado + curr.Debe - curr.Haber,
             filas : [...acc.filas, 
-                <div>
+                <div className='cuenta-corriente__fila'>
                     <span>{moment(curr.periodo).format('DD[-]MM[-]YYYY')}</span>
                     <span>{curr.nombre}</span>
                     <span>{moment(curr.periodo).format('MMMM[ ]YYYY')}</span>
@@ -109,8 +113,8 @@ let celdas = ctacte.reduce((acc, curr) => {
 
     return(
 
-        <div>
-            <div>
+        <div className='cuenta-corriente__container'>
+            <div className='cuenta-corriente__titulos'>
                 <span>Fecha</span>
                 <span>Embarcacion</span>
                 <span>Período</span>
@@ -120,12 +124,16 @@ let celdas = ctacte.reduce((acc, curr) => {
                 <span>Saldo</span>
                 <span>Pendiente</span>
             </div>
-            <div>
+            <div className='cuenta-corriente__contenido'>
                 {celdas.filas}
             </div>
-            <div>
-                {saldo}
+            <div className='cuenta-corriente__totales'>
+                <span>{totalDebe}</span>
+                <span>{totalHaber}</span>
+                <span>{totalDebe - totalHaber}</span>
+                <span> 0 </span>
             </div>
+
             
         </div>
 
