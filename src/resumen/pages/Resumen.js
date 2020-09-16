@@ -6,6 +6,12 @@ import { Boton } from '../../shared/components/Boton';
 
 const moment = require('moment');
 
+const calcularSaldo = (objCtaCte) => {
+    return objCtaCte.reduce((acc, curr)=> {
+        return curr.IDp !== null ? acc - curr.Haber : acc + curr.Debe;
+    }, 0);
+};
+
 export const Resumen = ({clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
@@ -34,17 +40,15 @@ export const Resumen = ({clases}) => {
         cuentaCorriente.forEach(ctacte => {
             if(ctacte.length === 0) return;
 
-            let suma = ctacte.reduce((acc, curr)=> {
-                return curr.IDp !== null ? acc - curr.Haber : acc + curr.Debe;
-            }, 0);
+            let saldo = calcularSaldo(ctacte);
 
-            console.log("suma", suma);
+            console.log("saldo", saldo);
 
             setListaEmb((prevListaEmb)=> {
                 let newListaEmb = prevListaEmb.map((emb)=>{
                     if(emb.IDc === ctacte[0].IDcl){
-                        emb.Estado = suma <= 0 ? "Al Día" : "Pendiente";
-                        emb.Pendiente = suma;
+                        emb.Estado = saldo <= 0 ? "Al Día" : "Pendiente";
+                        emb.Pendiente = saldo;
                     }
                     return emb;
                 });

@@ -54,7 +54,7 @@ categorias.idcategorias AS Cat,
 CONCAT(clientes.apellido, ', ' , clientes.nombre) AS Cliente,
 clientes.idclientes AS IDc,
 embarcaciones_has_clientes.porcentaje_posesion AS '%',
-'Al Día' as Estado,
+'Sin Datos' as Estado,
 '0' as Pendiente
 FROM
 embarcaciones
@@ -283,7 +283,7 @@ ORDER BY fecha_de_pago;
 `
 
 const cEstado = (idCliente) => `
-SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion,
+SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion,
 detalle_mensualidad.valor_contingencia AS Debe, null AS Haber
 FROM 
 mensualidad
@@ -298,7 +298,7 @@ AND detalle_mensualidad.concepto_producto_idconcepto_producto = '1'
 
 UNION
 
-(SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tarifas.tarifa), null
+(SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tarifas.tarifa), null
 FROM 
 mensualidad
 
@@ -323,7 +323,7 @@ ORDER BY mensualidad.periodo)
 UNION
 
 (
-SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tasas.tasa), null
+SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tasas.tasa), null
 FROM 
 mensualidad
 
@@ -347,7 +347,7 @@ ORDER BY mensualidad.periodo
 UNION
 (
 
-SELECT null AS IDm, null AS IDd, pago.idpago AS IDp, pago.fecha_de_pago, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, 'PAGO', null, pago.monto
+SELECT null AS IDm, null AS IDd, pago.idpago AS IDp, pago.fecha_de_pago, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, 'PAGO', null, pago.monto
 FROM pago
 JOIN clientes ON clientes.idclientes = pago.clientes_idclientes
 JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
