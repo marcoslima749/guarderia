@@ -102,8 +102,8 @@ let celdas = ctacte.reduce((acc, curr) => {
                     <span>{curr.descripcion} </span>
                     <span>{curr.Debe} </span>
                     <span>{curr.Haber} </span>
-                    <span> {acc.saldoAcumulado + curr.Debe - curr.Haber} </span>
-                    <span> 0 </span>
+                    <span>{acc.saldoAcumulado + curr.Debe - curr.Haber}</span>
+                    <span>0</span>
                 </div>
             ]
         }
@@ -128,10 +128,11 @@ let celdas = ctacte.reduce((acc, curr) => {
                 {celdas.filas}
             </div>
             <div className='cuenta-corriente__totales'>
-                <span>{totalDebe}</span>
-                <span>{totalHaber}</span>
-                <span>{totalDebe - totalHaber}</span>
-                <span> 0 </span>
+                <span className="cuenta-corriente__totales__label">TOTALES</span>
+                <span className="cuenta-corriente__totales__debe">{totalDebe}</span>
+                <span className="cuenta-corriente__totales__haber">{totalHaber}</span>
+                <span className="cuenta-corriente__totales__saldo">{totalDebe - totalHaber}</span>
+                <span className="cuenta-corriente__totales__pendiente">0</span>
             </div>
 
             
