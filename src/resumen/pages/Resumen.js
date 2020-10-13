@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Switch, useParams, useRouteMatch, Link} from 'r
 import axios from 'axios';
 import './Resumen.css';
 import { Boton } from '../../shared/components/Boton';
+import { CuentaCorriente } from '../components/CuentaCorriente';
 
 const moment = require('moment');
 
@@ -15,9 +16,11 @@ const calcularSaldo = (objCtaCte) => {
 export const Resumen = ({clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
+    let [ctacteCliente, setCtacteCliente] = useState(null);
     let {path} = useRouteMatch();
     let [cuentaCorriente, setCuentaCorriente] = useState([]);
-    
+
+      
 
     useEffect(()=> {
         axios.get('/api/db/resumen').then((response)=>{
@@ -26,7 +29,7 @@ export const Resumen = ({clases}) => {
             const arrConsultas = response.data.map(el=>axios.get(`/api/db/clientes/${el.IDc}/cta-cte`));
             Promise.all(arrConsultas).then( res => {
                 let newCtaCte = res.map(r => r.data);
-                console.log(newCtaCte);
+                console.log("cuenta corriente: ",newCtaCte);
                 setCuentaCorriente(newCtaCte);
             }).catch(error=>{throw error;});
         }).catch((error)=>{
@@ -64,10 +67,17 @@ export const Resumen = ({clases}) => {
         setListaEmb(datos);
     }
 
+    const mostrarCtacte = (id) => {
+        let cuentaPorMostrar = cuentaCorriente.filter((cta)=> {
+            return cta.length > 0 && cta[0].IDcl === id;
+        })[0];
+        setCtacteCliente(cuentaPorMostrar);
+    }
+
     
     let titulos = llaves.filter((llave)=>llave !== 'IDc').map((llave)=> {
         return (
-            <span key={Math.random()} className={`simple-hover embarcaciones__titulo embarcaciones__titulo-${llave}`}>
+            <span key={llave} className={`simple-hover embarcaciones__titulo embarcaciones__titulo-${llave}`}>
                 {llave}
             </span>
         )
@@ -84,7 +94,7 @@ export const Resumen = ({clases}) => {
                                 {
                                     llave === 'Embarcacion' ? <Boton path={`/embarcaciones/${emb.ID}`}>{emb[llave]}</Boton>
                                     : llave === 'Cliente' ? <Boton path={`/clientes/${emb.IDc}`} >{emb[llave]}</Boton> 
-                                    : llave === 'Estado' ? <Boton path={`/clientes/${emb.IDc}/cta-cte`} >{emb[llave]}</Boton> 
+                                    : llave === 'Estado' ? emb[llave] === "Sin Datos" ? emb[llave] : <div onClick={()=> mostrarCtacte(emb.ID)} >{emb[llave]}</div> 
                                     : llave === 'Contrato' || llave === 'Seguro' ? moment(emb[llave]).format('DD[-]MM[-]YYYY') 
                                     : emb[llave]
                                 }
@@ -98,6 +108,8 @@ export const Resumen = ({clases}) => {
         });
 
     return(
+
+        ctacteCliente ? <CuentaCorriente ctacte={ctacteCliente} /> :  
 
         <div className={`embarcaciones ${clases}`}>
 

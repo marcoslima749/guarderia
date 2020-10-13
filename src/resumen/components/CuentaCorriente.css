@@ -5,17 +5,17 @@
     overflow-y: auto;
     display: grid;
     grid-template-rows: 2rem 1fr 2rem;
-    background-color: lightblue;
+    /*background-color: lightblue;*/
 }
 
 .cuenta-corriente__titulos {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(3, 1fr) 2fr repeat(4, 1fr);
     justify-items: center;
     align-items: center;
-    background-color: lightgray;
+    /*background-color: lightgray;*/
 
 }
 
@@ -24,7 +24,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;    
-    background-color: lavender;
+    /*background-color: lavender;*/
     /*margin: 5px 0;*/
 }
 
@@ -32,10 +32,10 @@
     width: 100%;
     height: 2rem;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(3, 1fr) 2fr repeat(4, 1fr);
     justify-items: center;
     align-items: center;
-    background-color: lavender;
+    /*background-color: lavender;*/
     /*margin: 5px 0;*/
 }
 
@@ -43,16 +43,18 @@
     width: 100%;
     height: 2rem;
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(3, 1fr) 2fr repeat(4, 1fr);
     grid-template-areas: "total-label . . . total-debe total-haber total-saldo total-pendiente";
     justify-items: center;
     align-items: center;
-    background-color:grey;
+    font-weight: bold;
+    /*background-color:grey;*/
     /*margin: 5px 0;*/
 }
 
 .cuenta-corriente__totales__label{
     grid-area: total-label;
+    font-weight: normal;
 }
 .cuenta-corriente__totales__debe{
     grid-area: total-debe;

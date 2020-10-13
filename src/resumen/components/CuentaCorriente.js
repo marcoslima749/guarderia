@@ -95,10 +95,10 @@ let celdas = ctacte.reduce((acc, curr) => {
         {
             saldoAcumulado : acc.saldoAcumulado + curr.Debe - curr.Haber,
             filas : [...acc.filas, 
-                <div className='cuenta-corriente__fila'>
+                <div className='cuenta-corriente__fila' key={`${curr.IDcl}${curr.IDd}${curr.IDemb}${curr.IDm}${curr.IDp}`}>
                     <span>{moment(curr.periodo).format('DD[-]MM[-]YYYY')}</span>
                     <span>{curr.nombre}</span>
-                    <span>{moment(curr.periodo).format('MMMM[ ]YYYY')}</span>
+                    <span>{curr.descripcion === "PAGO" ? "" : moment(curr.periodo).format('MMMM[ ]YYYY')}</span>
                     <span>{curr.descripcion} </span>
                     <span>{curr.Debe} </span>
                     <span>{curr.Haber} </span>
@@ -128,7 +128,7 @@ let celdas = ctacte.reduce((acc, curr) => {
                 {celdas.filas}
             </div>
             <div className='cuenta-corriente__totales'>
-                <span className="cuenta-corriente__totales__label">TOTALES</span>
+                <span className="cuenta-corriente__totales__label">TOTALES: </span>
                 <span className="cuenta-corriente__totales__debe">{totalDebe}</span>
                 <span className="cuenta-corriente__totales__haber">{totalHaber}</span>
                 <span className="cuenta-corriente__totales__saldo">{totalDebe - totalHaber}</span>
