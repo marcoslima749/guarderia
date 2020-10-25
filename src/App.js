@@ -33,7 +33,12 @@ export const App = () => {
                 <Route exact path="/register">
                     <Register />
                 </Route>
-                {/* a partir de acá está logueado */}
+                {/* a partir de acá está logueado
+                    DEBERÍA RENDERIZAR UN COMPONENTE INICIO QUE CREE EL CONTEXTO DE DATOS
+                    Y RENDERICE LAS RUTAS SEGUN CORRESPONDA, CADA UNA CON SU NAV, SIDE Y MAIN POR SEPARADO
+                    Y CON LOS DATOS DEL CONTEXT SEGÚN SEA EL CASO,
+                    EN ESE CASO EL LAYOUT ESTARÍA EN EL COMPONENTE "INICIO"
+                 */}
 
                 <Route exact path="/inicio">
                     <Dashboard nombre="CYNM" descripcion="Tareas" side={true} >
