@@ -82,9 +82,9 @@ export const Resumen = ({clases}) => {
                         return(
                             <span key={llave} className={`${llave === 'Embarcacion' || llave === 'Cliente' || llave === 'Estado' ? 'simple-hover': '' } embarcaciones__campo embarcacion__${llave}`}>
                                 {
-                                    llave === 'Embarcacion' ? <Boton path={`/embarcaciones/${emb.ID}`}>{emb[llave]}</Boton>
-                                    : llave === 'Cliente' ? <Boton path={`/clientes/${emb.IDc}`} >{emb[llave]}</Boton> 
-                                    : llave === 'Estado' ? <Boton path={`/clientes/${emb.IDc}/cta-cte`} >{emb[llave]}</Boton> 
+                                    llave === 'Embarcacion' ? <Boton path={`/inicio/embarcaciones/${emb.ID}`}>{emb[llave]}</Boton>
+                                    : llave === 'Cliente' ? <Boton path={`/inicio/clientes/${emb.IDc}`} >{emb[llave]}</Boton> 
+                                    : llave === 'Estado' ? <Boton path={`/inicio/clientes/${emb.IDc}/cta-cte`} >{emb[llave]}</Boton> 
                                     : llave === 'Contrato' || llave === 'Seguro' ? moment(emb[llave]).format('DD[-]MM[-]YYYY') 
                                     : emb[llave]
                                 }

@@ -18,6 +18,7 @@ import { Embarcacion } from './embarcaciones/pages/Embarcacion';
 import { Cliente } from './clientes/pages/Cliente';
 import { Boton } from './shared/components/Boton';
 import { CuentaCorriente } from './cuentacorriente/pages/CuentaCorriente';
+import { Inicio } from './shared/components/Inicio';
 
 export const App = () => {
     return (
@@ -40,32 +41,11 @@ export const App = () => {
                     EN ESE CASO EL LAYOUT ESTARÍA EN EL COMPONENTE "INICIO"
                  */}
 
-                <Route exact path="/inicio">
-                    <Dashboard nombre="CYNM" descripcion="Tareas" side={true} >
-                        <Tareas />
-                    </Dashboard>  
-                </Route>
-                <Route exact path="/resumen">
-                    <Dashboard nombre="CYNM" descripcion="Resumen" side={true} panel={<Boton path="#" clases="simple-hover embarcacion__boton-nuevo">Nuevo</Boton>} >
-                        <Resumen />
-                    </Dashboard>  
-                </Route>
-                <Route path="/embarcaciones/:id">
-                    <Dashboard nombre="CYNM" descripcion="embarcaciones" side={true} >
-                        <Embarcacion />
-                    </Dashboard>  
-                </Route>
-                <Route path="/clientes/:id/cta-cte">
-                    <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
-                        <CuentaCorriente />
-                    </Dashboard>  
-                </Route>
-                <Route path="/clientes/:id">
-                    <Dashboard nombre="CYNM" descripcion="clientes" side={true} >
-                        <Cliente />
-                    </Dashboard>  
+                <Route path="/inicio">
+                    <Inicio nombre="CYNM" descripcion="Tareas" />
                 </Route>
                 <Redirect to="/" />
+                
             </Switch>
     )
 }
