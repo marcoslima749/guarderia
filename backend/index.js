@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const envParser = require('./utils/env');
+const cron = require('node-cron');
 
 //importando las rutas
 const login = require('./routes/login');
@@ -21,6 +22,12 @@ const db = mysql.createConnection({
     database: env.DB_BASE,
     flags: 'MULTI_STATEMENTS'
 });
+
+cron.schedule('12 15 25 * *', ()=> {
+    console.log('tarea programada para el 25 de cada mes a las 15:12 funciona');
+});
+
+
  
 db.connect((err)=> {
     if(err){

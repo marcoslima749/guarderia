@@ -9,6 +9,8 @@ import './CuentaCorriente.css';
 
 const moment = require('moment');
 
+//FIN DATOS DEFAULT***************************************************************************************
+
 let maqueta = [{
     Debe: 0,
     Haber: null,
@@ -80,7 +82,7 @@ periodo: "2019-10-01T03:00:00.000Z",
     periodo: "2019-10-07T03:00:00.000Z",
 }
 ]
-
+//FIN DATOS DEFAULT***************************************************************************************
 
 const sumarColumna = (objCtaCte, strColumna) => {
     return objCtaCte.reduce((acc, curr)=> {
