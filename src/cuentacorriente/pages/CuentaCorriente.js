@@ -9,7 +9,7 @@ import './CuentaCorriente.css';
 
 const moment = require('moment');
 
-//FIN DATOS DEFAULT***************************************************************************************
+//COMIENZA DATOS DEFAULT***************************************************************************************
 
 let maqueta = [{
     Debe: 0,
@@ -106,7 +106,7 @@ export const CuentaCorriente = () => {
             setCtacte(response.data);
         });
         
-    }, []);
+    }, [params.id]);
     
     useEffect(()=> {
 
