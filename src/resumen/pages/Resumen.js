@@ -12,14 +12,22 @@ const calcularSaldo = (objCtaCte) => {
     }, 0);
 };
 
-export const Resumen = ({clases}) => {
+export const Resumen = ({setHeader, clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
     let {path} = useRouteMatch();
     let [cuentaCorriente, setCuentaCorriente] = useState([]);
-    
 
     useEffect(()=> {
+        setHeader.setNombreHeader("CYNM");
+        setHeader.setDescripcionHeader("Resumen");
+        setHeader.setPanelHeader(<Boton path="#" clases="simple-hover embarcacion__boton-nuevo">Nuevo</Boton>);
+    },[]);
+    
+    useEffect(()=> {
+        
+
+
         axios.get('/api/db/resumen').then((response)=>{
             console.log(response.data);
             actualizarLista(response.data);

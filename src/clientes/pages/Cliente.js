@@ -18,7 +18,7 @@ import { DetalleFormaPago } from '../components/DetalleFormaPago';
 
 const moment = require('moment');
 
-export const Cliente = () => {
+export const Cliente = ({setHeader}) => {
     let [cliente, setCliente] = useState({});
     let [snapCliente, setSnapCliente] = useState({});
     let [llavesCliente, setLlavesCliente] = useState([]);
@@ -38,6 +38,13 @@ export const Cliente = () => {
     let [detalleFormaPago, setDetalleFormaPago] = useState(null);
 
     let params = useParams();
+
+    useEffect(()=>{
+        setHeader.setNombreHeader("CYNM");
+        setHeader.setDescripcionHeader("Clientes");
+        setHeader.setPanelHeader(null);
+    },[]);
+
  
     useEffect(() =>{
         console.log('render')

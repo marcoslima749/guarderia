@@ -91,13 +91,20 @@ const sumarColumna = (objCtaCte, strColumna) => {
 }
 
 
-export const CuentaCorriente = () => {
+export const CuentaCorriente = ({setHeader}) => {
     
     let [ctacte, setCtacte] = useState(maqueta);
     let [totalDebe, setTotalDebe] = useState(0);
     let [totalHaber, setTotalHaber] = useState(0);
     let [celdas, setCeldas] = useState({filas : ""});
     const params = useParams();
+
+    
+    useEffect(()=>{
+        setHeader.setNombreHeader("CYNM");
+        setHeader.setDescripcionHeader("Estado de Cuenta");
+        setHeader.setPanelHeader(<Link target="blank" to={`/clientes/${params.id}/cta-cte/imprimir`} className="simple-hover embarcacion__boton-nuevo">Imprimir</Link>);
+    },[]);
     
     
     useEffect(()=>{
@@ -106,6 +113,7 @@ export const CuentaCorriente = () => {
             setCtacte(response.data);
         });
         
+
     }, [params.id]);
     
     useEffect(()=> {

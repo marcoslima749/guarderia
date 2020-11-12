@@ -10,13 +10,19 @@ import { CampoEditable } from '../components/CampoEditable';
 
 const moment = require('moment');
 
-export const Embarcacion = () => {
+export const Embarcacion = ({setHeader}) => {
     let [embarcacion, setEmbarcacion] = useState({});
     let [llaves, setLlaves] = useState([]);
     let [propietario, setPropietario] = useState();
     let [modificado, setModificado] = useState(false);
     let [snapEmb, setSnapEmb] = useState();
     let params = useParams();
+
+    useEffect(()=> {
+        setHeader.setNombreHeader("CYNM");
+        setHeader.setDescripcionHeader("Embarcaciones");
+        setHeader.setPanelHeader(null);
+    },[]);
 
     let embarcacionNueva = {
         Id: "Nueva",

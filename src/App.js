@@ -28,16 +28,20 @@ export const App = () => {
     let [descripcionHeader, setDescripcionHeader] = useState("");
     let [nombreHeader, setNombreHeader] = useState("");
     let [panelHeader, setPanelHeader] = useState("");
+    let setHeader = {setNombreHeader, setDescripcionHeader, setPanelHeader};
 
     let matchActual = useRouteMatch();
     let locationActual = useLocation();
+
     console.log(matchActual);
     console.log(locationActual);
+
     let pathActual = locationActual.pathname;
 
     useEffect(()=>{
 
 
+/*
         
         let newNombreHeader = "CYNM";
 
@@ -79,7 +83,7 @@ export const App = () => {
         setDescripcionHeader(newDescripcionHeader);
         setPanelHeader(newPanelHeader);
         setNombreHeader(newNombreHeader);
-
+*/
 
     },[pathActual, locationActual]);
 
@@ -89,7 +93,7 @@ export const App = () => {
 
 
 
-    
+      
 
     return (
             <Switch>
@@ -116,19 +120,19 @@ export const App = () => {
 
                 <Dashboard nombre={nombreHeader} descripcion={descripcionHeader} side={true} panel={panelHeader} >
                     <Route exact path="/inicio">
-                            <Tareas />
+                        <Tareas setHeader={setHeader} />
                     </Route>
                     <Route exact path="/resumen">
-                            <Resumen />
+                        <Resumen setHeader={setHeader} />
                     </Route>
                     <Route exact path="/embarcaciones/:id">
-                            <Embarcacion />
+                        <Embarcacion setHeader={setHeader} />
                     </Route>
                     <Route exact path="/clientes/:id/cta-cte">
-                        <CuentaCorriente /> 
+                        <CuentaCorriente setHeader={setHeader} /> 
                     </Route>
                     <Route exact path="/clientes/:id">
-                        <Cliente />
+                        <Cliente setHeader={setHeader} />
                     </Route>
 
                 </Dashboard>  

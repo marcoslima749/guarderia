@@ -11,22 +11,28 @@ import eliminar from '../../shared/components/iconos/eliminar.svg';
 const moment = require('moment');
 
 
-export const Tareas = () => {
-
+export const Tareas = ({setHeader}) => {
+    
     
     let [ lista, setLista ] = useState();
- /*   let [listaCopia, setListaCopia] = useState();*/
+    /*   let [listaCopia, setListaCopia] = useState();*/
     let [completadas, setCompletadas] = useState(0);
-
+    
     //Estados para manejar el CSS a través de las clases
     let [desplazar, setDesplazar] = useState(false);
     let [transition, setTransition] = useState(true);
-
+    
     //Estado para manejar el blur y el focus dentro del mismo elemento
     let [elementoAnterior, setElementoAnterior] = useState();
-
+    
     //Estado para manejar el snapshot del elemento a modificar
     let [snap, setSnap] = useState();
+    
+    useEffect(()=> {
+        setHeader.setNombreHeader("CYNM");
+        setHeader.setDescripcionHeader("Tareas")
+        setHeader.setPanelHeader(null);
+    },[])
     
     // ****************
     //La idea es que al modificar cualquier tarea se ponga un timer a correr para actualizar la base
@@ -38,17 +44,17 @@ export const Tareas = () => {
     //o directamente poner la última versión de la tarea en una queue para enviar como 'modificaciones'
     //pero mandar la queue importa la modificación de la función 'mandar consulta' para aceptar múltiples
     //tareas
-
+    
     //Al final agregué un timer para llamar a la función 'verificar cambios'
     //y una variable para establecer si hacerlo o no.
     //El resto sigue igual.
-
+    
     //Cuenta regresiva para actualizar la base
     let [timer, setTimer] = useState(0);
     let [verificar, setVerificar] = useState(false);
-
+    
     //Cuando el timer se pone en un valor tope (2500 por ahora) lo empieza a descontar hasta que esté en cero
-
+    
     useEffect(()=>{
         if (timer === 0) {
             console.log('Timer en 0');
@@ -70,31 +76,33 @@ export const Tareas = () => {
                 return newTimer;
             })
         }, 500);
-
+        
         return ()=> {
             clearTimeout(idTimeOut);
         }
-
+        
     }, [timer]);
-
+    
     
     //consulta las tareas a la base de datos y las asigna al estado
     useEffect(() => {
-            axios.get('/api/db/tareas').then((res)=>{
-                setLista(() => res.data.map((tarea)=> {
-                    let tareaMod = {...tarea /*, modificado : false, eliminado: false, nuevo: false*/ };
-                    return(tareaMod);
-                }));
-/*                setListaCopia(()=> res.data.map((tarea)=> {
-                    let tareaMod = {...tarea, modificado : false, eliminado: false, nuevo: false};
-                    return(tareaMod);
-                })); */
-            }).catch((err)=> {
-                console.log(err);
-            });     
+        axios.get('/api/db/tareas').then((res)=>{
+            setLista(() => res.data.map((tarea)=> {
+                let tareaMod = {...tarea /*, modificado : false, eliminado: false, nuevo: false*/ };
+                return(tareaMod);
+            }));
+            /*                setListaCopia(()=> res.data.map((tarea)=> {
+                let tareaMod = {...tarea, modificado : false, eliminado: false, nuevo: false};
+                return(tareaMod);
+            })); */
+        }).catch((err)=> {
+            console.log(err);
+        });     
+        
+        
     }, []);
 
-
+    
     //Revisa la lista para enumerar las tareas completadas
     useEffect(()=>{
         if (lista === undefined) {return}
@@ -103,10 +111,10 @@ export const Tareas = () => {
         setCompletadas(newCompletadas);
     },[lista]);
     
-
+    
     const completarTarea = (indice, id,e) => {
-//Al hacer click en el boton se genera un blur en el elemento y como no es un input no se produce focus.
-//Esto es interpretado como último blur, se verifican cambios y setean snap y último elemento a undefined.
+        //Al hacer click en el boton se genera un blur en el elemento y como no es un input no se produce focus.
+        //Esto es interpretado como último blur, se verifican cambios y setean snap y último elemento a undefined.
 //Blur no puede ser evitado con preventDefault y siempre va a suceder esto antes de llamar a completarTarea
 //Por lo tanto hay que manejar este cambio por fuera de el flujo 'focus-edicion-blur'
 
