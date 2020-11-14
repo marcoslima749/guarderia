@@ -12,7 +12,7 @@ const calcularSaldo = (objCtaCte) => {
     }, 0);
 };
 
-export const Resumen = ({setHeader, clases}) => {
+export const Resumen = ({setHeader,  clases}) => {
     let [listaEmb, setListaEmb]  = useState([]);
     let [llaves, setLlaves] = useState([]);
     let {path} = useRouteMatch();
@@ -26,8 +26,6 @@ export const Resumen = ({setHeader, clases}) => {
     
     useEffect(()=> {
         
-
-
         axios.get('/api/db/resumen').then((response)=>{
             console.log(response.data);
             actualizarLista(response.data);

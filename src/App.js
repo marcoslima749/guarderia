@@ -2,6 +2,7 @@
 //123 probando...
 
 import React from 'react';
+import axios from 'axios';
 
 import { Home } from './home/pages/Home';
 import { Login } from './auth/pages/Login';
@@ -22,6 +23,7 @@ import { CuentaCorrienteImpresion } from './cuentacorriente/components/CuentaCor
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+
 export const App = () => {
 
 
@@ -30,6 +32,13 @@ export const App = () => {
     let [panelHeader, setPanelHeader] = useState("");
     let setHeader = {setNombreHeader, setDescripcionHeader, setPanelHeader};
 
+    //Recolectar los datos
+    let [listaResumen, setListaResumen] = useState("");
+    let [cuentaCorriente, setCuentaCorriente] = useState([]);
+
+
+/* APROACH AL ROUTE PATH SIN PATHS, CON REGEX.      
+    
     let matchActual = useRouteMatch();
     let locationActual = useLocation();
 
@@ -40,9 +49,6 @@ export const App = () => {
 
     useEffect(()=>{
 
-
-/*
-        
         let newNombreHeader = "CYNM";
 
         let inicio = /\/inicio\/{0,1}/;
@@ -83,13 +89,28 @@ export const App = () => {
         setDescripcionHeader(newDescripcionHeader);
         setPanelHeader(newPanelHeader);
         setNombreHeader(newNombreHeader);
-*/
+
 
     },[pathActual, locationActual]);
-
+*/
         
+//CARGANDO LOS DATOS DE LAS CUENTAS CORRIENTES    
     
-    
+    useEffect(()=>{
+        //Datos Resumen
+        axios.get('/api/db/resumen').then((response)=>{
+            console.log(response.data);
+            setListaResumen(response.data);
+            const arrConsultas = response.data.map(el=>axios.get(`/api/db/clientes/${el.IDc}/cta-cte`));
+            Promise.all(arrConsultas).then( res => {
+                let newCtaCte = res.map(r => r.data);
+                console.log(newCtaCte);
+                setCuentaCorriente(newCtaCte);
+            }).catch(error=>{throw error;});
+        }).catch((error)=>{
+            throw error;
+        });
+    },[]);
 
 
 
@@ -123,13 +144,13 @@ export const App = () => {
                         <Tareas setHeader={setHeader} />
                     </Route>
                     <Route exact path="/resumen">
-                        <Resumen setHeader={setHeader} />
+                        <Resumen setHeader={setHeader} listaResumen={listaResumen} />
                     </Route>
                     <Route exact path="/embarcaciones/:id">
                         <Embarcacion setHeader={setHeader} />
                     </Route>
                     <Route exact path="/clientes/:id/cta-cte">
-                        <CuentaCorriente setHeader={setHeader} /> 
+                        <CuentaCorriente setHeader={setHeader} listaResumen={listaResumen} cuentaCorriente={cuentaCorriente} /> 
                     </Route>
                     <Route exact path="/clientes/:id">
                         <Cliente setHeader={setHeader} />
