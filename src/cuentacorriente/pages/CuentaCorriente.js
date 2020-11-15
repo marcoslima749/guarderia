@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import {BrowserRouter as Router, Switch, useParams, useRouteMatch, Link} from 'react-router-dom';
 import axios from 'axios';
 import './CuentaCorriente.css';
+import { CuentaCorrienteImpresion } from '../components/CuentaCorrienteImpresion';
 
 
 
@@ -91,19 +92,28 @@ const sumarColumna = (objCtaCte, strColumna) => {
 }
 
 
+
 export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     
     let [ctacte, setCtacte] = useState(maqueta);
     let [totalDebe, setTotalDebe] = useState(0);
     let [totalHaber, setTotalHaber] = useState(0);
     let [celdas, setCeldas] = useState({filas : ""});
+    let [imprimir, setImprimir] = useState(false);
+    
+    
+    const toggleImprimir = ()=> {
+        setImprimir((prevImprimir)=> !prevImprimir);
+    }
+    
+    
     const params = useParams();
-
+    
     
     useEffect(()=>{
         setHeader.setNombreHeader("CYNM");
         setHeader.setDescripcionHeader("Estado de Cuenta");
-        setHeader.setPanelHeader(<Link target="blank" to={`/clientes/${params.id}/cta-cte/imprimir`} className="simple-hover embarcacion__boton-nuevo">Imprimir</Link>);
+        setHeader.setPanelHeader(<button onClick={()=> toggleImprimir()}>Nueva Ventana</button>);
     },[]);
 
     useEffect(()=>{
@@ -154,9 +164,7 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     }, [ctacte]);
 
 
-
-    return(
-
+    let displayCuentaCorriente = 
         <div className='cuenta-corriente__container'>
             <div className='cuenta-corriente__titulos'>
                 <span>Fecha</span>
@@ -181,6 +189,16 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
 
             
         </div>
+    ;
 
-    )
+    return (
+        imprimir ?
+        <>
+        <CuentaCorrienteImpresion>
+            {displayCuentaCorriente}
+        </CuentaCorrienteImpresion>
+        {displayCuentaCorriente}
+        </> :
+        displayCuentaCorriente
+        );
 }
