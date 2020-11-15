@@ -1,0 +1,17 @@
+.ctacte-impresion__container {
+    font-family: 'ShareTech';
+
+}
+
+.ctacte-impresion__titulo {
+    font-family: 'Volvo';
+}
+
+.ctacte-impresion__subtitulo {
+    font-family: 'Volvo';
+}
+
+.ctacte-impresion__separador {
+    height: 4px;
+    background-color: blue;
+}

@@ -144,13 +144,13 @@ export const App = () => {
                         <Tareas setHeader={setHeader} />
                     </Route>
                     <Route exact path="/resumen">
-                        <Resumen setHeader={setHeader} listaResumen={listaResumen} />
+                        <Resumen setHeader={setHeader} listaResumen={listaResumen} cuentaCorriente={cuentaCorriente} />
                     </Route>
                     <Route exact path="/embarcaciones/:id">
                         <Embarcacion setHeader={setHeader} />
                     </Route>
                     <Route exact path="/clientes/:id/cta-cte">
-                        <CuentaCorriente setHeader={setHeader} listaResumen={listaResumen} cuentaCorriente={cuentaCorriente} /> 
+                        <CuentaCorriente setHeader={setHeader} cuentaCorriente={cuentaCorriente} /> 
                     </Route>
                     <Route exact path="/clientes/:id">
                         <Cliente setHeader={setHeader} />

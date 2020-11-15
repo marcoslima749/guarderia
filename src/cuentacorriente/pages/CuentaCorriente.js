@@ -91,7 +91,7 @@ const sumarColumna = (objCtaCte, strColumna) => {
 }
 
 
-export const CuentaCorriente = ({setHeader}) => {
+export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     
     let [ctacte, setCtacte] = useState(maqueta);
     let [totalDebe, setTotalDebe] = useState(0);
@@ -105,8 +105,15 @@ export const CuentaCorriente = ({setHeader}) => {
         setHeader.setDescripcionHeader("Estado de Cuenta");
         setHeader.setPanelHeader(<Link target="blank" to={`/clientes/${params.id}/cta-cte/imprimir`} className="simple-hover embarcacion__boton-nuevo">Imprimir</Link>);
     },[]);
+
+    useEffect(()=>{
+        let newCtaCte = cuentaCorriente.filter(cta => cta[0]?.IDcl == params.id);
+        console.log('cuentaCorriente',cuentaCorriente);
+        console.log('newCtaCte',newCtaCte);
+        setCtacte(newCtaCte[0]);
+    },[cuentaCorriente, params.id]);
     
-    
+   /* 
     useEffect(()=>{
         
         axios.get(`/api/db/clientes/${params.id}/cta-cte`).then((response) => {
@@ -115,8 +122,9 @@ export const CuentaCorriente = ({setHeader}) => {
         
 
     }, [params.id]);
-    
+*/
     useEffect(()=> {
+        if (ctacte === undefined) return;
 
         setTotalDebe(sumarColumna(ctacte, 'Debe'));
         setTotalHaber(sumarColumna(ctacte, 'Haber'));
