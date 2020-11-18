@@ -5,6 +5,7 @@ import {BrowserRouter as Router, Switch, useParams, useRouteMatch, Link} from 'r
 import axios from 'axios';
 import './CuentaCorriente.css';
 import { CuentaCorrienteImpresion } from '../components/CuentaCorrienteImpresion';
+import { Boton } from '../../shared/components/Boton';
 
 
 
@@ -104,6 +105,7 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     
     const toggleImprimir = ()=> {
         setImprimir((prevImprimir)=> !prevImprimir);
+        document.body.display = 'none';
     }
     
     
@@ -113,7 +115,7 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     useEffect(()=>{
         setHeader.setNombreHeader("CYNM");
         setHeader.setDescripcionHeader("Estado de Cuenta");
-        setHeader.setPanelHeader(<button onClick={()=> toggleImprimir()}>Nueva Ventana</button>);
+        setHeader.setPanelHeader(<a className="cuenta-corriente__boton-imprimir simple-hover" href="#" onClick={()=> toggleImprimir()}>Imprimir</a>);
     },[]);
 
     useEffect(()=>{
@@ -194,7 +196,7 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     return (
         imprimir ?
         <>
-        <CuentaCorrienteImpresion>
+        <CuentaCorrienteImpresion setImprimir={setImprimir}>
             {displayCuentaCorriente}
         </CuentaCorrienteImpresion>
         {displayCuentaCorriente}

@@ -5,7 +5,20 @@
     overflow-y: auto;
     display: grid;
     grid-template-rows: 2rem 1fr 2rem;
-    background-color: lightblue;
+    /*background-color: lightblue;*/
+}
+
+.cuenta-corriente__boton-imprimir {
+    height: 100%;
+    width: 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.cuenta-corriente__boton-imprimir:visited {
+    color: black;
 }
 
 .cuenta-corriente__titulos {
@@ -15,7 +28,8 @@
     grid-template-columns: repeat(8, 1fr);
     justify-items: center;
     align-items: center;
-    background-color: lightgray;
+    font-weight: bold;
+    /*background-color: lightgray;*/
 
 }
 
@@ -24,7 +38,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;    
-    background-color: lavender;
+    /*background-color: lavender;*/
     /*margin: 5px 0;*/
 }
 
@@ -35,7 +49,7 @@
     grid-template-columns: repeat(8, 1fr);
     justify-items: center;
     align-items: center;
-    background-color: lavender;
+    /*background-color: lavender;*/
     /*margin: 5px 0;*/
 }
 
@@ -47,7 +61,8 @@
     grid-template-areas: "total-label . . . total-debe total-haber total-saldo total-pendiente";
     justify-items: center;
     align-items: center;
-    background-color:grey;
+    font-weight: bold;
+    /*background-color:grey;*/
     /*margin: 5px 0;*/
 }
 

@@ -1,17 +1,50 @@
+
+.ctacte-impresion__background {
+
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    min-width: 0;
+    height: auto;
+    overflow-y: auto;
+
+}
+
+.ctacte-impresion__logo__svg {
+
+    width: 4rem;
+    height: auto;
+    border-radius: 6px;
+    display: inline-block;
+
+}
+
 .ctacte-impresion__container {
     font-family: 'ShareTech';
+    font-size: 14px;
 
 }
 
 .ctacte-impresion__titulo {
-    font-family: 'Volvo';
+    font-family:  'Volvo';
 }
 
 .ctacte-impresion__subtitulo {
-    font-family: 'Volvo';
+    font-family: ShareTech;
 }
 
 .ctacte-impresion__separador {
     height: 4px;
     background-color: blue;
+}
+
+@media print {
+
+    .cuenta-corriente__fila span{
+        font-size: 14px;
+    }
+
+
 }
