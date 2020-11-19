@@ -3,7 +3,9 @@ import { createPortal } from 'react-dom';
 import { useEffect } from 'react';
 import './CuentaCorrienteImpresion.css';
 
-export const CuentaCorrienteImpresion = ({setImprimir, children}) => {
+const moment = require('moment');
+
+export const CuentaCorrienteImpresion = ({setImprimir, nombreCliente, numeroCliente, children}) => {
 
   /*
     const contenedor = useRef(document.createElement('div'));
@@ -66,12 +68,14 @@ createPortal(   <div className="ctacte-impresion__background">
                       
                       <h1 className="ctacte-impresion__titulo">CLUB DE YATES NAVAL MOTOR</h1>
                       <h2 className="ctacte-impresion__subtitulo">OPERADORA RIO LUJAN SRL</h2>
+                      <h3 className="ctacte-impresion__numero-cliente">N° Cliente: {numeroCliente}</h3>
+                      <h3 className="ctacte-impresion__nombre-cliente">Nombre: {nombreCliente}</h3>
                       <div className="ctacte-impresion__separador"></div>
                       <div className="ctacte-impresion__children">
                           {children}
                       </div>
 
-                      <footer className="ctacte-impresion__footer">Pie de Página</footer>
+                      <footer className="ctacte-impresion__footer">Período: 01/01/2018 a {moment(Date.now()).format('DD[/]MM[/]YYYY')}</footer>
                       
                   </div>
                 </div>

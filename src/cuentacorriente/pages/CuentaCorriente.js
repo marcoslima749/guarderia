@@ -196,7 +196,7 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
     return (
         imprimir ?
         <>
-        <CuentaCorrienteImpresion setImprimir={setImprimir}>
+        <CuentaCorrienteImpresion setImprimir={setImprimir} nombreCliente={`${ctacte[0].apellido}, ${ctacte[0].clNombre}`} numeroCliente={ctacte[0].IDcl}>
             {displayCuentaCorriente}
         </CuentaCorrienteImpresion>
         {displayCuentaCorriente}
