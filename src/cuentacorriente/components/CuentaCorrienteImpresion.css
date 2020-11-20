@@ -9,36 +9,68 @@
     min-width: 0;
     height: auto;
     overflow-y: auto;
-
-}
-
-.ctacte-impresion__logo__svg {
-
-    width: 4rem;
-    height: auto;
-    border-radius: 6px;
-    display: inline-block;
-
+    
 }
 
 .ctacte-impresion__container {
     font-family: 'ShareTech';
     font-size: 14px;
-
+    
 }
 
+.ctacte-impresion__header-izquierda {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr 1fr;
+    align-items: center;
+}
+
+.ctacte-impresion__logo__svg {
+    
+    width: 67px;
+    height: auto;
+    border-radius: 6px;
+    grid-row-start: 1;
+    grid-row-end: span 2;
+    margin: 10px;
+    
+}
+
+
 .ctacte-impresion__titulo {
+    margin: 0 5px;
     font-family:  'Volvo';
+    display: inline;
+    
 }
 
 .ctacte-impresion__subtitulo {
+    margin: 0 5px;
     font-family: ShareTech;
+    display: inline;
+
+}
+
+.ctacte-impresion__header-derecha{
+    display: flex;
+    margin-right: 50px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.ctacte-impresion__header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 .ctacte-impresion__separador {
     height: 4px;
-    background-color: blue;
+    background-color:  #0C67AD;
 }
+
+
+
 
 @media print {
 
