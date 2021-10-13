@@ -1,0 +1,45 @@
+idproducto,descripcion,eslora,m_cuad,id_SOS
+1,Alquiler,,,1935061
+2,Alquiler - Motos de agua,0,,1935083
+3,Alquiler - Lanchas hasta 5 mts,4,,1935062
+4,Alquiler - Lanchas hasta 5.50 mts,5.01,,1935063
+5,Alquiler - Lanchas hasta 6 mts,5.51,,1935064
+6,Alquiler - Lanchas hasta 6.50 mts,6.01,,1935065
+7,Alquiler - Lanchas hasta 7 mts,6.51,,1935066
+8,Alquiler - Lanchas hasta 7.50 mts,7.01,,1935067
+9,Marinas - Hasta 32´ / 9.8 mts,9.8,,1935069
+10,Marinas - Hasta 35´ / 10.7 mts,10.7,,1935075
+11,Marinas - Hasta 40´ / 12.2 mts,12.2,,1935076
+12,Marinas - Hasta 42´ / 12.8 mts,12.8,,1935077
+13,Marinas - Hasta 44´ / 13.4 mts,13.4,,1935078
+14,Marinas - Hasta 46´ / 14.0 mts,14,,1935079
+15,Marinas - Hasta 50´ / 15.2 mts,15.2,,1935080
+16,Marinas - Hasta 55´ / 16.8 mts,16.8,,1935081
+17,Marinas - Hasta 60´ / 18.3 mts,18.3,,1935082
+18,Marinas - Hasta 65´ / 19.8 mts,19.8,,1935070
+19,Marinas - Hasta 70´ / 21.3 mts,21.3,,1935071
+20,Marinas - Hasta 74´ / 22.6 mts,22.6,,1935072
+21,Marinas - Hasta 86´ / 26.2 mts,26.2,,1935073
+22,Marinas - Hasta 105´ / 32.0 mts,32,,1935074
+23,"Tasas de fondeadero - Moto de Agua, Jet Sky o similar",,0,1935088
+24,"Tasas de fondeadero - Embarcaciones menores a 7,5 mts",,20.01,1935084
+25,Tasas de fondeadero - Por amarras hasta 50 m2 por unidad,,38.51,1935085
+26,Tasas de fondeadero - Por amarra de 50 m2 y hasta 90 m2 por unidad,,50.01,1935086
+27,Tasas de fondeadero - Por amarras mayores de 90 m2 por unidad,,90.01,1935087
+28,Intereses por mora,,,2342704
+29,Redondeo,,,1971505
+30,Aceite -  Aceite 2 Tiempos x ¼ Gallon,,,1935046
+31,Aceite -  Aceite 2 Tiempos x 1 Gallon,,,1935047
+32,Aceite -  Aceite de Pata High Performance SAE 90 x ¼ Gallon,,,1935051
+33,Aceite -  Aceite de Pata Premium 80W90 x ¼ Gallon,,,1935050
+34,Aceite -  Aceite de Pata Premium 80W90 x Pomo,,,1935045
+35,Aceite -  Aceite Diesel 15W40 x 1 Gallon,,,1935049
+36,Aceite -  Aceite Mineral 10W30 x ¼ Gallon,,,1935053
+37,Aceite -  Aceite Mineral 10W30 x 1 Gallon,,,1935054
+38,Aceite -  Aceite Mineral 25W40 x ¼ Gallon,,,1935055
+39,Aceite -  Aceite Mineral 25W40 x 1 Gallon,,,1935056
+40,Aceite -  Aceite Optimax x 1 Gallon,,,1935048
+41,Aceite -  Aceite Sintetico 25W40 x ¼ Gallon,,,1935057
+42,Aceite -  Aceite Sintetico 25W40 x 1 Gallon,,,1935060
+43,Aceite -  Aceite Sintético Verado 25W50 x 1 Gallon,,,1935052
+44,Hielo -,,,1935068
