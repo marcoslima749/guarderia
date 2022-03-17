@@ -1,18 +1,32 @@
 
 //123 probando...
 
+//220317: librerías
 import React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
+import { Switch, Route, Redirect, Link, useParams, useRouteMatch, useLocation } from 'react-router-dom';
 
+
+//220317: páginas que no necesitan login
 import { Home } from './home/pages/Home';
 import { Login } from './auth/pages/Login';
 import { Register } from './auth/pages/Register';
 
-import { Switch, Route, Redirect, Link, useParams, useRouteMatch, useLocation } from 'react-router-dom';
+
+/*220317: Dashboard es el marco con el header y el side al que se le pasa el resto de la página
+como children para renderizar
+*/
+
 import { Dashboard } from './shared/pages/dashboard';
 
+//220317: Importando los estilos
 
 import './App.css'
+
+//220317: Páginas que se le pasan al Dashboard
+
 import { Resumen } from './resumen/pages/Resumen';
 import { Tareas } from './inicio/components/Tareas';
 import { Embarcacion } from './embarcaciones/pages/Embarcacion';
@@ -20,17 +34,58 @@ import { Cliente } from './clientes/pages/Cliente';
 import { Boton } from './shared/components/Boton';
 import { CuentaCorriente } from './cuentacorriente/pages/CuentaCorriente';
 import { CuentaCorrienteImpresion } from './cuentacorriente/components/CuentaCorrienteImpresion';
-import { useState } from 'react';
-import { useEffect } from 'react';
 
 
 export const App = () => {
 
+/*
+220317:
+Aparentemente la estructura de la UI es, según la página, un marco (Dashboard) con el header y el side panel
+que renderiza los children que se les pasa.
+El estado para renderizar el contenido del header y el side es global:
+(descripcionHeader, nombreHeader, panelHeader)
+La página recibe y pasa funciones a los hijos para que se pueda
+customizar el header y los botones del side.
 
+Ahí lo ví mejor:
+
+Todas las rutas logueadas renderizan un dashboard sí o sí, que recibe el switch con las routes
+para renderizar el contenido según la route. El dashboard renderiza según el estado global y pasa
+por props las funciones para modificarlo a cada página. Cada página llama a esas funciones para
+efectivamente customizar los botones y el título del header, el nav, etc.
+Al final los hijos conocen el funcionamiento del padre
+y el padre conoce parcialmente el funcionamiento de los hijos
+habría que usar una solución de estado global y actue como controller en la app principal
+(o que el controller sea el backend) ---repensar
+y que los demás sean dumb components y chau. Las rutas cada una por su lado y que el login
+lo cheque una función del controller antes de renderizar cada componente (view)
+
+-----
+Quizás se pueda hacer al revés, que a cada página se le pase el header y el side por parámetros
+como meros contenedores que reciban props para renderizar, y que dentro de la UI se modifiquen
+según se requiera.
+
+Por ejemplo el componente Home importa directamente al componente Cabecera y lo renderiza desde adentro
+Quizás debería ser así con todas las páginas, o que lo reciban por props.
+
+-----
+De esta manera las routes van a quedar un poco más limpias y se evita un poco el estado global,
+eliminando esas tres variables, que pasarían a ser props, simplificando la UI.
+
+*/
+
+//220317: Variables de estado global para el header y el panel (deberían volar cuando se pasen a cada página)
     let [descripcionHeader, setDescripcionHeader] = useState("");
     let [nombreHeader, setNombreHeader] = useState("");
     let [panelHeader, setPanelHeader] = useState("");
     let setHeader = {setNombreHeader, setDescripcionHeader, setPanelHeader};
+
+
+/*220317: 
+Variables de estado global para almacenar la lista de resumen y la ctacte de cada cliente
+HAY QUE HACERLO ANDAR - (VER QUÉ DEVUELVE /api/db/resumen)
+DESPUÉS HAY QUE BUSCAR UNA FORMA DE OPTIMIZAR PORQUE VA A SER HEAVY LA CONSULTA
+*/
 
     //Recolectar los datos
     let [listaResumen, setListaResumen] = useState("");
