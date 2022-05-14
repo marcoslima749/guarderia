@@ -195,6 +195,7 @@ export const Tareas = () => {
 
     const enviarConsulta = (tarea, mod, campos = []) => {
         console.log('enviando consulta. tarea : ', tarea, ' mod: ', mod, ' campos: ', campos);
+        setVerificar(false);
         axios.post('/api/db/tareas', {
             tarea,
             mod,
@@ -222,6 +223,7 @@ export const Tareas = () => {
                 });
             } else {console.log('mod no es nuevo: ', mod)};
             console.log('Respuesta del servidor',response);
+            
         }).catch((err)=>{
             console.log('Error en axios response: ',err);
             throw err;
