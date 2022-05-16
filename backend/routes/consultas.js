@@ -268,24 +268,24 @@ routes.put('/clientes/:id/guardar-cambios',(req, res) => {
             break;
             case 'mails':
                 let consultaMails = '';
-                if (cambios.mails.insertar) {consultaMails =  consultaMails + cambios.mails.insertar.map((mail)=> sql.clientes.mails.insertar(id,mail.mail)).join('');}
-                if (cambios.mails.eliminar) {consultaMails =  consultaMails + cambios.mails.eliminar.map((mail)=> sql.clientes.mails.eliminar(mail.idmails)).join('');}
+                if (cambios.mails.insertar) {consultaMails =  consultaMails + cambios.mails.insertar.map((mail)=> sql.clientes.mails.insertar(id,mail.mail)).join(';');}
+                if (cambios.mails.eliminar) {consultaMails =  consultaMails + cambios.mails.eliminar.map((mail)=> sql.clientes.mails.eliminar(mail.idmails)).join(';');}
                 console.log('append mails: ', consultaMails)
                 consulta = consulta + consultaMails;
             break;
             case 'telefonos':
                 
                 let consultaTelefonos = '';
-                if (cambios.telefonos.insertar) {consultaTelefonos =  consultaTelefonos + cambios.telefonos.insertar.map((tel)=> sql.clientes.telefonos.insertar(id,tel.telefono)).join('');}
-                if (cambios.telefonos.eliminar) {consultaTelefonos =  consultaTelefonos + cambios.telefonos.eliminar.map((tel)=> sql.clientes.telefonos.eliminar(tel.idtelefonos)).join('');}
+                if (cambios.telefonos.insertar) {consultaTelefonos =  consultaTelefonos + cambios.telefonos.insertar.map((tel)=> sql.clientes.telefonos.insertar(id,tel.telefono)).join(';');}
+                if (cambios.telefonos.eliminar) {consultaTelefonos =  consultaTelefonos + cambios.telefonos.eliminar.map((tel)=> sql.clientes.telefonos.eliminar(tel.idtelefonos)).join(';');}
                 console.log('append telefonos: ', consultaTelefonos)
                 consulta = consulta + consultaTelefonos;
                 break;
             case 'observaciones':
                     
                 let consultaObservaciones = '';
-                if (cambios.observaciones.insertar) {consultaObservaciones =  consultaObservaciones + cambios.observaciones.insertar.map((obs)=> sql.clientes.observaciones.insertar(id,obs.observacion)).join('');}
-                if (cambios.observaciones.eliminar) {consultaObservaciones =  consultaObservaciones + cambios.observaciones.eliminar.map((obs)=> sql.clientes.observaciones.eliminar(obs.idobservaciones)).join('');}
+                if (cambios.observaciones.insertar) {consultaObservaciones =  consultaObservaciones + cambios.observaciones.insertar.map((obs)=> sql.clientes.observaciones.insertar(id,obs.observacion)).join(';');}
+                if (cambios.observaciones.eliminar) {consultaObservaciones =  consultaObservaciones + cambios.observaciones.eliminar.map((obs)=> sql.clientes.observaciones.eliminar(obs.idobservaciones)).join(';');}
                 console.log('append telefonos: ', consultaObservaciones)
                 consulta = consulta + consultaObservaciones;
                     
@@ -294,8 +294,8 @@ routes.put('/clientes/:id/guardar-cambios',(req, res) => {
             case 'forma_de_pago':
                 
                 let consultaFormaDePago = '';
-                if (cambios.forma_de_pago.insertar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.insertar.map((forma)=> sql.clientes.forma_de_pago.insertar(id,forma.forma_de_pago_idforma_de_pago, forma.numero)).join('');}
-                if (cambios.forma_de_pago.eliminar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.eliminar.map((forma)=> sql.clientes.forma_de_pago.eliminar(forma.idforma_de_pago_has_clientes)).join('');}
+                if (cambios.forma_de_pago.insertar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.insertar.map((forma)=> sql.clientes.forma_de_pago.insertar(id,forma.forma_de_pago_idforma_de_pago, forma.numero)).join(';');}
+                if (cambios.forma_de_pago.eliminar) {consultaFormaDePago =  consultaFormaDePago + cambios.forma_de_pago.eliminar.map((forma)=> sql.clientes.forma_de_pago.eliminar(forma.idforma_de_pago_has_clientes)).join(';');}
                 console.log('append forma de pago: ', consultaFormaDePago)
                 consulta = consulta + consultaFormaDePago;
                 
@@ -304,8 +304,8 @@ routes.put('/clientes/:id/guardar-cambios',(req, res) => {
                 case 'forma_de_facturacion':
                     
                     let consultaFormaFacturacion = '';
-                    if (cambios.forma_de_facturacion.insertar) {consultaFormaFacturacion =  consultaFormaFacturacion + cambios.forma_de_facturacion.insertar.map((forma)=> sql.clientes.forma_de_facturacion.insertar(forma.numero_cliente, forma.razon_social, forma.documento, forma.iva, forma.tipo_de_factura,id)).join('');}
-                    if (cambios.forma_de_facturacion.eliminar) {consultaFormaFacturacion =  consultaFormaFacturacion + cambios.forma_de_facturacion.eliminar.map((forma)=> sql.clientes.forma_de_facturacion.eliminar(forma.idforma_de_facturacion)).join('');}
+                    if (cambios.forma_de_facturacion.insertar) {consultaFormaFacturacion =  consultaFormaFacturacion + cambios.forma_de_facturacion.insertar.map((forma)=> sql.clientes.forma_de_facturacion.insertar(forma.numero_cliente, forma.razon_social, forma.documento, forma.iva, forma.tipo_de_factura,id)).join(';');}
+                    if (cambios.forma_de_facturacion.eliminar) {consultaFormaFacturacion =  consultaFormaFacturacion + cambios.forma_de_facturacion.eliminar.map((forma)=> sql.clientes.forma_de_facturacion.eliminar(forma.idforma_de_facturacion)).join(';');}
                     console.log('append forma de facturacion: ', consultaFormaFacturacion)
                     consulta = consulta + consultaFormaFacturacion;
 
@@ -316,7 +316,14 @@ routes.put('/clientes/:id/guardar-cambios',(req, res) => {
         }
     }
 
-    res.send(consulta);
+    console.log('CONSULTANDO A LA BASE: ', consulta);
+    
+    db.query(consulta, (error, results, fields)=>{
+        if(error) throw error;
+        
+        console.log('RESULTADOS: ', error || results);
+        res.json(results);
+    });
     
 })
 

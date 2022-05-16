@@ -270,6 +270,14 @@ export const Cliente = ({setHeader}) => {
         
         console.log('cambios: ', cambios);
 
+        /* setCliente(JSON.parse(JSON.stringify(snapCliente)));
+        setMails(JSON.parse(JSON.stringify(snapMails)));
+        setTelefonos(JSON.parse(JSON.stringify(snapTelefonos)));
+        setFormaPago(JSON.parse(JSON.stringify(snapFormaPago)));
+        setFormaFacturacion(JSON.parse(JSON.stringify(snapFormaFacturacion)));
+        setObservaciones(JSON.parse(JSON.stringify(snapObservaciones)));
+
+ */
     }
 
     let descartarCambios = () => {

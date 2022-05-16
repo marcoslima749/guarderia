@@ -1,7 +1,7 @@
 //Patrones comunes
 
 const select = (tabla, campo, where) => {
-    return `SELECT ${campo} FROM ${tabla}${where ? ' WHERE ' + where : ''}`;
+    return `SELECT ${campo} FROM ${tabla}${where ? ' WHERE ' + where : ''};`;
 };
 
 const todo = (tabla) => {
@@ -9,15 +9,15 @@ const todo = (tabla) => {
 };
 
 const eliminar = (tabla, campo, valor) => {
-    return `DELETE FROM ${tabla} WHERE (${campo} = '${valor}')`;
+    return `DELETE FROM ${tabla} WHERE (${campo} = '${valor}');`;
 };
 
 const insertar = (tabla, campos, valores) => {
-    return `INSERT INTO ${tabla} ( ${campos.join(' , ')} ) VALUES ( '${valores.join("' , '")}' )`
+    return `INSERT INTO ${tabla} ( ${campos.join(' , ')} ) VALUES ( '${valores.join("' , '")}' );`
 };
 
 const modificar = (tabla, campo, valor, ID, valorID) => {
-    return `UPDATE ${tabla} SET ${campo} = '${valor}' WHERE (${ID} = '${valorID}')`
+    return `UPDATE ${tabla} SET ${campo} = '${valor}' WHERE (${ID} = '${valorID}');`
 };
 
 /*
@@ -186,8 +186,7 @@ const obtenerTelefonos = (id) =>
     telefonos
     JOIN clientes ON clientes.idclientes = telefonos.clientes_idclientes
     WHERE
-    clientes.idclientes = '${id}';
-    `;
+    clientes.idclientes = '${id}';`;
 
 const insertarTelefono = (idCliente, telefono, observ) => `INSERT INTO telefonos (clientes_idclientes, telefono${observ ? ', observacion' : '' }) VALUES('${idCliente}' , '${telefono}'${observ ? ",'" + observ + "'" : "" });`;
 const eliminarTelefono = (idTelefono) => `DELETE FROM telefonos WHERE idtelefonos = '${idTelefono}';`
@@ -202,8 +201,8 @@ WHERE clientes.idclientes = '${id}';`
 
 const obtenerObservaciones = (id) =>
 `SELECT * FROM observaciones WHERE observaciones.clientes_idclientes = '${id}';`;
-const insertarObservacion = (idCliente, obs) => `INSERT INTO observaciones (clientes_idclientes, observacion) VALUES ('${idCliente}', '${obs}')`;
-const eliminarObservacion = (idObs) => `DELETE FROM observaciones WHERE idobservaciones = '${idObs}'`;
+const insertarObservacion = (idCliente, obs) => `INSERT INTO observaciones (clientes_idclientes, observacion) VALUES ('${idCliente}', '${obs}');`;
+const eliminarObservacion = (idObs) => `DELETE FROM observaciones WHERE idobservaciones = '${idObs}';`;
 
 const cModificarCliente = (campo, valor, id) => modificar('clientes', campo, valor, 'idclientes', id);
 const cModificarFormaFacturacion = (campo, valor, id) => modificar('forma_de_facturacion', campo, valor, 'idforma_de_facturacion', id);
