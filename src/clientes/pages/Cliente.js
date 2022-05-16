@@ -263,21 +263,26 @@ export const Cliente = ({setHeader}) => {
         Object.keys(cambios.forma_de_facturacion).length === 0 && delete cambios.forma_de_facturacion;
 
         axios.put(`/api/db/clientes/${params.id}/guardar-cambios`, cambios).then((response)=>{
-            console.log('response: ', response)
+            console.log('response: ', response);
+            aplicarCambios();
         }).catch((error)=>{
             throw error;
         })
         
         console.log('cambios: ', cambios);
 
-        /* setCliente(JSON.parse(JSON.stringify(snapCliente)));
-        setMails(JSON.parse(JSON.stringify(snapMails)));
-        setTelefonos(JSON.parse(JSON.stringify(snapTelefonos)));
-        setFormaPago(JSON.parse(JSON.stringify(snapFormaPago)));
-        setFormaFacturacion(JSON.parse(JSON.stringify(snapFormaFacturacion)));
-        setObservaciones(JSON.parse(JSON.stringify(snapObservaciones)));
+        
 
- */
+    }
+
+    let aplicarCambios = () => {
+        setSnapCliente(JSON.parse(JSON.stringify(cliente)));
+        setSnapMails(JSON.parse(JSON.stringify(mails)));
+        setSnapTelefonos(JSON.parse(JSON.stringify(telefonos)));
+        setSnapFormaPago(JSON.parse(JSON.stringify(formaPago)));
+        setSnapFormaFacturacion(JSON.parse(JSON.stringify(formaFacturacion)));
+        setSnapObservaciones(JSON.parse(JSON.stringify(observaciones)));
+
     }
 
     let descartarCambios = () => {
