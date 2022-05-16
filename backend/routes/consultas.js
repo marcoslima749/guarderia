@@ -124,8 +124,8 @@ routes.put('/embarcaciones/:id/m', (req, res) => {
     }
 
     let consulta = campos.map((llave)=>sql.embarcaciones.modificar(llave, embarcacion[llave], id)).join(';');
-    res.send(consulta);
-    return;
+    //res.send(consulta);
+    //return;
     db.query(consulta, (error, results, fields)=> {
         if (error) throw error;
         res.send(results);
