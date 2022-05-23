@@ -9,6 +9,7 @@
     font-family: 'ShareTech'; /*'Century Gothic' es la letra de las planillas, Roboto va bien en 0.9rem -  */
     font-size: .9rem;
     box-sizing: border-box;
+    overflow: auto;
 }
 
 .embarcaciones__titulos, .embarcaciones__embarcacion {

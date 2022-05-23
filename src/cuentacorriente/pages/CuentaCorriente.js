@@ -94,7 +94,7 @@ const sumarColumna = (objCtaCte, strColumna) => {
 
 
 
-export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
+export const CuentaCorriente = ({setHeader/* , cuentaCorriente */}) => {
     
     let [ctacte, setCtacte] = useState(maqueta);
     let [totalDebe, setTotalDebe] = useState(0);
@@ -118,23 +118,25 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
         setHeader.setPanelHeader(<a className="cuenta-corriente__boton-imprimir simple-hover" href="#" onClick={()=> toggleImprimir()}>Imprimir</a>);
     },[]);
 
-    useEffect(()=>{
+    /* useEffect(()=>{
         let newCtaCte = cuentaCorriente.filter(cta => cta[0]?.IDcl == params.id);
         console.log('cuentaCorriente',cuentaCorriente);
         console.log('newCtaCte',newCtaCte);
         setCtacte(newCtaCte[0]);
-    },[cuentaCorriente, params.id]);
+    },[cuentaCorriente, params.id]); */
     
-   /* 
-    useEffect(()=>{
-        
-        axios.get(`/api/db/clientes/${params.id}/cta-cte`).then((response) => {
-            setCtacte(response.data);
+    useEffect(() => {
+      axios
+        .get(
+          `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+            params.id
+          }/cta-cte`
+        )
+        .then((response) => {
+          setCtacte(response.data);
         });
-        
-
-    }, [params.id]);
-*/
+    }, []);
+    
     useEffect(()=> {
         if (ctacte === undefined) return;
 
@@ -149,7 +151,7 @@ export const CuentaCorriente = ({setHeader, cuentaCorriente}) => {
                         <div className='cuenta-corriente__fila'>
                             <span>{moment(curr.periodo).format('DD[-]MM[-]YYYY')}</span>
                             <span>{curr.nombre}</span>
-                            <span>{moment(curr.periodo).format('MMMM[ ]YYYY')}</span>
+                            <span>{curr.descripcion === 'PAGO' ? '': moment(curr.periodo).format('MMMM[ ]YYYY')}</span>
                             <span>{curr.descripcion} </span>
                             <span>{curr.Debe} </span>
                             <span>{curr.Haber} </span>

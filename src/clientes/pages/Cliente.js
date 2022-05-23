@@ -1,123 +1,175 @@
-import React from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import { useRouterMatch, useParams } from 'react-router-dom';
+import React from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { useState } from "react";
+import { useRouterMatch, useParams } from "react-router-dom";
 
-import './Clientes.css';
-import { CampoEditable } from '../../embarcaciones/components/CampoEditable';
-import { CampoMultiple } from '../components/CampoMultiple';
-import { ListaEmbarcaciones } from '../../shared/components/ListaEmbarcaciones';
-import { FormaFacturacion } from '../components/FormaFacturacion';
-import { verificarCambios } from '../../shared/util/verificarCambios';
-import { FlagModificado } from '../../embarcaciones/components/FlagModificado';
-import { objetosNoIncluidos } from '../../shared/util/objetosNoIncluidos';
-import { objetosNoIncluidosID } from '../../shared/util/objetosNoIncluidosID';
-import { useRef } from 'react';
-import { DetalleFormaPago } from '../components/DetalleFormaPago';
+import "./Clientes.css";
+import { CampoEditable } from "../../embarcaciones/components/CampoEditable";
+import { CampoMultiple } from "../components/CampoMultiple";
+import { ListaEmbarcaciones } from "../../shared/components/ListaEmbarcaciones";
+import { FormaFacturacion } from "../components/FormaFacturacion";
+import { verificarCambios } from "../../shared/util/verificarCambios";
+import { FlagModificado } from "../../embarcaciones/components/FlagModificado";
+import { objetosNoIncluidos } from "../../shared/util/objetosNoIncluidos";
+import { objetosNoIncluidosID } from "../../shared/util/objetosNoIncluidosID";
+import { useRef } from "react";
+import { DetalleFormaPago } from "../components/DetalleFormaPago";
 
-const moment = require('moment');
+const moment = require("moment");
 
 export const Cliente = ({setHeader}) => {
-    let [cliente, setCliente] = useState({});
-    let [snapCliente, setSnapCliente] = useState({});
-    let [llavesCliente, setLlavesCliente] = useState([]);
-    let [mails, setMails] = useState([]);
-    let [snapMails, setSnapMails] = useState([]);
-    let [telefonos, setTelefonos] = useState([]);
-    let [snapTelefonos, setSnapTelefonos] = useState([]);
-    let [formaPago, setFormaPago] = useState([]);
-    let [snapFormaPago, setSnapFormaPago] = useState([]);
-    let listaFormasDePago = useRef();
-    let [observaciones, setObservaciones] = useState([]);
-    let [snapObservaciones, setSnapObservaciones] = useState([]);
-    let [formaFacturacion, setFormaFacturacion] = useState([]);
-    let [snapFormaFacturacion, setSnapFormaFacturacion] = useState([]);
-    let [listaEmb, setListaEmb] = useState([]);
-    let [modificado, setModificado] = useState(false);
-    let [detalleFormaPago, setDetalleFormaPago] = useState(null);
+  let [cliente, setCliente] = useState({});
+  let [snapCliente, setSnapCliente] = useState({});
+  let [llavesCliente, setLlavesCliente] = useState([]);
+  let [mails, setMails] = useState([]);
+  let [snapMails, setSnapMails] = useState([]);
+  let [telefonos, setTelefonos] = useState([]);
+  let [snapTelefonos, setSnapTelefonos] = useState([]);
+  let [formaPago, setFormaPago] = useState([]);
+  let [snapFormaPago, setSnapFormaPago] = useState([]);
+  let listaFormasDePago = useRef();
+  let [observaciones, setObservaciones] = useState([]);
+  let [snapObservaciones, setSnapObservaciones] = useState([]);
+  let [formaFacturacion, setFormaFacturacion] = useState([]);
+  let [snapFormaFacturacion, setSnapFormaFacturacion] = useState([]);
+  let [listaEmb, setListaEmb] = useState([]);
+  let [modificado, setModificado] = useState(false);
+  let [detalleFormaPago, setDetalleFormaPago] = useState(null);
 
-    let params = useParams();
+  let params = useParams();
 
-    useEffect(()=>{
-        setHeader.setNombreHeader("CYNM");
-        setHeader.setDescripcionHeader("Clientes");
-        setHeader.setPanelHeader(null);
-    },[]);
+  useEffect(()=>{
+    setHeader.setNombreHeader("CYNM");
+    setHeader.setDescripcionHeader("Clientes");
+    setHeader.setPanelHeader(null);
+  },[]);
 
- 
-    useEffect(() =>{
-        console.log('render')
-        axios.get(`/api/db/clientes/${params.id}`).then((response)=>{
-            let res = response.data[0];
-            res.fecha_registro = moment(res.fecha_registro).format('YYYY[-]MM[-]DD');
-            res.fecha_ingreso = moment(res.fecha_ingreso).format('YYYY[-]MM[-]DD');
-            setCliente(JSON.parse(JSON.stringify(response.data[0])));
-            setSnapCliente(JSON.parse(JSON.stringify(response.data[0])));
-            setLlavesCliente(Object.keys(response.data[0]));
-        });
-        
-        axios.get(`/api/db/clientes/${params.id}/mails`).then((response)=>{
-            setMails(JSON.parse(JSON.stringify(response.data)));
-            setSnapMails(JSON.parse(JSON.stringify(response.data)));
-        });
-        
-        axios.get(`/api/db/clientes/${params.id}/telefonos`).then((response)=>{
-            setTelefonos(JSON.parse(JSON.stringify(response.data)));
-            setSnapTelefonos(JSON.parse(JSON.stringify(response.data)));
-        });
-        
-        axios.get(`/api/db/clientes/${params.id}/forma-de-facturacion`).then((response)=>{
-            setFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
-            setSnapFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
+  useEffect(() => {
+    console.log("render");
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }`
+      )
+      .then((response) => {
+        let res = response.data[0];
+        res.fecha_registro = moment(res.fecha_registro).format(
+          "YYYY[-]MM[-]DD"
+        );
+        res.fecha_ingreso = moment(res.fecha_ingreso).format("YYYY[-]MM[-]DD");
+        setCliente(JSON.parse(JSON.stringify(response.data[0])));
+        setSnapCliente(JSON.parse(JSON.stringify(response.data[0])));
+        setLlavesCliente(Object.keys(response.data[0]));
+      });
 
-        });
-        
-        axios.get(`/api/db/clientes/${params.id}/forma-de-pago`).then((response)=>{
-            setFormaPago(JSON.parse(JSON.stringify(response.data)));
-            setSnapFormaPago(JSON.parse(JSON.stringify(response.data)));
-        });
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }/mails`
+      )
+      .then((response) => {
+        setMails(JSON.parse(JSON.stringify(response.data)));
+        setSnapMails(JSON.parse(JSON.stringify(response.data)));
+      });
 
-        axios.get(`/api/db/clientes/${params.id}/observaciones`).then((response)=>{
-            setObservaciones(JSON.parse(JSON.stringify(response.data)));
-            setSnapObservaciones(JSON.parse(JSON.stringify(response.data)));
-        })
-        
-        axios.get(`/api/db/clientes/${params.id}/embarcaciones`).then((response)=>{
-            setListaEmb(JSON.parse(JSON.stringify(response.data)));
-        });
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }/telefonos`
+      )
+      .then((response) => {
+        setTelefonos(JSON.parse(JSON.stringify(response.data)));
+        setSnapTelefonos(JSON.parse(JSON.stringify(response.data)));
+      });
 
-        axios.get('/api/db/formas-de-pago').then((response)=>{
-            listaFormasDePago.current = response.data;
-        })
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }/forma-de-facturacion`
+      )
+      .then((response) => {
+        setFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
+        setSnapFormaFacturacion(JSON.parse(JSON.stringify(response.data)));
+      });
 
-    }, [params.id]);
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }/forma-de-pago`
+      )
+      .then((response) => {
+        setFormaPago(JSON.parse(JSON.stringify(response.data)));
+        setSnapFormaPago(JSON.parse(JSON.stringify(response.data)));
+      });
 
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }/observaciones`
+      )
+      .then((response) => {
+        setObservaciones(JSON.parse(JSON.stringify(response.data)));
+        setSnapObservaciones(JSON.parse(JSON.stringify(response.data)));
+      });
 
+    axios
+      .get(
+        `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+          params.id
+        }/embarcaciones`
+      )
+      .then((response) => {
+        setListaEmb(JSON.parse(JSON.stringify(response.data)));
+      });
 
-    useEffect(()=>{
-        let arrCambio = [];
-        arrCambio.push(verificarCambios(cliente, snapCliente));
-        arrCambio.push(verificarCambios(mails, snapMails));
-        arrCambio.push(verificarCambios(telefonos, snapTelefonos));
-        arrCambio.push(verificarCambios(formaPago, snapFormaPago));
-        arrCambio.push(verificarCambios(formaFacturacion, snapFormaFacturacion));
-        arrCambio.push(verificarCambios(observaciones, snapObservaciones));
-        let cambio = arrCambio.some((b)=>b);
+    axios
+      .get("https://guarderia-backend.herokuapp.com" + "/api/db/formas-de-pago")
+      .then((response) => {
+        listaFormasDePago.current = response.data;
+      });
+  }, [params.id]);
 
-        setModificado(cambio);
+  useEffect(() => {
+    let arrCambio = [];
+    arrCambio.push(verificarCambios(cliente, snapCliente));
+    arrCambio.push(verificarCambios(mails, snapMails));
+    arrCambio.push(verificarCambios(telefonos, snapTelefonos));
+    arrCambio.push(verificarCambios(formaPago, snapFormaPago));
+    arrCambio.push(verificarCambios(formaFacturacion, snapFormaFacturacion));
+    arrCambio.push(verificarCambios(observaciones, snapObservaciones));
+    let cambio = arrCambio.some((b) => b);
 
-    }, [cliente, mails, telefonos, formaFacturacion, formaPago, observaciones, snapCliente, snapMails, snapTelefonos, snapFormaFacturacion, snapFormaPago, snapObservaciones]);
+    setModificado(cambio);
+  }, [
+    cliente,
+    mails,
+    telefonos,
+    formaFacturacion,
+    formaPago,
+    observaciones,
+    snapCliente,
+    snapMails,
+    snapTelefonos,
+    snapFormaFacturacion,
+    snapFormaPago,
+    snapObservaciones,
+  ]);
 
-    let handleDescartarDetalleFP = () =>{
-        setDetalleFormaPago(null);
-    } 
+  let handleDescartarDetalleFP = () => {
+    setDetalleFormaPago(null);
+  };
 
-    let handleGuardarDetalleFP = (formaGuardada) => {
-        if(formaGuardada.numero === ""){
-            formaGuardada.numero = null;
-        }
-
+  let handleGuardarDetalleFP = (formaGuardada) => {
+    if (formaGuardada.numero === "") {
+      formaGuardada.numero = null;
+    }
         setFormaPago((prevFormaPago)=> {
             let newFormaPago = prevFormaPago.map((forma)=>{
                 if(forma.idforma_de_pago_has_clientes === formaGuardada.idforma_de_pago_has_clientes){
@@ -131,6 +183,7 @@ export const Cliente = ({setHeader}) => {
         });
 
         setDetalleFormaPago(null);
+
     }
 
     
@@ -262,7 +315,7 @@ export const Cliente = ({setHeader}) => {
         cambios.forma_de_facturacion.modificar.length === 0 && delete cambios.forma_de_facturacion.modificar;
         Object.keys(cambios.forma_de_facturacion).length === 0 && delete cambios.forma_de_facturacion;
 
-        axios.put(`/api/db/clientes/${params.id}/guardar-cambios`, cambios).then((response)=>{
+        axios.put(`https://guarderia-backend.herokuapp.com/api/db/clientes/${params.id}/guardar-cambios`, cambios).then((response)=>{
             console.log('response: ', response);
             aplicarCambios();
         }).catch((error)=>{

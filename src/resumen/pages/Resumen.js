@@ -13,39 +13,48 @@ const calcularSaldo = (objCtaCte) => {
     }, 0);
 };
 
-export const Resumen = ({setHeader, cuentaCorriente, listaResumen, clases}) => {
-  let [listaEmb, setListaEmb]  = useState([]);
-    let [llaves, setLlaves] = useState([]);
-    let {path} = useRouteMatch();
-//    let [cuentaCorriente, setCuentaCorriente] = useState([]);
 
-    useEffect(()=> {
+export const Resumen = ({setHeader, /* cuentaCorriente,  listaResumen,*/ clases}) => {
+  let [listaEmb, setListaEmb] = useState([]);
+  let [llaves, setLlaves] = useState([]);
+  let { path } = useRouteMatch();
+  let [cuentaCorriente, setCuentaCorriente] = useState([]);
+
+  useEffect(()=> {
         setHeader.setNombreHeader("CYNM");
         setHeader.setDescripcionHeader("Resumen");
         setHeader.setPanelHeader(<Boton path="#" clases="simple-hover embarcacion__boton-nuevo">Nuevo</Boton>);
     },[]);
 
-/*    
-    useEffect(()=> {
-        
-        axios.get('/api/db/resumen').then((response)=>{
-            console.log(response.data);
-            actualizarLista(response.data);
-            const arrConsultas = response.data.map(el=>axios.get(`/api/db/clientes/${el.IDc}/cta-cte`));
-            Promise.all(arrConsultas).then( res => {
-                let newCtaCte = res.map(r => r.data);
-                console.log(newCtaCte);
-                setCuentaCorriente(newCtaCte);
-            }).catch(error=>{throw error;});
-        }).catch((error)=>{
+  useEffect(() => {
+    axios
+      .get("https://guarderia-backend.herokuapp.com/api/db/resumen")
+      .then((response) => {
+        console.log(response.data);
+        actualizarLista(response.data);
+        const arrConsultas = response.data.map((el) =>
+          axios.get(
+            `https://guarderia-backend.herokuapp.com/api/db/clientes/${
+              el.IDc
+            }/cta-cte`
+          )
+        );
+        Promise.all(arrConsultas)
+          .then((res) => {
+            let newCtaCte = res.map((r) => r.data);
+            console.log(newCtaCte);
+            setCuentaCorriente(newCtaCte);
+          })
+          .catch((error) => {
             throw error;
-        });
+        })
+    });
         
     }, []);
-*/
+
     useEffect(()=>{
 
-        actualizarLista(listaResumen);
+        /* actualizarLista(listaResumen); */
 
         cuentaCorriente.forEach(ctacte => {
             if(ctacte.length === 0) return;
@@ -67,7 +76,7 @@ export const Resumen = ({setHeader, cuentaCorriente, listaResumen, clases}) => {
 
         });
 
-    }, [cuentaCorriente, listaResumen])
+    }, [cuentaCorriente/* , listaResumen */])
 
     const actualizarLista = (datos) => {
         setLlaves(Object.keys(datos[0]));

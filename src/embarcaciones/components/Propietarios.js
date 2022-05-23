@@ -12,12 +12,12 @@ return (
                         <>
                         <div className="embarcacion__propietario__campo">
                         <span className="embarcacion__propietario__nombre__label">Nombre:</span>
-                        <Boton path={`/clientes/${prop.id}`}  clases={`embarcacion__propietario__nombre__boton simple-hover`} >{prop.nombre}</Boton>
+                        <Boton path={`../clientes/${prop.id}`}  clases={`embarcacion__propietario__nombre__boton simple-hover`} >{prop.nombre}</Boton>
                         </div>
 
                         <div className="embarcacion__propietario__campo">
                         <span className="embarcacion__propietario__apellido__label">Apellido:</span>
-                        <Boton path={`/clientes/${prop.id}`} clases={`embarcacion__propietario__apellido__boton simple-hover`}>{prop.apellido}</Boton>
+                        <Boton path={`../clientes/${prop.id}`} clases={`embarcacion__propietario__apellido__boton simple-hover`}>{prop.apellido}</Boton>
                         </div>
 
                         <div className="embarcacion__propietario__campo">

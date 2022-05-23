@@ -27,6 +27,16 @@ export const Tareas = ({setHeader}) => {
     
     //Estado para manejar el snapshot del elemento a modificar
     let [snap, setSnap] = useState();
+
+    //Estado para mostrar las tareas completadas
+
+    let [mostrarCompletadas, setMostrarCompletadas] = useState(false);
+
+    useEffect(()=> {
+        if(completadas === 0){
+            setMostrarCompletadas(false);
+        }
+    },[completadas])
     
     useEffect(()=> {
         setHeader.setNombreHeader("CYNM");
@@ -86,7 +96,7 @@ export const Tareas = ({setHeader}) => {
     
     //consulta las tareas a la base de datos y las asigna al estado
     useEffect(() => {
-        axios.get('/api/db/tareas').then((res)=>{
+        axios.get('https://guarderia-backend.herokuapp.com/api/db/tareas').then((res)=>{
             setLista(() => res.data.map((tarea)=> {
                 let tareaMod = {...tarea /*, modificado : false, eliminado: false, nuevo: false*/ };
                 return(tareaMod);
@@ -127,7 +137,11 @@ export const Tareas = ({setHeader}) => {
         setLista((prevLista)=> {
             let newLista = prevLista.map((tarea) => {
                 if(tarea.idtareas === id) {
-                    tarea.completado = 1;
+                    if(tarea.completado == 0){
+                        tarea.completado = 1;
+                    } else {
+                        tarea.completado = 0;
+                    }
                 }
                 return tarea;
             });
@@ -203,7 +217,7 @@ export const Tareas = ({setHeader}) => {
 
     const enviarConsulta = (tarea, mod, campos = []) => {
         console.log('enviando consulta. tarea : ', tarea, ' mod: ', mod, ' campos: ', campos);
-        axios.post('/api/db/tareas', {
+        axios.post('https://guarderia-backend.herokuapp.com/api/db/tareas', {
             tarea,
             mod,
             campos
@@ -348,7 +362,7 @@ export const Tareas = ({setHeader}) => {
             </li>
             
 
-            {lista && lista.filter((tarea)=>tarea.completado === 0).map((tarea, indice)=> {
+            {lista && lista.filter((tarea)=>tarea.completado === (mostrarCompletadas && completadas > 0 ?  1 : 0)).map((tarea, indice)=> {
                 return(
                     <li onFocus={()=>handleFocus(indice, tarea.idtareas)} onBlur={()=>handleBlur(indice, tarea.idtareas)} key={tarea.idtareas} className={`lista-tareas__tarea simple-hover ${transition && 'lista-tareas__tarea--transition'} ${ desplazar && 'lista-tareas__desplazar'}`}>
                         <div className="lista-tareas__completado" onClick={(e)=>completarTarea(indice, tarea.idtareas, e)} >
@@ -375,8 +389,8 @@ export const Tareas = ({setHeader}) => {
 
         </ul>
         <div className={`tareas-completadas__container simple-hover ${completadas > 0 && 'tareas-completadas__container--visible'}`}>
-            <span className="tareas-completadas__span">
-                {`Tareas completadas: ${completadas}`}
+            <span onClick={()=>{setMostrarCompletadas((mc)=>!mc)}} className="tareas-completadas__span">
+                {mostrarCompletadas? `Ocultar tareas completadas (${completadas})` : `Mostrar tareas completadas (${completadas})`}
             </span>
         </div>
         </div>

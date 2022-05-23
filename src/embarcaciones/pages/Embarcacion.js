@@ -69,7 +69,12 @@ export const Embarcacion = ({setHeader}) => {
         }
 
         */
-        axios.get(`/api/db/embarcaciones/${params.id}`).then((response)=>{
+axios
+.get(
+  `https://guarderia-backend.herokuapp.com/api/db/embarcaciones/${
+    params.id
+  }`
+).then((response)=>{
             let res = response.data[0];
             res.contrato = moment(res.contrato).format('YYYY[-]MM[-]DD');
             res.seguro = moment(res.seguro).format('YYYY[-]MM[-]DD');
@@ -77,7 +82,11 @@ export const Embarcacion = ({setHeader}) => {
             setEmbarcacion(res);
         });
 
-        axios.get(`/api/db/embarcaciones/${params.id}/cl`).then((response)=>{
+        axios.get(
+          `https://guarderia-backend.herokuapp.com/api/db/embarcaciones/${
+            params.id
+          }/cl`
+        ).then((response)=>{
             setPropietario(response.data);
         });
         
@@ -133,7 +142,9 @@ export const Embarcacion = ({setHeader}) => {
                 console.log('contrato: ',embarcacion.contrato,'seguro: ',embarcacion.seguro);
                 //agregar la lógica para la baja
             }
-            axios.put(`/api/db/embarcaciones/${embarcacion.Id}/m`, {embarcacion, campos}).then((response)=> {
+            axios.put(`https://guarderia-backend.herokuapp.com/api/db/embarcaciones/${
+              embarcacion.Id
+            }/m`, {embarcacion, campos}).then((response)=> {
                 console.log('Base consultada correctamente, respuesta: ', response);
                 //Iguala el snap al state actual para no tener que consultar a la base de nuevo
                 setSnapEmb(embarcacion);

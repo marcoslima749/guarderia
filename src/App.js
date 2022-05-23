@@ -88,8 +88,8 @@ DESPUÉS HAY QUE BUSCAR UNA FORMA DE OPTIMIZAR PORQUE VA A SER HEAVY LA CONSULTA
 */
 
     //Recolectar los datos
-    let [listaResumen, setListaResumen] = useState("");
-    let [cuentaCorriente, setCuentaCorriente] = useState([]);
+    /* let [listaResumen, setListaResumen] = useState("");
+    let [cuentaCorriente, setCuentaCorriente] = useState([]); */
 
 
 /* APROACH AL ROUTE PATH SIN PATHS, CON REGEX.      
@@ -151,7 +151,7 @@ DESPUÉS HAY QUE BUSCAR UNA FORMA DE OPTIMIZAR PORQUE VA A SER HEAVY LA CONSULTA
         
 //CARGANDO LOS DATOS DE LAS CUENTAS CORRIENTES    
     
-    useEffect(()=>{
+   /*  useEffect(()=>{
         //Datos Resumen
         axios.get('/api/db/resumen').then((response)=>{
             console.log(response.data);
@@ -165,7 +165,7 @@ DESPUÉS HAY QUE BUSCAR UNA FORMA DE OPTIMIZAR PORQUE VA A SER HEAVY LA CONSULTA
         }).catch((error)=>{
             throw error;
         });
-    },[]);
+    },[]); */
 
 
 
@@ -199,13 +199,13 @@ DESPUÉS HAY QUE BUSCAR UNA FORMA DE OPTIMIZAR PORQUE VA A SER HEAVY LA CONSULTA
                         <Tareas setHeader={setHeader} />
                     </Route>
                     <Route exact path="/resumen">
-                        <Resumen setHeader={setHeader} listaResumen={listaResumen} cuentaCorriente={cuentaCorriente} />
+                        <Resumen setHeader={setHeader} /* listaResumen={listaResumen} cuentaCorriente={cuentaCorriente} */ />
                     </Route>
                     <Route exact path="/embarcaciones/:id">
                         <Embarcacion setHeader={setHeader} />
                     </Route>
                     <Route exact path="/clientes/:id/cta-cte">
-                        <CuentaCorriente setHeader={setHeader} cuentaCorriente={cuentaCorriente} /> 
+                        <CuentaCorriente setHeader={setHeader} /* cuentaCorriente={cuentaCorriente} */ /> 
                     </Route>
                     <Route exact path="/clientes/:id">
                         <Cliente setHeader={setHeader} />

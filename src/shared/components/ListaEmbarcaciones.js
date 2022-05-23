@@ -10,7 +10,7 @@ return (
                 {embarcaciones ? embarcaciones.map((emb)=> {
                     return(
                         <div key={emb.id} className={`${entidad}__${llave}__campo`}>
-                        <Boton path={`/${url}/${emb.id}`}  clases={`${entidad}__${llave}__nombre__boton simple-hover`} >{emb.nombre}</Boton>
+                        <Boton path={`../${url}/${emb.id}`}  clases={`${entidad}__${llave}__nombre__boton simple-hover`} >{emb.nombre}</Boton>
                         </div>
                     )
                 })
