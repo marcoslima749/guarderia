@@ -68,8 +68,8 @@ createPortal(   <div className="ctacte-impresion__background">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M466.342 371L437.556 359.621C421.598 353.263 402.199 345.9 394.377 343.223L380.297 338.537L380.923 323.143C381.236 312.768 384.678 301.389 392.187 286.664C414.402 243.827 412.838 235.795 367.782 164.845L332.112 109.291L328.67 122.343C321.787 147.108 321.161 179.236 327.419 205.675C333.051 230.105 333.051 230.44 326.167 251.189C314.903 286.329 314.277 310.76 323.977 337.868C325.541 341.884 322.725 344.227 312.4 346.904C285.179 354.267 280.172 354.601 261.712 347.573C251.387 343.892 242.626 340.88 242.313 340.88C241.687 340.88 242 347.573 243.252 355.94L245.129 371H466.342Z" fill="#0C67AD"/>
                           </svg>
                           
-                          <h1 className="ctacte-impresion__titulo">CLUB DE YATES NAVAL MOTOR</h1>
-                          <h2 className="ctacte-impresion__subtitulo">OPERADORA RIO LUJAN SRL</h2>
+                          <h1 className="ctacte-impresion__titulo">YATCH CLUB DELTA</h1>
+                          <h2 className="ctacte-impresion__subtitulo">EMPRESA FICTICIA S.A.</h2>
 
                         </div>
 
