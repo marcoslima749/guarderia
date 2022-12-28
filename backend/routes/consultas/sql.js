@@ -50,18 +50,13 @@ const embResumen =
 `SELECT
 embarcaciones.idembarcaciones AS ID,
 embarcaciones.nombre AS Embarcacion,
-categorias.idcategorias AS Cat,
 CONCAT(clientes.apellido, ', ' , clientes.nombre) AS Cliente,
 clientes.idclientes AS IDc,
-embarcaciones_has_clientes.porcentaje_posesion AS '%',
 'Sin Datos' as Estado,
 '0' as Pendiente
 FROM
 embarcaciones
-JOIN categorias_has_embarcaciones ON categorias_has_embarcaciones.id_embarcaciones = embarcaciones.idembarcaciones
-JOIN categorias ON categorias.idcategorias = categorias_has_embarcaciones.id_categorias
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
-JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idclientes
+JOIN clientes ON clientes.idclientes = embarcaciones.clientes_idclientes
 ;`;
 
 const embTarifaId = (id) =>
