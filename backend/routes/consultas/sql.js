@@ -50,6 +50,7 @@ const embResumen =
 `SELECT
 embarcaciones.idembarcaciones AS ID,
 embarcaciones.nombre AS Embarcacion,
+producto.idproducto AS Cat,
 CONCAT(clientes.apellido, ', ' , clientes.nombre) AS Cliente,
 clientes.idclientes AS IDc,
 'Sin Datos' as Estado,
@@ -57,6 +58,10 @@ clientes.idclientes AS IDc,
 FROM
 embarcaciones
 JOIN clientes ON clientes.idclientes = embarcaciones.clientes_idclientes
+JOIN producto_has_embarcaciones ON producto_has_embarcaciones.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
+JOIN producto ON producto.idproducto = producto_has_embarcaciones.producto_idproducto
+WHERE producto.m_cuad IS NOT NULL
+ORDER BY IDc
 ;`;
 
 const embTarifaId = (id) =>

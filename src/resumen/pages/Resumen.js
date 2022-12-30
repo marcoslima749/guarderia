@@ -97,6 +97,14 @@ export const Resumen = ({
       );
     });
 
+  const categorias = {
+    23 : 'MO',
+    24: 'G',
+    25: 'M1',
+    26: 'M2',
+    27: 'M3'
+  }
+
   let filas = listaEmb.map((emb) => {
     return (
       <div
@@ -125,8 +133,8 @@ export const Resumen = ({
                   <Boton path={`/clientes/${emb.IDc}/cta-cte`}>
                     {emb[llave]}
                   </Boton>
-                ) : llave === "Contrato" || llave === "Seguro" ? (
-                  moment(emb[llave]).format("DD[-]MM[-]YYYY")
+                ) : llave === "Cat" ? (
+                  categorias[emb[llave]]
                 ) : (
                   emb[llave]
                 )}
