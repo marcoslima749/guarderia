@@ -68,40 +68,33 @@ const embTarifaId = (id) =>
 `SELECT
 embarcaciones.nombre AS nombre,
 embarcaciones.idembarcaciones AS Id,
-categorias.idcategorias AS categoria,
+embarcaciones.tipo AS categoria,
 embarcaciones.marca AS marca,
 embarcaciones.modelo AS modelo,
-tarifas.tarifa AS tarifa,
-tasas.tasa AS tasa,
-(tarifas.tarifa + tasas.tasa) AS total,
+0 AS tarifa,
+0 AS tasa,
+0 AS total,	
 embarcaciones.eslora AS eslora,
 embarcaciones.manga AS manga,
 embarcaciones.puntal AS puntal,
-embarcaciones.contrato_fecha AS contrato,
-embarcaciones.matricula AS matricula,
-embarcaciones.seguro_fecha AS seguro
+embarcaciones.fecha_ingreso AS contrato,
+embarcaciones.num_matricula AS matricula,
+'' AS seguro
 FROM
 embarcaciones
-JOIN categorias_has_embarcaciones ON categorias_has_embarcaciones.id_embarcaciones = embarcaciones.idembarcaciones
-JOIN categorias ON categorias.idcategorias = categorias_has_embarcaciones.id_categorias
-JOIN tasas ON tasas.categoria = categorias.idcategorias
-JOIN rangos_precio_has_embarcaciones ON rangos_precio_has_embarcaciones.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
-JOIN rangos_precio ON rangos_precio.idrangos_precio = rangos_precio_has_embarcaciones.rangos_precio_idrangos_precio
-JOIN tarifas ON tarifas.rangos_precio_idrangos_precio = rangos_precio.idrangos_precio
 WHERE
-embarcaciones.idembarcaciones = '${id}'
-ORDER BY tarifas.vigencia DESC, tasas.vigencia DESC LIMIT 1;`;
+embarcaciones.idembarcaciones = ${id};
+`;
 
 const embClientes = (id) =>
     `SELECT
     clientes.apellido,
     clientes.nombre,
-    embarcaciones_has_clientes.porcentaje_posesion AS posesion,
+    '100' AS posesion,
     clientes.idclientes AS id
     FROM
     embarcaciones
-    JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
-    JOIN clientes ON clientes.idclientes = embarcaciones_has_clientes.clientes_idclientes
+    JOIN clientes ON clientes.idclientes = embarcaciones.clientes_idclientes
     WHERE embarcaciones.idembarcaciones = '${id}';`;
 
 const embModificar = (campo, valor, id) => modificar('embarcaciones', campo, valor, 'idembarcaciones', id)
@@ -194,8 +187,7 @@ const eliminarTelefono = (idTelefono) => `DELETE FROM telefonos WHERE idtelefono
 const listaEmb = (id) =>
 `SELECT embarcaciones.idembarcaciones AS id, embarcaciones.nombre
 FROM clientes
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
-JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
+JOIN embarcaciones ON embarcaciones.clientes_idclientes = clientes.idclientes
 WHERE clientes.idclientes = '${id}';`
 ;
 
@@ -282,80 +274,27 @@ ORDER BY fecha_de_pago;
 `
 
 const cEstado = (idCliente) => `
-SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion,
-detalle_mensualidad.valor_contingencia AS Debe, null AS Haber
+SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, producto.descripcion,
+detalle_mensualidad.valor AS Debe, null AS Haber
 FROM 
 mensualidad
 JOIN detalle_mensualidad ON detalle_mensualidad.mensualidad_idmensualidad = mensualidad.idmensualidad
-JOIN concepto_producto ON concepto_producto.idconcepto_producto = detalle_mensualidad.concepto_producto_idconcepto_producto
+JOIN producto ON producto.idproducto = detalle_mensualidad.producto_idproducto
 JOIN clientes ON clientes.idclientes = mensualidad.clientes_idclientes
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
-JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
+JOIN embarcaciones ON embarcaciones.clientes_idclientes = clientes.idclientes
 
 WHERE clientes.idclientes = '${idCliente}'
-AND detalle_mensualidad.concepto_producto_idconcepto_producto = '1'
 
-UNION
-
-(SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tarifas.tarifa), null
-FROM 
-mensualidad
-
-JOIN detalle_mensualidad ON detalle_mensualidad.mensualidad_idmensualidad = mensualidad.idmensualidad
-JOIN concepto_producto ON concepto_producto.idconcepto_producto = detalle_mensualidad.concepto_producto_idconcepto_producto
-JOIN clientes ON clientes.idclientes = mensualidad.clientes_idclientes
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
-JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
-
-JOIN rangos_precio_has_embarcaciones ON rangos_precio_has_embarcaciones.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
-JOIN rangos_precio ON rangos_precio.idrangos_precio = rangos_precio_has_embarcaciones.rangos_precio_idrangos_precio
-JOIN tarifas ON tarifas.rangos_precio_idrangos_precio = rangos_precio.idrangos_precio
-AND tarifas.vigencia <= mensualidad.periodo
-
-AND tarifas.vigencia >= embarcaciones.contrato_fecha
-
-WHERE clientes.idclientes = '${idCliente}'
-AND detalle_mensualidad.concepto_producto_idconcepto_producto = '2'
-GROUP BY mensualidad.periodo
-ORDER BY mensualidad.periodo)
-
-UNION
-
-(
-SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tasas.tasa), null
-FROM 
-mensualidad
-
-JOIN detalle_mensualidad ON detalle_mensualidad.mensualidad_idmensualidad = mensualidad.idmensualidad
-JOIN concepto_producto ON concepto_producto.idconcepto_producto = detalle_mensualidad.concepto_producto_idconcepto_producto
-JOIN clientes ON clientes.idclientes = mensualidad.clientes_idclientes
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
-JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
-
-JOIN categorias_has_embarcaciones ON categorias_has_embarcaciones.id_embarcaciones = embarcaciones.idembarcaciones
-JOIN categorias ON categorias.idcategorias = categorias_has_embarcaciones.id_categorias
-JOIN tasas ON tasas.categoria = categorias.idcategorias
-AND tasas.vigencia <= mensualidad.periodo
-AND tasas.vigencia >= DATE(CONCAT(YEAR(embarcaciones.contrato_fecha), '-01-01'))
-
-WHERE clientes.idclientes = '${idCliente}'
-AND detalle_mensualidad.concepto_producto_idconcepto_producto = '3'
-GROUP BY mensualidad.periodo
-ORDER BY mensualidad.periodo
-)
 UNION
 (
-
-SELECT null AS IDm, null AS IDd, pago.idpago AS IDp, pago.fecha_de_pago, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, 'PAGO', null, pago.monto
-FROM pago
-JOIN clientes ON clientes.idclientes = pago.clientes_idclientes
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
-JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
-WHERE pago.clientes_idclientes = '${idCliente}'
+SELECT null AS IDm, null AS IDd, cobro.idcobro AS IDp, cobro.fecha_de_cobro, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, 'PAGO', null, cobro.monto
+FROM cobro
+JOIN clientes ON clientes.idclientes = cobro.clientes_idclientes
+JOIN embarcaciones ON embarcaciones.clientes_idclientes = clientes.idclientes
+WHERE cobro.clientes_idclientes = '${idCliente}'
 )
 
 ORDER BY periodo;
-
 `
 
 const clientes = {
