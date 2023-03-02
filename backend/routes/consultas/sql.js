@@ -106,7 +106,8 @@ const embarcaciones = {
     resumen: embResumen,
     seleccionar : embTarifaId,
     clientes : embClientes,
-    modificar: embModificar
+    modificar: embModificar,
+    productos : prodPrecioEmbarcacionPeriodo
 }
 
 
@@ -342,6 +343,23 @@ const clientes = {
 let listaFormasPago = {
     consultar : ()=> 'SELECT * FROM forma_de_pago;'
 }
+
+//NUEVO - Productos y precios asociados a una embarcación a un período
+//Hay que cambiar el layout de embarcaciones para que muestre al lado de cada producto la forma de facturación asociada.
+//También tiene que mostrar el total sumándolo en el frontend
+let prodPrecioEmbarcacionPeriodo = (id_embarcacion, periodo) => {
+    //El periodo debe ser un string en el formato aaaa-mm-01
+    `select producto.idproducto, producto.descripcion, max(precio.precio) as precio, producto_has_embarcaciones.forma_de_facturacion_idforma_de_facturacion as id_facturacion, forma_de_facturacion.razon_social as facturacion
+		from embarcaciones
+		join producto_has_embarcaciones on producto_has_embarcaciones.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
+        join forma_de_facturacion on forma_de_facturacion.idforma_de_facturacion = producto_has_embarcaciones.forma_de_facturacion_idforma_de_facturacion
+		join producto on producto.idproducto = producto_has_embarcaciones.producto_idproducto
+		join precio on precio.producto_idproducto = producto.idproducto
+		where embarcaciones.idembarcaciones = '${id_embarcacion}'
+		and precio.vigencia <= '${periodo}' group by producto.idproducto;`
+}
+
+
 
 /*
 LA CONSULTA PARA INSERTAR TODAS LAS MENSUALIDADES DE UN CLIENTE
