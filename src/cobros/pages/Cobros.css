@@ -1,0 +1,181 @@
+.embarcacion__container {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-areas:
+    "nombre nombre nombre nombre nombre nombre"
+    "id cat . tarifa tasa total"
+    "marca modelo . eslora manga puntal"
+    "contrato contrato matricula matricula seguro seguro"
+    "baja baja . . . . "
+    "propietarios propietarios propietarios propietarios propietarios propietarios "
+    "flag flag flag flag flag flag"
+    ;
+    
+    font-family: Sharetech;
+
+}
+
+.entrada__input {
+    font-family: inherit;
+}
+/*
+.embarcacion__campo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.embarcacion__llave {
+    text-align: center;
+    text-transform: capitalize;
+}*/
+
+.embarcacion__nombre {
+    grid-area: nombre;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.embarcacion__nombre__input {
+    width: 100%;
+    text-align: center;
+}
+/*La clase embarcacion__ID choca con la misma clase en el resumen, por eso la d minúscula*/
+.embarcacion__Id {
+    grid-area: id;
+}
+
+.embarcacion__categoria {
+    grid-area: cat;
+}
+
+.embarcacion__tarifa {
+    grid-area: tarifa;
+}
+
+.embarcacion__tasa {
+    grid-area: tasa;
+}
+
+.embarcacion__total {
+    grid-area: total;
+}
+
+.embarcacion__marca {
+    grid-area: marca;
+}
+
+.embarcacion__modelo {
+    grid-area: modelo;
+}
+
+.embarcacion__eslora {
+    grid-area: eslora;
+}
+
+.embarcacion__manga {
+    grid-area: manga;
+}
+
+.embarcacion__puntal {
+    grid-area: puntal;
+}
+
+
+.embarcacion__contrato {
+    grid-area: contrato;
+    justify-self: center;
+}
+
+.embarcacion__contrato__input, .embarcacion__seguro__input, .embarcacion__baja__input {
+    font-family: inherit;
+    width: 10rem;
+    font-size: 1.3rem;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+.embarcacion__matricula {
+    grid-area: matricula;
+}
+
+.embarcacion__seguro {
+    grid-area: seguro;
+    justify-self: center;
+}
+
+.embarcacion__baja {
+    grid-area: baja;
+}
+
+.embarcacion__flag {
+    grid-area: flag;
+    background-color: rgb(255, 179, 144);
+    height: 0;
+    min-height: 100%;
+    width: 0;
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 300ms ease;
+}
+
+.embarcacion__flag--visible {
+    opacity: 1;
+}
+
+.embarcacion__flag__boton {
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    height: 100%;
+    width: 6.5rem;
+    cursor: pointer;
+}
+
+.embarcacion__propietarios {
+    grid-area: propietarios;
+    display: grid;
+    grid-template-rows: 4rem;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    align-items: center;
+}
+
+
+.embarcacion__propietario__campo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+[class$=__label],
+.embarcacion__propietario__nombre__boton, .embarcacion__propietario__apellido__boton, .embarcacion__propietario__posesion__span
+{
+    width: 100%;
+    text-align: center;
+}
+
+.embarcacion__propietario__nombre__boton, .embarcacion__propietario__apellido__boton , .embarcacion__propietario__posesion__span {
+    font-size: 1.3rem;
+}
+
+.embarcacion__boton-nuevo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 1rem;
+    font-size: 1.1rem;
+}
+

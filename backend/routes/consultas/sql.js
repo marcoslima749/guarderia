@@ -1,23 +1,25 @@
 //Patrones comunes
 
 const select = (tabla, campo, where) => {
-    return `SELECT ${campo} FROM ${tabla}${where ? ' WHERE ' + where : ''};`;
+  return `SELECT ${campo} FROM ${tabla}${where ? " WHERE " + where : ""};`;
 };
 
 const todo = (tabla) => {
-    return select(tabla, '*');
+  return select(tabla, "*");
 };
 
 const eliminar = (tabla, campo, valor) => {
-    return `DELETE FROM ${tabla} WHERE (${campo} = '${valor}');`;
+  return `DELETE FROM ${tabla} WHERE (${campo} = '${valor}');`;
 };
 
 const insertar = (tabla, campos, valores) => {
-    return `INSERT INTO ${tabla} ( ${campos.join(' , ')} ) VALUES ( '${valores.join("' , '")}' );`
+  return `INSERT INTO ${tabla} ( ${campos.join(
+    " , "
+  )} ) VALUES ( '${valores.join("' , '")}' );`;
 };
 
 const modificar = (tabla, campo, valor, ID, valorID) => {
-    return `UPDATE ${tabla} SET ${campo} = '${valor}' WHERE (${ID} = '${valorID}');`
+  return `UPDATE ${tabla} SET ${campo} = '${valor}' WHERE (${ID} = '${valorID}');`;
 };
 
 /*
@@ -28,26 +30,24 @@ console.log(eliminar('tareas', 'idtareas','1'));
 console.log(insertar('tareas', ['campo1', 'campo2', 'campo3'],['valor1', 'valor2', 'valor3']));
 */
 
-
-
 //Tablas
 
 //Tareas
 
 const tareas = {
-    todo : todo('tareas'),
-    eliminar : (id) => eliminar('tareas', 'idtareas', id),
-    
-    // INSERT INTO `guarderiadb`.`tareas` (`descripcion`, `nota`, `deadline`, `prioridad`, `completado`) VALUES ('nueva descr', 'nota de la desc', '2020-09-01', '3', '0');
+  todo: todo("tareas"),
+  eliminar: (id) => eliminar("tareas", "idtareas", id),
 
-    insertar : (campos, valores) => insertar('tareas', campos, valores),
-    modificar: (campo, valor, id) => modificar('tareas', campo, valor, 'idtareas', id)
-}
+  // INSERT INTO `guarderiadb`.`tareas` (`descripcion`, `nota`, `deadline`, `prioridad`, `completado`) VALUES ('nueva descr', 'nota de la desc', '2020-09-01', '3', '0');
+
+  insertar: (campos, valores) => insertar("tareas", campos, valores),
+  modificar: (campo, valor, id) =>
+    modificar("tareas", campo, valor, "idtareas", id),
+};
 
 //Embarcaciones
 
-const embResumen =
-`SELECT
+const embResumen = `SELECT
 embarcaciones.idembarcaciones AS ID,
 embarcaciones.nombre AS Embarcacion,
 producto.idproducto AS Cat,
@@ -65,7 +65,7 @@ ORDER BY IDc
 ;`;
 
 const embTarifaId = (id) =>
-`SELECT
+  `SELECT
 embarcaciones.nombre AS nombre,
 embarcaciones.idembarcaciones AS Id,
 embarcaciones.tipo AS categoria,
@@ -86,9 +86,8 @@ WHERE
 embarcaciones.idembarcaciones = ${id};
 `;
 
-
 const embClientes = (id) =>
-    `SELECT
+  `SELECT
     clientes.apellido,
     clientes.nombre,
     '100' AS posesion,
@@ -98,14 +97,15 @@ const embClientes = (id) =>
     JOIN clientes ON clientes.idclientes = embarcaciones.clientes_idclientes
     WHERE embarcaciones.idembarcaciones = '${id}';`;
 
-const embModificar = (campo, valor, id) => modificar('embarcaciones', campo, valor, 'idembarcaciones', id)
+const embModificar = (campo, valor, id) =>
+  modificar("embarcaciones", campo, valor, "idembarcaciones", id);
 
 //NUEVO - Productos y precios asociados a una embarcación a un período
 //Hay que cambiar el layout de embarcaciones para que muestre al lado de cada producto la forma de facturación asociada.
 //También tiene que mostrar el total sumándolo en el frontend
-let embProductos = (id_embarcacion, periodo) => 
-    //El periodo debe ser un string en el formato aaaa-mm-01
-    `select producto.idproducto, producto.descripcion, producto.tipo, max(precio.precio) as precio, producto_has_embarcaciones.forma_de_facturacion_idforma_de_facturacion as id_facturacion, forma_de_facturacion.razon_social as facturacion
+let embProductos = (id_embarcacion, periodo) =>
+  //El periodo debe ser un string en el formato aaaa-mm-01
+  `select producto.idproducto, producto.descripcion, producto.tipo, max(precio.precio) as precio, producto_has_embarcaciones.forma_de_facturacion_idforma_de_facturacion as id_facturacion, forma_de_facturacion.razon_social as facturacion
 		from embarcaciones
 		join producto_has_embarcaciones on producto_has_embarcaciones.embarcaciones_idembarcaciones = embarcaciones.idembarcaciones
         join forma_de_facturacion on forma_de_facturacion.idforma_de_facturacion = producto_has_embarcaciones.forma_de_facturacion_idforma_de_facturacion
@@ -114,20 +114,17 @@ let embProductos = (id_embarcacion, periodo) =>
 		where embarcaciones.idembarcaciones = '${id_embarcacion}'
 		and precio.vigencia <= '${periodo}' group by producto.idproducto;`;
 
-
-
 const embarcaciones = {
-    todo : todo('embarcaciones'),
-    resumen: embResumen,
-    seleccionar : embTarifaId,
-    clientes : embClientes,
-    modificar: embModificar,
-    productos : embProductos
-}
+  todo: todo("embarcaciones"),
+  resumen: embResumen,
+  seleccionar: embTarifaId,
+  clientes: embClientes,
+  modificar: embModificar,
+  productos: embProductos,
+};
 
-
-const obtenerMails = id =>
-`SELECT
+const obtenerMails = (id) =>
+  `SELECT
 mails.mail, mails.idmails
 FROM 
 mails
@@ -136,11 +133,12 @@ WHERE
 clientes.idclientes = '${id}';
 `;
 
-const agregarMail = (idCliente, mail) => `INSERT INTO mails (clientes_idclientes, mail) VALUES ('${idCliente}', '${mail}');`;
-const eliminarMail = (idMail) => `DELETE FROM mails WHERE (idmails = '${idMail}');`;
+const agregarMail = (idCliente, mail) =>
+  `INSERT INTO mails (clientes_idclientes, mail) VALUES ('${idCliente}', '${mail}');`;
+const eliminarMail = (idMail) =>
+  `DELETE FROM mails WHERE (idmails = '${idMail}');`;
 
-
-const cliente = id => `
+const cliente = (id) => `
 SELECT
 clientes.idclientes,
 clientes.apellido,
@@ -162,7 +160,7 @@ clientes
 JOIN forma_de_pago ON forma_de_pago.clientes_idclientes = clientes.idclientes
 JOIN forma_de_facturacion ON forma_de_facturacion.clientes_idclientes = clientes.idclientes
 WHERE
-clientes.idclientes = '${id}';`
+clientes.idclientes = '${id}';`;
 
 const formaPago = (id) => `
 SELECT *
@@ -172,14 +170,27 @@ WHERE
 forma_de_pago_has_clientes.clientes_idclientes = '${id}';
 `;
 
-const insertarFormaPago = (idCliente, idFormaPago, numero) => `INSERT INTO forma_de_pago_has_clientes (clientes_idclientes, forma_de_pago_idforma_de_pago ${numero ? ', numero' : '' }) VALUES ('${idCliente}','${idFormaPago}'${numero ? ",'" + numero + "'" : ""});`
-const eliminarFormaPago = (idFormaPagoHasClientes) => `DELETE FROM forma_de_pago_has_clientes WHERE (idforma_de_pago_has_clientes = '${idFormaPagoHasClientes}');`
+const insertarFormaPago = (idCliente, idFormaPago, numero) =>
+  `INSERT INTO forma_de_pago_has_clientes (clientes_idclientes, forma_de_pago_idforma_de_pago ${
+    numero ? ", numero" : ""
+  }) VALUES ('${idCliente}','${idFormaPago}'${
+    numero ? ",'" + numero + "'" : ""
+  });`;
+const eliminarFormaPago = (idFormaPagoHasClientes) =>
+  `DELETE FROM forma_de_pago_has_clientes WHERE (idforma_de_pago_has_clientes = '${idFormaPagoHasClientes}');`;
 
 const formaFacturacion = (id) => `
 SELECT * FROM forma_de_facturacion WHERE clientes_idclientes = '${id}';
 `;
 
-const insertarFormaFacturacion = (numero_cliente, razon_social, documento, iva, tipo_de_factura, clientes_idclientes) => `
+const insertarFormaFacturacion = (
+  numero_cliente,
+  razon_social,
+  documento,
+  iva,
+  tipo_de_factura,
+  clientes_idclientes
+) => `
 INSERT INTO forma_de_facturacion (numero_cliente, razon_social, documento, iva, tipo_de_factura, clientes_idclientes)
 VALUES ('${numero_cliente}', '${razon_social}', '${documento}', '${iva}', '${tipo_de_factura}', '${clientes_idclientes}');
 `;
@@ -188,8 +199,8 @@ const eliminarFormaFacturacion = (idforma_de_facturacion) => `
 DELETE FROM forma_de_facturacion WHERE (idforma_de_facturacion = '${idforma_de_facturacion}');
 `;
 
-const obtenerTelefonos = (id) => 
-    `SELECT
+const obtenerTelefonos = (id) =>
+  `SELECT
     telefonos.telefono, telefonos.idtelefonos
     FROM 
     telefonos
@@ -197,25 +208,33 @@ const obtenerTelefonos = (id) =>
     WHERE
     clientes.idclientes = '${id}';`;
 
-const insertarTelefono = (idCliente, telefono, observ) => `INSERT INTO telefonos (clientes_idclientes, telefono${observ ? ', observacion' : '' }) VALUES('${idCliente}' , '${telefono}'${observ ? ",'" + observ + "'" : "" });`;
-const eliminarTelefono = (idTelefono) => `DELETE FROM telefonos WHERE idtelefonos = '${idTelefono}';`
+const insertarTelefono = (idCliente, telefono, observ) =>
+  `INSERT INTO telefonos (clientes_idclientes, telefono${
+    observ ? ", observacion" : ""
+  }) VALUES('${idCliente}' , '${telefono}'${
+    observ ? ",'" + observ + "'" : ""
+  });`;
+const eliminarTelefono = (idTelefono) =>
+  `DELETE FROM telefonos WHERE idtelefonos = '${idTelefono}';`;
 
 const listaEmb = (id) =>
-`SELECT embarcaciones.idembarcaciones AS id, embarcaciones.nombre
+  `SELECT embarcaciones.idembarcaciones AS id, embarcaciones.nombre
 FROM clientes
 JOIN embarcaciones ON embarcaciones.clientes_idclientes = clientes.idclientes
-WHERE clientes.idclientes = '${id}';`
-;
-
+WHERE clientes.idclientes = '${id}';`;
 const obtenerObservaciones = (id) =>
-`SELECT * FROM observaciones WHERE observaciones.clientes_idclientes = '${id}';`;
-const insertarObservacion = (idCliente, obs) => `INSERT INTO observaciones (clientes_idclientes, observacion) VALUES ('${idCliente}', '${obs}');`;
-const eliminarObservacion = (idObs) => `DELETE FROM observaciones WHERE idobservaciones = '${idObs}';`;
+  `SELECT * FROM observaciones WHERE observaciones.clientes_idclientes = '${id}';`;
+const insertarObservacion = (idCliente, obs) =>
+  `INSERT INTO observaciones (clientes_idclientes, observacion) VALUES ('${idCliente}', '${obs}');`;
+const eliminarObservacion = (idObs) =>
+  `DELETE FROM observaciones WHERE idobservaciones = '${idObs}';`;
 
-const cModificarCliente = (campo, valor, id) => modificar('clientes', campo, valor, 'idclientes', id);
-const cModificarFormaFacturacion = (campo, valor, id) => modificar('forma_de_facturacion', campo, valor, 'idforma_de_facturacion', id);
+const cModificarCliente = (campo, valor, id) =>
+  modificar("clientes", campo, valor, "idclientes", id);
+const cModificarFormaFacturacion = (campo, valor, id) =>
+  modificar("forma_de_facturacion", campo, valor, "idforma_de_facturacion", id);
 
-const cCuotas= (idCliente) => `
+const cCuotas = (idCliente) => `
 SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion,
 detalle_mensualidad.valor_contingencia AS Valor
 FROM 
@@ -252,7 +271,7 @@ AND detalle_mensualidad.concepto_producto_idconcepto_producto = '2'
 GROUP BY mensualidad.periodo
 ORDER BY mensualidad.periodo)
 ;
-`
+`;
 const cTasas = (idCliente) => `
 SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, concepto_producto.descripcion, MAX(tasas.tasa) as Valor
 FROM 
@@ -277,17 +296,12 @@ WHERE clientes.idclientes = '${idCliente}'
 AND detalle_mensualidad.concepto_producto_idconcepto_producto = '3'
 GROUP BY mensualidad.periodo
 ORDER BY mensualidad.periodo;
-`
+`;
 
-const cPagos = (idCliente) => `
-SELECT pago.idpago AS IDp, pago.fecha_de_pago, clientes.idclientes AS IDcl, clientes.apellido, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, 'PAGO', pago.monto
-FROM pago
-JOIN clientes ON clientes.idclientes = pago.clientes_idclientes
-JOIN embarcaciones_has_clientes ON embarcaciones_has_clientes.clientes_idclientes = clientes.idclientes
-JOIN embarcaciones ON embarcaciones.idembarcaciones = embarcaciones_has_clientes.embarcaciones_idembarcaciones
-WHERE pago.clientes_idclientes = '${idCliente}'
-ORDER BY fecha_de_pago;
-`
+const cCobros = (idCliente) => `
+SELECT idcobro, monto, fecha_de_cobro, fecha_acreditacion, clientes_idclientes, forma_de_pago_idforma_de_pago, comprobante
+FROM cobro
+${idCliente ? "WHERE clientes_idclientes = '" + idCliente + "'" : ""};`
 
 const cEstado = (idCliente) => `
 SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, producto.descripcion,
@@ -311,56 +325,51 @@ WHERE cobro.clientes_idclientes = '${idCliente}'
 )
 
 ORDER BY periodo;
-`
+`;
 
 const clientes = {
-    todo: todo('clientes'),
-    seleccionar : (id) => select('clientes', '*', `idclientes = '${id}'`),
-    mails: {
-            consultar : obtenerMails,
-            insertar : agregarMail,
-            eliminar : eliminarMail
-            },
-    telefonos: {
-                consultar: obtenerTelefonos,
-                insertar: insertarTelefono,
-                eliminar: eliminarTelefono 
-                },
-    forma_de_pago: {
-                    consultar: formaPago,
-                    insertar : insertarFormaPago,
-                    eliminar: eliminarFormaPago
-                    },
-    observaciones : {
-                    consultar : obtenerObservaciones,
-                    insertar: insertarObservacion,
-                    eliminar: eliminarObservacion
-                    },
-    forma_de_facturacion: {
-                            consultar: formaFacturacion,
-                            insertar: insertarFormaFacturacion,
-                            eliminar: eliminarFormaFacturacion
-                            },
-    cliente,
-    listaEmb,
-    modificarCliente : cModificarCliente,
-    modificarFormaFacturacion : cModificarFormaFacturacion,
-    cta_cte : {
-        estado: cEstado,
-        cuotas : cCuotas,
-        tasas : cTasas,
-        pagos: cPagos
-    }
-
-
-}
+  todo: todo("clientes"),
+  seleccionar: (id) => select("clientes", "*", `idclientes = '${id}'`),
+  mails: {
+    consultar: obtenerMails,
+    insertar: agregarMail,
+    eliminar: eliminarMail,
+  },
+  telefonos: {
+    consultar: obtenerTelefonos,
+    insertar: insertarTelefono,
+    eliminar: eliminarTelefono,
+  },
+  forma_de_pago: {
+    consultar: formaPago,
+    insertar: insertarFormaPago,
+    eliminar: eliminarFormaPago,
+  },
+  observaciones: {
+    consultar: obtenerObservaciones,
+    insertar: insertarObservacion,
+    eliminar: eliminarObservacion,
+  },
+  forma_de_facturacion: {
+    consultar: formaFacturacion,
+    insertar: insertarFormaFacturacion,
+    eliminar: eliminarFormaFacturacion,
+  },
+  cliente,
+  listaEmb,
+  modificarCliente: cModificarCliente,
+  modificarFormaFacturacion: cModificarFormaFacturacion,
+  cta_cte: {
+    estado: cEstado,
+    cuotas: cCuotas,
+    tasas: cTasas,
+    cobros: cCobros,
+  },
+};
 
 let listaFormasPago = {
-    consultar : ()=> 'SELECT * FROM forma_de_pago;'
-}
-
-
-
+  consultar: () => "SELECT * FROM forma_de_pago;",
+};
 
 /*
 LA CONSULTA PARA INSERTAR TODAS LAS MENSUALIDADES DE UN CLIENTE
@@ -410,13 +419,9 @@ VALUES (
 
  */
 
-
-
-
-
 module.exports = {
-    tareas,
-    embarcaciones,
-    clientes,
-    listaFormasPago
-}
+  tareas,
+  embarcaciones,
+  clientes,
+  listaFormasPago,
+};

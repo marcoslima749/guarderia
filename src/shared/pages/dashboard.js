@@ -32,7 +32,7 @@ export const Dashboard = ({
         let listaPaths = [
             '/resumen',
             '/inicio',
-            '/pagos',
+            '/cobros',
             '/reportes',
             '/planillas'
         ];

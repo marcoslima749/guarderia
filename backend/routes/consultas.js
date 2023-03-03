@@ -223,33 +223,6 @@ routes.get('/clientes/:id/observaciones', (req, res)=>{
 
 
 
-routes.get('/clientes/:id/cta-cte/cuotas', (req, res)=>{
-    const db = req.app.get('db');
-    const id = req.params.id;
-    db.query(sql.clientes.cta_cte.cuotas(id), (error, results, fields)=>{
-        if(error) throw error;
-        res.json(results);
-    })
-})
-
-routes.get('/clientes/:id/cta-cte/tasas', (req, res)=>{
-    const db = req.app.get('db');
-    const id = req.params.id;
-    db.query(sql.clientes.cta_cte.tasas(id), (error, results, fields)=>{
-        if(error) throw error;
-        res.json(results);
-    })
-})
-
-routes.get('/clientes/:id/cta-cte/pagos', (req, res)=>{
-    const db = req.app.get('db');
-    const id = req.params.id;
-    db.query(sql.clientes.cta_cte.pagos(id), (error, results, fields)=>{
-        if(error) throw error;
-        res.json(results);
-    })
-})
-
 routes.get('/clientes/:id/cta-cte', (req, res)=>{
     const db = req.app.get('db');
     const id = req.params.id;
@@ -347,6 +320,33 @@ routes.get('/clientes/:id', (req, res)=> {
         if (error) throw error;
         res.json(results);
     })
+});
+
+routes.get('/cobros/:id',(req,res)=> {
+const db = req.app.get('db');
+const id = req.params.id;
+
+    db.query(sql.clientes.cta_cte.cobros(id), (error, results, fields) => {
+        if (error) throw error;
+        console.log("resultados de la consulta a cobros");
+        console.log(results);
+        res.json(results);
+    })
+
+
+});
+
+routes.get('/cobros',(req,res)=> {
+const db = req.app.get('db');
+
+    db.query(sql.clientes.cta_cte.cobros(), (error, results, fields) => {
+        if (error) throw error;
+        console.log("resultados de la consulta a cobros");
+        console.log(results);
+        res.json(results);
+    })
+
+
 });
 
 

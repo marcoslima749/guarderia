@@ -34,6 +34,7 @@ import { Cliente } from './clientes/pages/Cliente';
 import { Boton } from './shared/components/Boton';
 import { CuentaCorriente } from './cuentacorriente/pages/CuentaCorriente';
 import { CuentaCorrienteImpresion } from './cuentacorriente/components/CuentaCorrienteImpresion';
+import { Cobros } from './cobros/pages/Cobros';
 
 
 export const App = () => {
@@ -209,6 +210,9 @@ DESPUÉS HAY QUE BUSCAR UNA FORMA DE OPTIMIZAR PORQUE VA A SER HEAVY LA CONSULTA
                     </Route>
                     <Route exact path="/clientes/:id">
                         <Cliente setHeader={setHeader} />
+                    </Route>
+                    <Route exact path="/cobros">
+                        <Cobros setHeader={setHeader} />
                     </Route>
 
                 </Dashboard>  

@@ -1,0 +1,12 @@
+
+
+div[class*=__campo] {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div[class*=__campo] span[class*=__label] {
+    text-align: center;
+    text-transform: capitalize;
+}
