@@ -38,7 +38,7 @@ export const Dashboard = ({
         ];
 
     return(
-        <div className={`dashboard ${clases}`}>
+        <div className={`dashboard ${clases || ''}`}>
             <Cabecera nombre={nombre} descripcion={descripcion}>
                { panel && panel }
             </Cabecera>

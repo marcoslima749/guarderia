@@ -79,13 +79,29 @@ export const Embarcacion = ({ setHeader }) => {
         res.seguro = moment(res.seguro).format("YYYY[-]MM[-]DD");
         setSnapEmb(res);
         setEmbarcacion(res);
-      });
+        return Promise.resolve();
+      }).then(()=>{
 
-    axios
+        axios
+        .get(`http://localhost:4000/api/db/embarcaciones/${params.id}/productos`)
+        .then((response) => {
+          let cuota = response.data.filter((prod)=> prod.tipo == 'CUOTA')[0].precio;
+          let tasa = response.data.filter((prod)=> prod.tipo == 'TASA')[0].precio;
+          setSnapEmb((snapEmb)=> ({...snapEmb, tarifa: cuota, tasa : tasa, total: cuota + tasa}));
+          setEmbarcacion((embarcacion)=>({...embarcacion, tarifa: cuota, tasa : tasa, total: cuota + tasa}));
+        });
+      });
+      
+      axios
       .get(`http://localhost:4000/api/db/embarcaciones/${params.id}/cl`)
       .then((response) => {
         setPropietario(response.data);
       });
+    
+      
+    
+    
+
   }, [params.id]);
 
   useEffect(() => {

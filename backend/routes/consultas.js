@@ -143,6 +143,19 @@ routes.get('/embarcaciones/:id', (req, res)=> {
     
 });
 
+routes.get('/embarcaciones/:id/productos', (req, res)=> {
+    const db = req.app.get('db');
+    const id = req.params.id;
+    const periodo = `${new Date().getFullYear()}-${new Date().getMonth().toString().length == 1 ? "0" : ""}${new Date().getMonth().toString()}-01`;
+    db.query(sql.embarcaciones.productos(id,periodo), (error, results, fields)=>{ //VER ESTO
+        if (error) throw error;
+        res.json(results);
+    })
+    
+});
+
+
+
 
 routes.get('/clientes/:id/mails', (req, res)=> {
     const db = req.app.get('db');
