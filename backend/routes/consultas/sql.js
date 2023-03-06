@@ -301,7 +301,56 @@ ORDER BY mensualidad.periodo;
 const cCobros = (idCliente) => `
 SELECT idcobro, monto, fecha_de_cobro, fecha_acreditacion, clientes_idclientes, forma_de_pago_idforma_de_pago, comprobante
 FROM cobro
-${idCliente ? "WHERE clientes_idclientes = '" + idCliente + "'" : ""};`
+${idCliente ? "WHERE clientes_idclientes = '" + idCliente + "'" : ""};`;
+
+//TERMINAR
+const nuevoCobro = 
+({monto,
+fecha_de_cobro,
+fecha_acreditacion,
+clientes_idclientes,
+forma_de_pago_idforma_de_pago,
+comprobante,
+id_SOS,
+concepto_ws,
+concepto_excel,
+codigo,
+num_documento,
+oficina,
+detalle_ws,
+detalle_excel}) => {
+  let b = (el) => el ? "," : "";
+  let c = (el) => el === ",";
+  let b1 = b(detalle_excel);
+  let b2 = b(c(b1) || detalle_ws);
+  let b3 = b(c(b2) || oficina);
+  let b4 = b(c(b3) || num_documento);
+  let b5 = b(c(b4) || codigo);
+  let b6 = b(c(b5) || concepto_excel);
+  let b7 = b(c(b6) || concepto_ws);
+  let b8 = b(c(b7) || id_SOS);
+
+  return  `
+  INSERT INTO cobro
+  (
+  monto,
+  ${fecha_de_cobro ? "fecha_de_cobro," : ""}
+  ${fecha_acreditacion ? "fecha_acreditacion," : ""}
+  clientes_idclientes,
+  forma_de_pago_idforma_de_pago,
+  ${comprobante ? "comprobante" + b8 : ""}
+  ${id_SOS ? "id_SOS" + b7 : ""}
+  ${concepto_ws ? "concepto_ws" + b6 : ""}
+  ${concepto_excel ? "concepto_excel" + b5 : ""}
+  ${codigo ? "codigo" + b4 : ""}
+  ${num_documento ? "num_documento" + b3 : ""}
+  ${oficina ? "oficina" + b2 : ""}
+  ${detalle_ws ? "detalle_ws" + b1 : ""}
+  ${detalle_excel ? "detalle_excel" : ""})
+  VALUES
+  (
+
+  )`};
 
 const cEstado = (idCliente) => `
 SELECT mensualidad.idmensualidad AS IDm, detalle_mensualidad.iddetalle_mensualidad AS IDd, null AS IDp, mensualidad.periodo, clientes.idclientes AS IDcl, clientes.apellido, clientes.nombre AS clNombre, embarcaciones.idembarcaciones AS IDemb, embarcaciones.nombre, producto.descripcion,

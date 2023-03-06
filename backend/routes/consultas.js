@@ -322,6 +322,19 @@ routes.get('/clientes/:id', (req, res)=> {
     })
 });
 
+routes.post('/cobros/nuevo',(req,res)=> {
+    const db = req.app.get('db');
+    
+        db.query(sql.clientes.cta_cte.cobros(id), (error, results, fields) => {
+            if (error) throw error;
+            console.log("resultados de la consulta a cobros");
+            console.log(results);
+            res.json(results);
+        })
+    
+    
+    });
+
 routes.get('/cobros/:id',(req,res)=> {
 const db = req.app.get('db');
 const id = req.params.id;

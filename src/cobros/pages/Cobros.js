@@ -48,7 +48,7 @@ export const Cobros = ({ setHeader }) => {
       console.log("volviendo de la consulta por axios");
       console.log(response.data);
       setCobro(response.data);
-      setLlaves(Object.keys(response.data[0]));
+      setLlaves(Object.keys(response.data[0] || {}));
     }).catch((error) => {
       throw error;
     });
